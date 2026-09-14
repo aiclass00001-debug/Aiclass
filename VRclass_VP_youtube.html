@@ -1,0 +1,1694 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VR / XR × Virtual Production｜TCIMAGE LAB</title>
+<style>
+:root{--bg:#050811;--panel:#0c1322;--text:#eef6ff;--muted:#9eb0c8;--cyan:#24e8ff;--pink:#ff45cf;--lime:#b9ff5a;--amber:#ffd166;--line:rgba(255,255,255,.09)}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(circle at 15% 0,rgba(36,232,255,.12),transparent 28%),radial-gradient(circle at 90% 5%,rgba(255,69,207,.1),transparent 25%),linear-gradient(#050811,#07101b 60%,#05070d);color:var(--text);font-family:Inter,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;line-height:1.7}
+a{color:var(--cyan);text-decoration:none} p{margin:0 0 10px}
+nav{position:sticky;top:0;z-index:20;background:rgba(5,8,14,.82);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+nav .in{max-width:1250px;margin:auto;padding:11px 18px;display:flex;gap:14px;align-items:center;overflow:auto} nav b{white-space:nowrap} nav a{font-size:13px;white-space:nowrap;color:#d2dceb}
+.hero{max-width:1250px;margin:auto;padding:76px 22px 52px;display:grid;grid-template-columns:1.25fr .75fr;gap:30px;align-items:center}
+.k{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid rgba(36,232,255,.3);background:rgba(36,232,255,.05);color:#c8fbff;font-size:12px}
+h1{font-size:clamp(48px,7vw,96px);line-height:.95;letter-spacing:-.055em;margin:18px 0}
+.grad{background:linear-gradient(90deg,#fff,var(--cyan),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent}
+.herobox{padding:22px;border:1px solid var(--line);border-radius:22px;background:rgba(12,19,34,.82)} .hero-stat{padding:11px 0;border-bottom:1px solid rgba(255,255,255,.08)} .hero-stat:last-child{border-bottom:0}
+section{max-width:1250px;margin:auto;padding:64px 22px} .eyebrow{font-size:12px;font-weight:900;color:var(--cyan);letter-spacing:.12em} h2{font-size:clamp(34px,4.5vw,58px);line-height:1.08;margin:6px 0 14px;letter-spacing:-.035em} h3{font-size:24px;margin:5px 0 12px} .lead{color:#bfd0e2;max-width:950px}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:17px} .card{grid-column:span 4;padding:20px;border:1px solid var(--line);border-radius:20px;background:rgba(12,19,34,.82)} .card p{color:#acbdd0}
+.flow{display:flex;flex-wrap:wrap;gap:10px;align-items:center} .step{padding:10px 14px;border:1px solid rgba(36,232,255,.25);border-radius:999px;background:rgba(36,232,255,.05);font-weight:800} .arr{color:var(--pink);font-weight:900}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:18px} .panel{padding:20px;border:1px solid var(--line);border-radius:20px;background:rgba(12,19,34,.82)} .callout{padding:18px 20px;border:1px solid rgba(185,255,90,.25);border-radius:18px;background:rgba(185,255,90,.06)}
+.track-toggle{display:flex;gap:10px;margin:20px 0} button{border:1px solid var(--line);background:#0c1422;color:#dbe8f6;padding:10px 14px;border-radius:999px;font-weight:900;cursor:pointer} button.active{background:linear-gradient(90deg,var(--cyan),#8af7ff);color:#001014}
+.sources{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:20px} .hidden{display:none}
+.src-card{border:1px solid var(--line);border-radius:17px;overflow:hidden;background:rgba(10,15,26,.92)}
+.cover{position:relative;display:block;aspect-ratio:16/9;background:#03060b;overflow:hidden}
+.cover img{width:100%;height:100%;object-fit:cover;display:block;transition:.2s} .cover:hover img{transform:scale(1.02)}
+.play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:56px;height:42px;border-radius:14px;background:rgba(255,0,0,.95);display:grid;place-items:center;color:#fff;font-weight:900;font-size:22px;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.badge{position:absolute;right:10px;top:10px;background:rgba(0,0,0,.72);border:1px solid rgba(255,255,255,.16);padding:4px 8px;border-radius:999px;font-size:10px;font-weight:900;color:#fff}
+.fallback{width:100%;height:100%;display:grid;place-items:center;background:linear-gradient(135deg,rgba(36,232,255,.12),rgba(255,69,207,.12));font-size:56px;font-weight:1000;color:#eaf7ff}
+.src-body{padding:14px 14px 16px} .src-body h4{font-size:15px;line-height:1.45;margin:0 0 8px} .desc{font-size:13px;color:#d2deeb} .note{font-size:12px;color:var(--muted)} .url{display:block;font-size:11px;line-height:1.45;word-break:break-all;color:#bfefff;text-decoration:underline;text-underline-offset:2px}
+footer{max-width:1250px;margin:0 auto;padding:30px 22px 60px;color:var(--muted)}
+@media(max-width:900px){.hero,.split{grid-template-columns:1fr} .card{grid-column:span 12} .sources{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.sources{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav><div class="in"><b>TCIMAGE/<span style="color:var(--cyan)">VR·VP CLASS</span></b><a href="#overview">課程地圖</a><a href="#vr">大三 VR/XR</a><a href="#vp">研究所 VP</a><a href="#sources">完整來源</a></div></nav>
+
+<header class="hero">
+  <div>
+    <span class="k">2026 · VR / XR · UE5 · Virtual Production</span>
+    <h1><span class="grad">從虛擬世界</span><br>到鏡頭裡的世界</h1>
+    <p class="lead">把兩份收集資料整理成同一套「沉浸式互動 × 虛擬場景合成」教材：大三走 VR / MR / WebXR / VTuber / Projection Mapping；研究所走 UE5、綠幕、Nuke、LED Volume、nDisplay、ICVFX 與色彩管理。</p>
+  </div>
+  <div class="herobox">
+    <div class="hero-stat"><b>大三：</b>互動、空間、Avatar、WebXR</div>
+    <div class="hero-stat"><b>研究所：</b>合成、虛擬攝影、LED、Color Pipeline</div>
+    <div class="hero-stat"><b>共同核心：</b>Real-time 3D → Experience / Shot</div>
+  </div>
+</header>
+
+<main>
+<section id="overview">
+  <div class="eyebrow">01 · COURSE MAP</div>
+  <h2>兩門課其實是同一條 Real-time Pipeline 的兩端</h2>
+  <div class="flow">
+    <span class="step">3D / Scan / AI Asset</span><span class="arr">→</span>
+    <span class="step">UE5 / Three.js</span><span class="arr">→</span>
+    <span class="step">Tracking / Interaction</span><span class="arr">→</span>
+    <span class="step">VR / MR / WebXR</span><span class="arr">→</span>
+    <span class="step">Camera / LED / Composite</span><span class="arr">→</span>
+    <span class="step">Experience / Film</span>
+  </div>
+</section>
+
+<section id="vr">
+  <div class="eyebrow">02 · JUNIOR / VR & XR</div>
+  <h2>大三 VR 課：不是只戴頭盔，而是設計「空間中的互動」</h2>
+  <div class="grid">
+    <div class="card"><h3>Meta MR × UE5</h3><p>從 UE5.5 Mixed Reality Game、Passthrough、空間定位開始，把虛擬物件真正放進現實環境。</p></div>
+    <div class="card"><h3>WebXR × Three.js</h3><p>瀏覽器直接進 VR，搭配 WebXR Samples、Three.js、VRM，適合 Quest 與跨平台教學。</p></div>
+    <div class="card"><h3>VTuber × Motion</h3><p>VRM、VMC、Live Link、BlendShape、身體與臉部動作串接，形成即時 Avatar Pipeline。</p></div>
+    <div class="card"><h3>Projection Mapping</h3><p>TouchDesigner + KantanMapper、360° AI 內容投影，把「虛擬場景」投到真實建築與空間。</p></div>
+    <div class="card"><h3>AR / MR 快速原型</h3><p>MAKAR 鯨鯊、MR 天燈等案例，讓學生理解內容、空間錨點、互動與體驗設計。</p></div>
+    <div class="card"><h3>3D Reconstruction</h3><p>Gaussian Splats、即時場景重建、XGRIDS / UE Plugin，從掃描走向可即時瀏覽的數位場景。</p></div>
+  </div>
+  <div class="callout" style="margin-top:18px"><strong>大三主線：</strong>不是「學一堆 XR 工具」，而是讓學生能把 3D 資產 → 互動 → 空間體驗 → 展示，做成完整作品。</div>
+</section>
+
+<section id="vp">
+  <div class="eyebrow">03 · GRADUATE / VIRTUAL PRODUCTION</div>
+  <h2>研究所：從「後製合成」走到「拍攝現場就是合成系統」</h2>
+  <div class="split">
+    <div class="panel">
+      <h3>傳統路線</h3>
+      <div class="flow"><span class="step">Green Screen</span><span class="arr">→</span><span class="step">Keying</span><span class="arr">→</span><span class="step">Nuke</span><span class="arr">→</span><span class="step">CG Composite</span></div>
+      <p>優點是後期控制最大；代價是「先拍再算」，燈光、反射、邊緣與溢色要靠後製救。</p>
+    </div>
+    <div class="panel">
+      <h3>Virtual Production 路線</h3>
+      <div class="flow"><span class="step">VAD / UE5</span><span class="arr">→</span><span class="step">nDisplay</span><span class="arr">→</span><span class="step">Tracking</span><span class="arr">→</span><span class="step">ICVFX / LED</span></div>
+      <p>把合成前移到拍攝現場，讓前景光影、反射與導演決策同步發生。</p>
+    </div>
+  </div>
+  <div class="grid" style="margin-top:20px">
+    <div class="card"><h3>nDisplay / Genlock</h3><p>不是把 HDMI 插到 LED 牆就完成。場景需要分割、同步與多節點輸出，還要避免黑線與閃爍。</p></div>
+    <div class="card"><h3>Inner / Outer Frustum</h3><p>鏡頭內視錐用高品質動態透視；外視錐主要負責環境光與反射，是 ICVFX 效率的核心。</p></div>
+    <div class="card"><h3>Color Pipeline</h3><p>RAW / Log、OCIO、OpenVPCal、Rec.2020 / PQ、Creative LUT，並避免 Double Tone Mapping。</p></div>
+  </div>
+  <div class="callout" style="margin-top:18px"><strong>研究題目直接可以做 A/B Test：</strong>同一個 UE5 場景，分別走「綠幕＋Nuke」與「LED＋ICVFX」，比較時間、成本、邊緣品質、人物光影、色彩一致性與導演控制。</div>
+</section>
+
+<section id="sources">
+  <div class="eyebrow">04 · SOURCE LIBRARY</div>
+  <h2>完整來源：封面＋原始連結＋簡短說明</h2>
+  <p class="lead">你剛剛提的需求我一起補上了。現在就算不是 YouTube 圖示卡，也會有一段簡短說明，包含「這個連結大概是什麼、適合怎麼用」。</p>
+  <div class="track-toggle">
+    <button id="bvr" class="active" onclick="showTrack('vr')">大三 VR / XR（31 個來源）</button>
+    <button id="bvp" onclick="showTrack('vp')">研究所 VP / 合成（81 個來源）</button>
+  </div>
+  <div id="src-vr" class="sources">
+    <article class="src-card">
+      <a class="cover" href="https://youtu.be/UgA2p9A2-Q0?t=418" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/UgA2p9A2-Q0/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://youtu.be/UgA2p9A2-Q0?t=418" target="_blank" rel="noopener">https://youtu.be/UgA2p9A2-Q0?t=418</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://youtu.be/5d6mZNA_5sg?t=285" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/5d6mZNA_5sg/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://youtu.be/5d6mZNA_5sg?t=285" target="_blank" rel="noopener">https://youtu.be/5d6mZNA_5sg?t=285</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://accel-city-exhibition.vercel.app/" target="_blank" rel="noopener">
+        <div class="fallback">↗</div>
+        <span class="badge">Web</span>
+      </a>
+      <div class="src-body">
+        <h4>加速城市 // 數媒系聯邦終極儀表板</h4>
+        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
+        <p class="note">來源平台：accel-city-exhibition.vercel.app｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://accel-city-exhibition.vercel.app/" target="_blank" rel="noopener">https://accel-city-exhibition.vercel.app/</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.fab.com/listings/b46926e1-fe3c-4c20-83f0-8be8ee5e8de5" target="_blank" rel="noopener">
+        <div class="fallback">FAB</div>
+        <span class="badge">Fab</span>
+      </a>
+      <div class="src-body">
+        <h4>加速城市 // 數媒系聯邦終極儀表板</h4>
+        <p class="desc">素材資源頁：可作為場景、資產與風格參考。</p>
+        <p class="note">來源平台：fab.com｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://www.fab.com/listings/b46926e1-fe3c-4c20-83f0-8be8ee5e8de5" target="_blank" rel="noopener">https://www.fab.com/listings/b46926e1-fe3c-4c20-83f0-8be8ee5e8de5</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=RlfGi6q-ss0" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/RlfGi6q-ss0/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=RlfGi6q-ss0" target="_blank" rel="noopener">https://www.youtube.com/watch?v=RlfGi6q-ss0</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://accel-city-exhibition.vercel.app/home.html" target="_blank" rel="noopener">
+        <div class="fallback">↗</div>
+        <span class="badge">Web</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
+        <p class="note">來源平台：accel-city-exhibition.vercel.app｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://accel-city-exhibition.vercel.app/home.html" target="_blank" rel="noopener">https://accel-city-exhibition.vercel.app/home.html</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=TO1Pvy-wCFc" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/TO1Pvy-wCFc/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=TO1Pvy-wCFc" target="_blank" rel="noopener">https://www.youtube.com/watch?v=TO1Pvy-wCFc</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=1IkZ5NrEf3A" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/1IkZ5NrEf3A/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=1IkZ5NrEf3A" target="_blank" rel="noopener">https://www.youtube.com/watch?v=1IkZ5NrEf3A</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.fab.com/listings/a0cbe964-b2e7-44b2-965c-febe2ec9b33a" target="_blank" rel="noopener">
+        <div class="fallback">FAB</div>
+        <span class="badge">Fab</span>
+      </a>
+      <div class="src-body">
+        <h4>360 Parallax card</h4>
+        <p class="desc">素材資源頁：可作為場景、資產與風格參考。</p>
+        <p class="note">來源平台：fab.com｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://www.fab.com/listings/a0cbe964-b2e7-44b2-965c-febe2ec9b33a" target="_blank" rel="noopener">https://www.fab.com/listings/a0cbe964-b2e7-44b2-965c-febe2ec9b33a</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.fab.com/listings/d8426949-1c95-4034-9cf4-ea0c9be511d5" target="_blank" rel="noopener">
+        <div class="fallback">FAB</div>
+        <span class="badge">Fab</span>
+      </a>
+      <div class="src-body">
+        <h4>360 Parallax card</h4>
+        <p class="desc">素材資源頁：可作為場景、資產與風格參考。</p>
+        <p class="note">來源平台：fab.com｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://www.fab.com/listings/d8426949-1c95-4034-9cf4-ea0c9be511d5" target="_blank" rel="noopener">https://www.fab.com/listings/d8426949-1c95-4034-9cf4-ea0c9be511d5</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://docs.idafaber3d.com/features/blendshapes#live-link-face-ue5" target="_blank" rel="noopener">
+        <div class="fallback">↗</div>
+        <span class="badge">Web</span>
+      </a>
+      <div class="src-body">
+        <h4>2026-07-12-23-38-44.bvh</h4>
+        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
+        <p class="note">來源平台：docs.idafaber3d.com｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://docs.idafaber3d.com/features/blendshapes#live-link-face-ue5" target="_blank" rel="noopener">https://docs.idafaber3d.com/features/blendshapes#live-link-face-ue5</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.kdocs.cn/l/cbMLAawWn4VS" target="_blank" rel="noopener">
+        <div class="fallback">↗</div>
+        <span class="badge">Web</span>
+      </a>
+      <div class="src-body">
+        <h4>2026-07-12-23-38-44.bvh</h4>
+        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
+        <p class="note">來源平台：kdocs.cn｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://www.kdocs.cn/l/cbMLAawWn4VS" target="_blank" rel="noopener">https://www.kdocs.cn/l/cbMLAawWn4VS</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://github.com/lifelike-and-believable/VMCLiveLink" target="_blank" rel="noopener">
+        <div class="fallback">GH</div>
+        <span class="badge">GitHub</span>
+      </a>
+      <div class="src-body">
+        <h4>GitHub</h4>
+        <p class="desc">程式／專案原始碼：適合延伸成實作、研究或工具測試。</p>
+        <p class="note">來源平台：GitHub｜點連結可查看原始碼與 README。</p>
+        <a class="url" href="https://github.com/lifelike-and-believable/VMCLiveLink" target="_blank" rel="noopener">https://github.com/lifelike-and-believable/VMCLiveLink</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=YPNO2xaAJ0k" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/YPNO2xaAJ0k/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=YPNO2xaAJ0k" target="_blank" rel="noopener">https://www.youtube.com/watch?v=YPNO2xaAJ0k</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://x.com/xingbugengming/status/2076973258117906905" target="_blank" rel="noopener">
+        <div class="fallback">𝕏</div>
+        <span class="badge">X</span>
+      </a>
+      <div class="src-body">
+        <h4>小奇说 (@xingbugengming)</h4>
+        <p class="desc">社群案例：通常是最新技術展示、流程分享或產業觀察。</p>
+        <p class="note">來源平台：X｜點連結可查看原始貼文與討論串。</p>
+        <a class="url" href="https://x.com/xingbugengming/status/2076973258117906905" target="_blank" rel="noopener">https://x.com/xingbugengming/status/2076973258117906905</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://youtu.be/QBEtbXtCIcU?si=emmX-sgkbtx5soEp" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/QBEtbXtCIcU/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://youtu.be/QBEtbXtCIcU?si=emmX-sgkbtx5soEp" target="_blank" rel="noopener">https://youtu.be/QBEtbXtCIcU?si=emmX-sgkbtx5soEp</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=1VBw_QBVY4M" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/1VBw_QBVY4M/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=1VBw_QBVY4M" target="_blank" rel="noopener">https://www.youtube.com/watch?v=1VBw_QBVY4M</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.makerar.com/tutorial_01?id=293" target="_blank" rel="noopener">
+        <div class="fallback">XR</div>
+        <span class="badge">MAKAR</span>
+      </a>
+      <div class="src-body">
+        <h4>MAKAR | 【XR專案教學】基隆港鯨鯊 AR 體驗怎麼做？...</h4>
+        <p class="desc">XR 教學連結：適合快速建立 AR / MR 專案原型。</p>
+        <p class="note">來源平台：makerar.com｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://www.makerar.com/tutorial_01?id=293" target="_blank" rel="noopener">https://www.makerar.com/tutorial_01?id=293</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.makerar.com/tutorial_01?id=187" target="_blank" rel="noopener">
+        <div class="fallback">XR</div>
+        <span class="badge">MAKAR</span>
+      </a>
+      <div class="src-body">
+        <h4>MAKAR | MR放天燈教學</h4>
+        <p class="desc">XR 教學連結：適合快速建立 AR / MR 專案原型。</p>
+        <p class="note">來源平台：makerar.com｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://www.makerar.com/tutorial_01?id=187" target="_blank" rel="noopener">https://www.makerar.com/tutorial_01?id=187</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://apps.apple.com/tw/app/makar-3d-scan/id6444039895" target="_blank" rel="noopener">
+        <div class="fallback">APP</div>
+        <span class="badge">App</span>
+      </a>
+      <div class="src-body">
+        <h4>App Store</h4>
+        <p class="desc">工具下載頁：方便學生安裝與現場測試。</p>
+        <p class="note">來源平台：apps.apple.com｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://apps.apple.com/tw/app/makar-3d-scan/id6444039895" target="_blank" rel="noopener">https://apps.apple.com/tw/app/makar-3d-scan/id6444039895</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://pimax.com/blogs/blogs/webxr" target="_blank" rel="noopener">
+        <div class="fallback">𝕏</div>
+        <span class="badge">X</span>
+      </a>
+      <div class="src-body">
+        <h4>Pimax Store</h4>
+        <p class="desc">社群案例：通常是最新技術展示、流程分享或產業觀察。</p>
+        <p class="note">來源平台：X｜點連結可查看原始貼文與討論串。</p>
+        <a class="url" href="https://pimax.com/blogs/blogs/webxr" target="_blank" rel="noopener">https://pimax.com/blogs/blogs/webxr</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://immersive-web.github.io/webxr-samples/" target="_blank" rel="noopener">
+        <div class="fallback">VR</div>
+        <span class="badge">WebXR</span>
+      </a>
+      <div class="src-body">
+        <h4>WebXR Samples</h4>
+        <p class="desc">WebXR 參考頁：可直接做瀏覽器 VR / XR 示範與測試。</p>
+        <p class="note">來源平台：immersive-web.github.io｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://immersive-web.github.io/webxr-samples/" target="_blank" rel="noopener">https://immersive-web.github.io/webxr-samples/</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://youtu.be/BCKEYrCfvHs?si=NqdoX52fx7rI-KvH" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/BCKEYrCfvHs/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://youtu.be/BCKEYrCfvHs?si=NqdoX52fx7rI-KvH" target="_blank" rel="noopener">https://youtu.be/BCKEYrCfvHs?si=NqdoX52fx7rI-KvH</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=5L5oIqg27z8" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/5L5oIqg27z8/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=5L5oIqg27z8" target="_blank" rel="noopener">https://www.youtube.com/watch?v=5L5oIqg27z8</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://github.com/Robbyant/lingbot-map" target="_blank" rel="noopener">
+        <div class="fallback">GH</div>
+        <span class="badge">GitHub</span>
+      </a>
+      <div class="src-body">
+        <h4>GitHub</h4>
+        <p class="desc">程式／專案原始碼：適合延伸成實作、研究或工具測試。</p>
+        <p class="note">來源平台：GitHub｜點連結可查看原始碼與 README。</p>
+        <a class="url" href="https://github.com/Robbyant/lingbot-map" target="_blank" rel="noopener">https://github.com/Robbyant/lingbot-map</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://x.com/thesupermanmx/status/2077779856050606155" target="_blank" rel="noopener">
+        <div class="fallback">𝕏</div>
+        <span class="badge">X</span>
+      </a>
+      <div class="src-body">
+        <h4>Superman (@thesupermanmx)</h4>
+        <p class="desc">社群案例：通常是最新技術展示、流程分享或產業觀察。</p>
+        <p class="note">來源平台：X｜點連結可查看原始貼文與討論串。</p>
+        <a class="url" href="https://x.com/thesupermanmx/status/2077779856050606155" target="_blank" rel="noopener">https://x.com/thesupermanmx/status/2077779856050606155</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=6MP48RFhe2Y" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/6MP48RFhe2Y/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=6MP48RFhe2Y" target="_blank" rel="noopener">https://www.youtube.com/watch?v=6MP48RFhe2Y</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://github.com/wass08/r3f-vrm-final" target="_blank" rel="noopener">
+        <div class="fallback">GH</div>
+        <span class="badge">GitHub</span>
+      </a>
+      <div class="src-body">
+        <h4>GitHub</h4>
+        <p class="desc">程式／專案原始碼：適合延伸成實作、研究或工具測試。</p>
+        <p class="note">來源平台：GitHub｜點連結可查看原始碼與 README。</p>
+        <a class="url" href="https://github.com/wass08/r3f-vrm-final" target="_blank" rel="noopener">https://github.com/wass08/r3f-vrm-final</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://share.gemini.google/lwVBopacW4As" target="_blank" rel="noopener">
+        <div class="fallback">↗</div>
+        <span class="badge">Web</span>
+      </a>
+      <div class="src-body">
+        <h4>Gemini</h4>
+        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
+        <p class="note">來源平台：share.gemini.google｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://share.gemini.google/lwVBopacW4As" target="_blank" rel="noopener">https://share.gemini.google/lwVBopacW4As</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=983BpAhzfSQ" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/983BpAhzfSQ/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=983BpAhzfSQ" target="_blank" rel="noopener">https://www.youtube.com/watch?v=983BpAhzfSQ</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=0p8h4acyq7o" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/0p8h4acyq7o/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=0p8h4acyq7o" target="_blank" rel="noopener">https://www.youtube.com/watch?v=0p8h4acyq7o</a>
+      </div>
+    </article>
+    </div>
+  <div id="src-vp" class="sources hidden">
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=tp6Fv9XymXg" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/tp6Fv9XymXg/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=tp6Fv9XymXg" target="_blank" rel="noopener">https://www.youtube.com/watch?v=tp6Fv9XymXg</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://gemini.google.com/share/7ec0d6549495" target="_blank" rel="noopener">
+        <div class="fallback">AI</div>
+        <span class="badge">Gemini</span>
+      </a>
+      <div class="src-body">
+        <h4>Gemini</h4>
+        <p class="desc">延伸討論連結：可作為課堂筆記或 AI 整理內容。</p>
+        <p class="note">來源平台：gemini.google.com｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://gemini.google.com/share/7ec0d6549495" target="_blank" rel="noopener">https://gemini.google.com/share/7ec0d6549495</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://gemini.google.com/share/6879b53d45ac" target="_blank" rel="noopener">
+        <div class="fallback">AI</div>
+        <span class="badge">Gemini</span>
+      </a>
+      <div class="src-body">
+        <h4>Gemini</h4>
+        <p class="desc">延伸討論連結：可作為課堂筆記或 AI 整理內容。</p>
+        <p class="note">來源平台：gemini.google.com｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://gemini.google.com/share/6879b53d45ac" target="_blank" rel="noopener">https://gemini.google.com/share/6879b53d45ac</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=e0aqex2J7gE" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/e0aqex2J7gE/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=e0aqex2J7gE" target="_blank" rel="noopener">https://www.youtube.com/watch?v=e0aqex2J7gE</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.vttlab.com/#course-collection-02" target="_blank" rel="noopener">
+        <div class="fallback">↗</div>
+        <span class="badge">Web</span>
+      </a>
+      <div class="src-body">
+        <h4>資深視覺特效總監 Michael Parker 解析 VAD （虛擬美術部門）的工作流程，以在羅馬的市集廣場拍一場對話戲為例 # Part3 在流程前期，VAD 通常會根據美術概念圖或分鏡稿，建立「灰模環境（graybox）」， 主要是用來討論鏡頭運動與場景結構。當導演與攝影師確認後，我們再進一步細化，加入材質、光影與特效。最後交付的資產，會是能在 Unreal Engine 中即時播放的高品質場景。</h4>
+        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
+        <p class="note">來源平台：vttlab.com｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://www.vttlab.com/#course-collection-02" target="_blank" rel="noopener">https://www.vttlab.com/#course-collection-02</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=UYPlhUxjy7M" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/UYPlhUxjy7M/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=UYPlhUxjy7M" target="_blank" rel="noopener">https://www.youtube.com/watch?v=UYPlhUxjy7M</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=Q6FjqfvtRps&amp;t=326s" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/Q6FjqfvtRps/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=Q6FjqfvtRps&amp;t=326s" target="_blank" rel="noopener">https://www.youtube.com/watch?v=Q6FjqfvtRps&amp;t=326s</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=mA0dqmewdOI" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/mA0dqmewdOI/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=mA0dqmewdOI" target="_blank" rel="noopener">https://www.youtube.com/watch?v=mA0dqmewdOI</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://youtu.be/-TYiNTdwJdE?t=1633" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/-TYiNTdwJdE/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://youtu.be/-TYiNTdwJdE?t=1633" target="_blank" rel="noopener">https://youtu.be/-TYiNTdwJdE?t=1633</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://youtu.be/UgA2p9A2-Q0?t=418" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/UgA2p9A2-Q0/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://youtu.be/UgA2p9A2-Q0?t=418" target="_blank" rel="noopener">https://youtu.be/UgA2p9A2-Q0?t=418</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://youtu.be/cMsuZtyEupA" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/cMsuZtyEupA/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://youtu.be/cMsuZtyEupA" target="_blank" rel="noopener">https://youtu.be/cMsuZtyEupA</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://youtu.be/5d6mZNA_5sg?t=251" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/5d6mZNA_5sg/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://youtu.be/5d6mZNA_5sg?t=251" target="_blank" rel="noopener">https://youtu.be/5d6mZNA_5sg?t=251</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=POkvDsbtraM" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/POkvDsbtraM/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=POkvDsbtraM" target="_blank" rel="noopener">https://www.youtube.com/watch?v=POkvDsbtraM</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=v8Sh-O-Yqjg" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/v8Sh-O-Yqjg/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=v8Sh-O-Yqjg" target="_blank" rel="noopener">https://www.youtube.com/watch?v=v8Sh-O-Yqjg</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=KEd5pRBo-8I" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/KEd5pRBo-8I/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=KEd5pRBo-8I" target="_blank" rel="noopener">https://www.youtube.com/watch?v=KEd5pRBo-8I</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://pixojam.com/index.php/adrec-climber/" target="_blank" rel="noopener">
+        <div class="fallback">↗</div>
+        <span class="badge">Web</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
+        <p class="note">來源平台：pixojam.com｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://pixojam.com/index.php/adrec-climber/" target="_blank" rel="noopener">https://pixojam.com/index.php/adrec-climber/</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://pixojam.com/" target="_blank" rel="noopener">
+        <div class="fallback">↗</div>
+        <span class="badge">Web</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
+        <p class="note">來源平台：pixojam.com｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://pixojam.com/" target="_blank" rel="noopener">https://pixojam.com/</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=W9QIyBNADG4" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/W9QIyBNADG4/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=W9QIyBNADG4" target="_blank" rel="noopener">https://www.youtube.com/watch?v=W9QIyBNADG4</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://gemini.google.com/share/02f3da51bc63" target="_blank" rel="noopener">
+        <div class="fallback">AI</div>
+        <span class="badge">Gemini</span>
+      </a>
+      <div class="src-body">
+        <h4>Linsn LED</h4>
+        <p class="desc">延伸討論連結：可作為課堂筆記或 AI 整理內容。</p>
+        <p class="note">來源平台：gemini.google.com｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://gemini.google.com/share/02f3da51bc63" target="_blank" rel="noopener">https://gemini.google.com/share/02f3da51bc63</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.linsnled.com/zh-TW/virtual-production-led-wall.html#support" target="_blank" rel="noopener">
+        <div class="fallback">↗</div>
+        <span class="badge">Web</span>
+      </a>
+      <div class="src-body">
+        <h4>Linsn LED</h4>
+        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
+        <p class="note">來源平台：linsnled.com｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://www.linsnled.com/zh-TW/virtual-production-led-wall.html#support" target="_blank" rel="noopener">https://www.linsnled.com/zh-TW/virtual-production-led-wall.html#support</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=M-vtf2TpopY" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/M-vtf2TpopY/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=M-vtf2TpopY" target="_blank" rel="noopener">https://www.youtube.com/watch?v=M-vtf2TpopY</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://dcfilmschool.com/疫情時代新變革──「虛擬製作」如何改變影視產/" target="_blank" rel="noopener">
+        <div class="fallback">↗</div>
+        <span class="badge">Web</span>
+      </a>
+      <div class="src-body">
+        <h4>VFX Voice</h4>
+        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
+        <p class="note">來源平台：dcfilmschool.com｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://dcfilmschool.com/疫情時代新變革──「虛擬製作」如何改變影視產/" target="_blank" rel="noopener">https://dcfilmschool.com/疫情時代新變革──「虛擬製作」如何改變影視產/</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://vfxvoice.com/first-man-an-effects-odyssey/" target="_blank" rel="noopener">
+        <div class="fallback">↗</div>
+        <span class="badge">Web</span>
+      </a>
+      <div class="src-body">
+        <h4>VFX Voice</h4>
+        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
+        <p class="note">來源平台：vfxvoice.com｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://vfxvoice.com/first-man-an-effects-odyssey/" target="_blank" rel="noopener">https://vfxvoice.com/first-man-an-effects-odyssey/</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://partnerhelp.netflixstudios.com/hc/en-us/articles/7262346654995-Post-Production-Branded-Delivery-Specifications" target="_blank" rel="noopener">
+        <div class="fallback">↗</div>
+        <span class="badge">Web</span>
+      </a>
+      <div class="src-body">
+        <h4>Netflix | Partner Help Center</h4>
+        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
+        <p class="note">來源平台：partnerhelp.netflixstudios.com｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://partnerhelp.netflixstudios.com/hc/en-us/articles/7262346654995-Post-Production-Branded-Delivery-Specifications" target="_blank" rel="noopener">https://partnerhelp.netflixstudios.com/hc/en-us/articles/7262346654995-Post-Production-Branded-Delivery-Specifications</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=2kQzfng264w" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/2kQzfng264w/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=2kQzfng264w" target="_blank" rel="noopener">https://www.youtube.com/watch?v=2kQzfng264w</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://dev.epicgames.com/documentation/unreal-engine/in-camera-vfx-in-unreal-engine" target="_blank" rel="noopener">
+        <div class="fallback">↗</div>
+        <span class="badge">Web</span>
+      </a>
+      <div class="src-body">
+        <h4>Epic Games Developer</h4>
+        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
+        <p class="note">來源平台：dev.epicgames.com｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://dev.epicgames.com/documentation/unreal-engine/in-camera-vfx-in-unreal-engine" target="_blank" rel="noopener">https://dev.epicgames.com/documentation/unreal-engine/in-camera-vfx-in-unreal-engine</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.framestore.com/work/1899-virtual-production" target="_blank" rel="noopener">
+        <div class="fallback">↗</div>
+        <span class="badge">Web</span>
+      </a>
+      <div class="src-body">
+        <h4>1899 Virtual Production</h4>
+        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
+        <p class="note">來源平台：framestore.com｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://www.framestore.com/work/1899-virtual-production" target="_blank" rel="noopener">https://www.framestore.com/work/1899-virtual-production</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.arri.com/en/solutions/virtual-production/arri-vp-stage-integration" target="_blank" rel="noopener">
+        <div class="fallback">↗</div>
+        <span class="badge">Web</span>
+      </a>
+      <div class="src-body">
+        <h4>Create a Fixed Stage | ARRI Solutions</h4>
+        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
+        <p class="note">來源平台：arri.com｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://www.arri.com/en/solutions/virtual-production/arri-vp-stage-integration" target="_blank" rel="noopener">https://www.arri.com/en/solutions/virtual-production/arri-vp-stage-integration</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.academia.edu/95798129/Virtual_Production_in_Action_A_Case_Study_in_Virtual_Production_Implementation_A_Creative_Implementation_of_Expanded_Cinematography_and_Narratives_Figure_1_Selected_case_studies_in_Virtual_Production" target="_blank" rel="noopener">
+        <div class="fallback">↗</div>
+        <span class="badge">Web</span>
+      </a>
+      <div class="src-body">
+        <h4>Virtual_Production_Real_Time_Rendering_P.pdf</h4>
+        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
+        <p class="note">來源平台：academia.edu｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://www.academia.edu/95798129/Virtual_Production_in_Action_A_Case_Study_in_Virtual_Production_Implementation_A_Creative_Implementation_of_Expanded_Cinematography_and_Narratives_Figure_1_Selected_case_studies_in_Virtual_Production" target="_blank" rel="noopener">https://www.academia.edu/95798129/Virtual_Production_in_Action_A_Case_Study_in_Virtual_Production_Implementation_A_Creative_Implementation_of_Expanded_Cinematography_and_Narratives_Figure_1_Selected_case_studies_in_Virtual_Production</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://medium.com/search?q=VIRTUAL+PRODUCTION" target="_blank" rel="noopener">
+        <div class="fallback">↗</div>
+        <span class="badge">Web</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
+        <p class="note">來源平台：medium.com｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://medium.com/search?q=VIRTUAL+PRODUCTION" target="_blank" rel="noopener">https://medium.com/search?q=VIRTUAL+PRODUCTION</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=Eq_3pJN7F74" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/Eq_3pJN7F74/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=Eq_3pJN7F74" target="_blank" rel="noopener">https://www.youtube.com/watch?v=Eq_3pJN7F74</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=a78WoZeZGqI" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/a78WoZeZGqI/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=a78WoZeZGqI" target="_blank" rel="noopener">https://www.youtube.com/watch?v=a78WoZeZGqI</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://learn.foundry.com/nuke?category=keying_45" target="_blank" rel="noopener">
+        <div class="fallback">↗</div>
+        <span class="badge">Web</span>
+      </a>
+      <div class="src-body">
+        <h4>NUKE官方教學</h4>
+        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
+        <p class="note">來源平台：learn.foundry.com｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://learn.foundry.com/nuke?category=keying_45" target="_blank" rel="noopener">https://learn.foundry.com/nuke?category=keying_45</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://youtu.be/Ub0MmjYy0b0?si=HkvxuXuWdeEczTHj" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/Ub0MmjYy0b0/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://youtu.be/Ub0MmjYy0b0?si=HkvxuXuWdeEczTHj" target="_blank" rel="noopener">https://youtu.be/Ub0MmjYy0b0?si=HkvxuXuWdeEczTHj</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://youtu.be/muAgkhaoLDA?si=GbIPjQ0TrLrEGH-6" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/muAgkhaoLDA/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://youtu.be/muAgkhaoLDA?si=GbIPjQ0TrLrEGH-6" target="_blank" rel="noopener">https://youtu.be/muAgkhaoLDA?si=GbIPjQ0TrLrEGH-6</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://x.com/EHuanglu/status/2077091952252875189" target="_blank" rel="noopener">
+        <div class="fallback">𝕏</div>
+        <span class="badge">X</span>
+      </a>
+      <div class="src-body">
+        <h4>el.cine (@EHuanglu)</h4>
+        <p class="desc">社群案例：通常是最新技術展示、流程分享或產業觀察。</p>
+        <p class="note">來源平台：X｜點連結可查看原始貼文與討論串。</p>
+        <a class="url" href="https://x.com/EHuanglu/status/2077091952252875189" target="_blank" rel="noopener">https://x.com/EHuanglu/status/2077091952252875189</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://youtu.be/1DK0pCxevts?si=84HiLuw1MsiXRyoB" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/1DK0pCxevts/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://youtu.be/1DK0pCxevts?si=84HiLuw1MsiXRyoB" target="_blank" rel="noopener">https://youtu.be/1DK0pCxevts?si=84HiLuw1MsiXRyoB</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=sL3dcOoiTes" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/sL3dcOoiTes/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=sL3dcOoiTes" target="_blank" rel="noopener">https://www.youtube.com/watch?v=sL3dcOoiTes</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://github.com/Robbyant/lingbot-map" target="_blank" rel="noopener">
+        <div class="fallback">GH</div>
+        <span class="badge">GitHub</span>
+      </a>
+      <div class="src-body">
+        <h4>GitHub</h4>
+        <p class="desc">程式／專案原始碼：適合延伸成實作、研究或工具測試。</p>
+        <p class="note">來源平台：GitHub｜點連結可查看原始碼與 README。</p>
+        <a class="url" href="https://github.com/Robbyant/lingbot-map" target="_blank" rel="noopener">https://github.com/Robbyant/lingbot-map</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://x.com/thesupermanmx/status/2077779856050606155" target="_blank" rel="noopener">
+        <div class="fallback">𝕏</div>
+        <span class="badge">X</span>
+      </a>
+      <div class="src-body">
+        <h4>Superman (@thesupermanmx)</h4>
+        <p class="desc">社群案例：通常是最新技術展示、流程分享或產業觀察。</p>
+        <p class="note">來源平台：X｜點連結可查看原始貼文與討論串。</p>
+        <a class="url" href="https://x.com/thesupermanmx/status/2077779856050606155" target="_blank" rel="noopener">https://x.com/thesupermanmx/status/2077779856050606155</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=983BpAhzfSQ" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/983BpAhzfSQ/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=983BpAhzfSQ" target="_blank" rel="noopener">https://www.youtube.com/watch?v=983BpAhzfSQ</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=Y1KLFktW_ss" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/Y1KLFktW_ss/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=Y1KLFktW_ss" target="_blank" rel="noopener">https://www.youtube.com/watch?v=Y1KLFktW_ss</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=u3aNcQMij24" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/u3aNcQMij24/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=u3aNcQMij24" target="_blank" rel="noopener">https://www.youtube.com/watch?v=u3aNcQMij24</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=OpfxgD8tjOQ" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/OpfxgD8tjOQ/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=OpfxgD8tjOQ" target="_blank" rel="noopener">https://www.youtube.com/watch?v=OpfxgD8tjOQ</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://x.com/voyzlab/status/2079273717142851926?s=20" target="_blank" rel="noopener">
+        <div class="fallback">𝕏</div>
+        <span class="badge">X</span>
+      </a>
+      <div class="src-body">
+        <h4>Voyz (@voyzlab)</h4>
+        <p class="desc">社群案例：通常是最新技術展示、流程分享或產業觀察。</p>
+        <p class="note">來源平台：X｜點連結可查看原始貼文與討論串。</p>
+        <a class="url" href="https://x.com/voyzlab/status/2079273717142851926?s=20" target="_blank" rel="noopener">https://x.com/voyzlab/status/2079273717142851926?s=20</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=mVN7mUDscxw" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/mVN7mUDscxw/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=mVN7mUDscxw" target="_blank" rel="noopener">https://www.youtube.com/watch?v=mVN7mUDscxw</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://youtu.be/9dQ-NZwG800?si=4yNquBMG_hYw5ZLB" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/9dQ-NZwG800/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://youtu.be/9dQ-NZwG800?si=4yNquBMG_hYw5ZLB" target="_blank" rel="noopener">https://youtu.be/9dQ-NZwG800?si=4yNquBMG_hYw5ZLB</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://x.com/ModelCollapse38/status/2081372551293366746?s=20" target="_blank" rel="noopener">
+        <div class="fallback">𝕏</div>
+        <span class="badge">X</span>
+      </a>
+      <div class="src-body">
+        <h4>Encodium (@ModelCollapse38)</h4>
+        <p class="desc">社群案例：通常是最新技術展示、流程分享或產業觀察。</p>
+        <p class="note">來源平台：X｜點連結可查看原始貼文與討論串。</p>
+        <a class="url" href="https://x.com/ModelCollapse38/status/2081372551293366746?s=20" target="_blank" rel="noopener">https://x.com/ModelCollapse38/status/2081372551293366746?s=20</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=pa7Bvzewta0" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/pa7Bvzewta0/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=pa7Bvzewta0" target="_blank" rel="noopener">https://www.youtube.com/watch?v=pa7Bvzewta0</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.ledscreenboard.com/zh-TW/eagerled-led-volume-wall/" target="_blank" rel="noopener">
+        <div class="fallback">↗</div>
+        <span class="badge">Web</span>
+      </a>
+      <div class="src-body">
+        <h4>LED Screen Board - The official website of LED Screen Board, a leading LED screen supplier.</h4>
+        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
+        <p class="note">來源平台：ledscreenboard.com｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://www.ledscreenboard.com/zh-TW/eagerled-led-volume-wall/" target="_blank" rel="noopener">https://www.ledscreenboard.com/zh-TW/eagerled-led-volume-wall/</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.getop.com/post/影集-1899-採用創新的虛擬製作" target="_blank" rel="noopener">
+        <div class="fallback">↗</div>
+        <span class="badge">Web</span>
+      </a>
+      <div class="src-body">
+        <h4>GETOP</h4>
+        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
+        <p class="note">來源平台：getop.com｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://www.getop.com/post/影集-1899-採用創新的虛擬製作" target="_blank" rel="noopener">https://www.getop.com/post/影集-1899-採用創新的虛擬製作</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=dQL6N5Xzz2w" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/dQL6N5Xzz2w/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=dQL6N5Xzz2w" target="_blank" rel="noopener">https://www.youtube.com/watch?v=dQL6N5Xzz2w</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://x.com/ModelCollapse38/status/2083965504473948330" target="_blank" rel="noopener">
+        <div class="fallback">𝕏</div>
+        <span class="badge">X</span>
+      </a>
+      <div class="src-body">
+        <h4>Encodium (@ModelCollapse38)</h4>
+        <p class="desc">社群案例：通常是最新技術展示、流程分享或產業觀察。</p>
+        <p class="note">來源平台：X｜點連結可查看原始貼文與討論串。</p>
+        <a class="url" href="https://x.com/ModelCollapse38/status/2083965504473948330" target="_blank" rel="noopener">https://x.com/ModelCollapse38/status/2083965504473948330</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://learn.foundry.com/course/4691/view/practical-compositing-in-nuke-10-keying-best-practices" target="_blank" rel="noopener">
+        <div class="fallback">↗</div>
+        <span class="badge">Web</span>
+      </a>
+      <div class="src-body">
+        <h4>Foundry</h4>
+        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
+        <p class="note">來源平台：learn.foundry.com｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://learn.foundry.com/course/4691/view/practical-compositing-in-nuke-10-keying-best-practices" target="_blank" rel="noopener">https://learn.foundry.com/course/4691/view/practical-compositing-in-nuke-10-keying-best-practices</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=3buiBEfmx18" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/3buiBEfmx18/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=3buiBEfmx18" target="_blank" rel="noopener">https://www.youtube.com/watch?v=3buiBEfmx18</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://x.com/willeastcott/status/2084337442157478191" target="_blank" rel="noopener">
+        <div class="fallback">𝕏</div>
+        <span class="badge">X</span>
+      </a>
+      <div class="src-body">
+        <h4>Will Eastcott (@willeastcott)</h4>
+        <p class="desc">社群案例：通常是最新技術展示、流程分享或產業觀察。</p>
+        <p class="note">來源平台：X｜點連結可查看原始貼文與討論串。</p>
+        <a class="url" href="https://x.com/willeastcott/status/2084337442157478191" target="_blank" rel="noopener">https://x.com/willeastcott/status/2084337442157478191</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.bilibili.com/video/BV1sDuT69E2m?t=16.2" target="_blank" rel="noopener">
+        <div class="fallback">↗</div>
+        <span class="badge">Web</span>
+      </a>
+      <div class="src-body">
+        <h4>哔哩哔哩</h4>
+        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
+        <p class="note">來源平台：bilibili.com｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://www.bilibili.com/video/BV1sDuT69E2m?t=16.2" target="_blank" rel="noopener">https://www.bilibili.com/video/BV1sDuT69E2m?t=16.2</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.liblib.tv/" target="_blank" rel="noopener">
+        <div class="fallback">↗</div>
+        <span class="badge">Web</span>
+      </a>
+      <div class="src-body">
+        <h4>LibTV - 专业视频创作工具</h4>
+        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
+        <p class="note">來源平台：liblib.tv｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://www.liblib.tv/" target="_blank" rel="noopener">https://www.liblib.tv/</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://youtu.be/qrKhMgOlrF8?si=XM7K1FbyDBRoPUPP" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/qrKhMgOlrF8/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://youtu.be/qrKhMgOlrF8?si=XM7K1FbyDBRoPUPP" target="_blank" rel="noopener">https://youtu.be/qrKhMgOlrF8?si=XM7K1FbyDBRoPUPP</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://app.notion.com/p/MiniMax-H3-The-Next-Gen-Open-Weight-Multimodal-Generation-Model-3acbb3a8c3ae81618844cb0a3904e247#99c2495055c74d8fba4ba5da7c44fdb2" target="_blank" rel="noopener">
+        <div class="fallback">↗</div>
+        <span class="badge">Web</span>
+      </a>
+      <div class="src-body">
+        <h4>Justin&#x27;s Business Team on Notion</h4>
+        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
+        <p class="note">來源平台：app.notion.com｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://app.notion.com/p/MiniMax-H3-The-Next-Gen-Open-Weight-Multimodal-Generation-Model-3acbb3a8c3ae81618844cb0a3904e247#99c2495055c74d8fba4ba5da7c44fdb2" target="_blank" rel="noopener">https://app.notion.com/p/MiniMax-H3-The-Next-Gen-Open-Weight-Multimodal-Generation-Model-3acbb3a8c3ae81618844cb0a3904e247#99c2495055c74d8fba4ba5da7c44fdb2</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://app.notion.com/p/MiniMax-H3-The-Next-Gen-Open-Weight-Multimodal-Generation-Model-5cdd99c3d331822397f18130e7b480a8?source=copy_link】" target="_blank" rel="noopener">
+        <div class="fallback">↗</div>
+        <span class="badge">Web</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
+        <p class="note">來源平台：app.notion.com｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://app.notion.com/p/MiniMax-H3-The-Next-Gen-Open-Weight-Multimodal-Generation-Model-5cdd99c3d331822397f18130e7b480a8?source=copy_link】" target="_blank" rel="noopener">https://app.notion.com/p/MiniMax-H3-The-Next-Gen-Open-Weight-Multimodal-Generation-Model-5cdd99c3d331822397f18130e7b480a8?source=copy_link】</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.instagram.com/reels/DbC1XMLxcw5/" target="_blank" rel="noopener">
+        <div class="fallback">↗</div>
+        <span class="badge">Web</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
+        <p class="note">來源平台：instagram.com｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://www.instagram.com/reels/DbC1XMLxcw5/" target="_blank" rel="noopener">https://www.instagram.com/reels/DbC1XMLxcw5/</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://youtu.be/mVN7mUDscxw" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/mVN7mUDscxw/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://youtu.be/mVN7mUDscxw" target="_blank" rel="noopener">https://youtu.be/mVN7mUDscxw</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/shorts/vzlatM0ybns" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/vzlatM0ybns/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/shorts/vzlatM0ybns" target="_blank" rel="noopener">https://www.youtube.com/shorts/vzlatM0ybns</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://youtu.be/ocSTG1yqTmA?si=7MlK6e3Muj3Xoxll" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/ocSTG1yqTmA/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://youtu.be/ocSTG1yqTmA?si=7MlK6e3Muj3Xoxll" target="_blank" rel="noopener">https://youtu.be/ocSTG1yqTmA?si=7MlK6e3Muj3Xoxll</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=-o0CIAxfkXE" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/-o0CIAxfkXE/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=-o0CIAxfkXE" target="_blank" rel="noopener">https://www.youtube.com/watch?v=-o0CIAxfkXE</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=NshfJajOjJM" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/NshfJajOjJM/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=NshfJajOjJM" target="_blank" rel="noopener">https://www.youtube.com/watch?v=NshfJajOjJM</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=sXusmdNdJhc" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/sXusmdNdJhc/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=sXusmdNdJhc" target="_blank" rel="noopener">https://www.youtube.com/watch?v=sXusmdNdJhc</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=KNwzWG2riFY" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/KNwzWG2riFY/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=KNwzWG2riFY" target="_blank" rel="noopener">https://www.youtube.com/watch?v=KNwzWG2riFY</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=WeQQy83K4rg" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/WeQQy83K4rg/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=WeQQy83K4rg" target="_blank" rel="noopener">https://www.youtube.com/watch?v=WeQQy83K4rg</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=k9YVBSs6_mQ" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/k9YVBSs6_mQ/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=k9YVBSs6_mQ" target="_blank" rel="noopener">https://www.youtube.com/watch?v=k9YVBSs6_mQ</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://youtu.be/nd084X0n7t4" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/nd084X0n7t4/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://youtu.be/nd084X0n7t4" target="_blank" rel="noopener">https://youtu.be/nd084X0n7t4</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=uAoBQgakyi8" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/uAoBQgakyi8/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=uAoBQgakyi8" target="_blank" rel="noopener">https://www.youtube.com/watch?v=uAoBQgakyi8</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=Oiu896-yCUo" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/Oiu896-yCUo/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=Oiu896-yCUo" target="_blank" rel="noopener">https://www.youtube.com/watch?v=Oiu896-yCUo</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.bilibili.com/video/BV1Ew8o6PEbV?t=355.9" target="_blank" rel="noopener">
+        <div class="fallback">↗</div>
+        <span class="badge">Web</span>
+      </a>
+      <div class="src-body">
+        <h4>哔哩哔哩</h4>
+        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
+        <p class="note">來源平台：bilibili.com｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://www.bilibili.com/video/BV1Ew8o6PEbV?t=355.9" target="_blank" rel="noopener">https://www.bilibili.com/video/BV1Ew8o6PEbV?t=355.9</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://hyper3d.ai/r/2KYW8OAC讨论相关技术，互相分享教程，共同学习" target="_blank" rel="noopener">
+        <div class="fallback">↗</div>
+        <span class="badge">Web</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
+        <p class="note">來源平台：hyper3d.ai｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://hyper3d.ai/r/2KYW8OAC讨论相关技术，互相分享教程，共同学习" target="_blank" rel="noopener">https://hyper3d.ai/r/2KYW8OAC讨论相关技术，互相分享教程，共同学习</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://youtu.be/FnwT-C5k5Gs?si=UwdPt5EkjmAjo39z" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/FnwT-C5k5Gs/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://youtu.be/FnwT-C5k5Gs?si=UwdPt5EkjmAjo39z" target="_blank" rel="noopener">https://youtu.be/FnwT-C5k5Gs?si=UwdPt5EkjmAjo39z</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://x.com/yyyole/status/2095341330914533567?s=46&amp;t=u8kKHhz4GMjaoMv7Wg7dhw" target="_blank" rel="noopener">
+        <div class="fallback">𝕏</div>
+        <span class="badge">X</span>
+      </a>
+      <div class="src-body">
+        <h4>沐阳 (@yyyole)</h4>
+        <p class="desc">社群案例：通常是最新技術展示、流程分享或產業觀察。</p>
+        <p class="note">來源平台：X｜點連結可查看原始貼文與討論串。</p>
+        <a class="url" href="https://x.com/yyyole/status/2095341330914533567?s=46&amp;t=u8kKHhz4GMjaoMv7Wg7dhw" target="_blank" rel="noopener">https://x.com/yyyole/status/2095341330914533567?s=46&amp;t=u8kKHhz4GMjaoMv7Wg7dhw</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://tcimage-lab.netlify.app/" target="_blank" rel="noopener">
+        <div class="fallback">↗</div>
+        <span class="badge">Web</span>
+      </a>
+      <div class="src-body">
+        <h4>TCIMAGE/LAB — Streaming Portfolio</h4>
+        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
+        <p class="note">來源平台：tcimage-lab.netlify.app｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://tcimage-lab.netlify.app/" target="_blank" rel="noopener">https://tcimage-lab.netlify.app/</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.youtube.com/watch?v=iIKc-HpVqks&amp;t=301s" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/iIKc-HpVqks/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
+        <span class="badge">YouTube</span>
+      </a>
+      <div class="src-body">
+        <h4>YouTube</h4>
+        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
+        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
+        <a class="url" href="https://www.youtube.com/watch?v=iIKc-HpVqks&amp;t=301s" target="_blank" rel="noopener">https://www.youtube.com/watch?v=iIKc-HpVqks&amp;t=301s</a>
+      </div>
+    </article>
+    
+
+    <article class="src-card">
+      <a class="cover" href="https://www.threads.com/@leofongai/post/DdNkh-Dkcqp" target="_blank" rel="noopener">
+        <div class="fallback">↗</div>
+        <span class="badge">Web</span>
+      </a>
+      <div class="src-body">
+        <h4>Threads</h4>
+        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
+        <p class="note">來源平台：threads.com｜點網址可查看原始頁面。</p>
+        <a class="url" href="https://www.threads.com/@leofongai/post/DdNkh-Dkcqp" target="_blank" rel="noopener">https://www.threads.com/@leofongai/post/DdNkh-Dkcqp</a>
+      </div>
+    </article>
+    </div>
+</section>
+</main>
+
+<footer>TCIMAGE/LAB · VR / XR × Virtual Production · 2026</footer>
+
+<script>
+function showTrack(x){
+  document.getElementById('src-vr').classList.toggle('hidden', x!=='vr');
+  document.getElementById('src-vp').classList.toggle('hidden', x!=='vp');
+  document.getElementById('bvr').classList.toggle('active', x==='vr');
+  document.getElementById('bvp').classList.toggle('active', x==='vp');
+}
+</script>
+</body>
+</html>
