@@ -32,10 +32,25 @@ section{max-width:1250px;margin:auto;padding:64px 22px} .eyebrow{font-size:12px;
 footer{max-width:1250px;margin:0 auto;padding:30px 22px 60px;color:var(--muted)}
 @media(max-width:900px){.hero,.split{grid-template-columns:1fr} .card{grid-column:span 12} .sources{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:620px){.sources{grid-template-columns:1fr}}
+
+.featured-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:18px}
+.pick-card{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:linear-gradient(180deg,rgba(16,25,43,.92),rgba(8,12,21,.94));box-shadow:0 14px 38px rgba(0,0,0,.24)}
+.pick-cover{position:relative;display:block;aspect-ratio:16/9;background:#000;overflow:hidden}
+.pick-cover img{width:100%;height:100%;object-fit:cover;display:block;transition:.22s}
+.pick-cover:hover img{transform:scale(1.025);filter:brightness(.92)}
+.pick-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:58px;height:43px;border-radius:14px;background:rgba(255,0,0,.95);display:grid;place-items:center;color:white;font-size:22px;font-weight:900;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.pick-body{padding:15px}
+.pick-tech{font-size:10px;font-weight:900;letter-spacing:.08em;color:var(--pink);text-transform:uppercase}
+.pick-body h4{font-size:16px;line-height:1.42;margin:5px 0 9px}
+.pick-body p{font-size:13px;color:#c5d3e2;line-height:1.55}
+.pick-url{display:block;font-size:10px;word-break:break-all;color:#bfefff;text-decoration:underline;text-underline-offset:2px}
+@media(max-width:1000px){.featured-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.featured-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
-<nav><div class="in"><b>TCIMAGE/<span style="color:var(--cyan)">VR·VP CLASS</span></b><a href="#overview">課程地圖</a><a href="#vr">大三 VR/XR</a><a href="#vp">研究所 VP</a><a href="#sources">完整來源</a></div></nav>
+<nav><div class="in"><b>TCIMAGE/<span style="color:var(--cyan)">VR·VP CLASS</span></b><a href="#overview">課程地圖</a><a href="#vr">大三 VR/XR</a><a href="#vp">研究所 VP</a><a href="#featured">精選案例</a><a href="#sources">完整來源</a></div></nav>
 
 <header class="hero">
   <div>
@@ -101,8 +116,246 @@ footer{max-width:1250px;margin:0 auto;padding:30px 22px 60px;color:var(--muted)}
   <div class="callout" style="margin-top:18px"><strong>研究題目直接可以做 A/B Test：</strong>同一個 UE5 場景，分別走「綠幕＋Nuke」與「LED＋ICVFX」，比較時間、成本、邊緣品質、人物光影、色彩一致性與導演控制。</div>
 </section>
 
+
+<section id="featured">
+  <div class="eyebrow">04 · FEATURED CASES</div>
+  <h2>上課先看這些：精選案例</h2>
+  <p class="lead">完整來源很多，但課堂不需要一次翻 100 多個。這區只留最值得現場播放、最容易帶出技術觀念的案例。</p>
+
+  <h3 style="margin-top:30px">大三 VR / XR｜精選 7 支</h3>
+  <div class="featured-grid">
+    
+    <article class="pick-card">
+      <a class="pick-cover" href="https://www.youtube.com/watch?v=RlfGi6q-ss0" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/RlfGi6q-ss0/hqdefault.jpg" alt="Meta Mixed Reality Game in UE5.5" loading="lazy">
+        <span class="pick-play">▶</span>
+      </a>
+      <div class="pick-body">
+        <div class="pick-tech">適合：MR / Quest / UE5</div>
+        <h4>Meta Mixed Reality Game in UE5.5</h4>
+        <p><strong>為什麼看：</strong>看 Passthrough、空間定位與 MR 遊戲如何整合。</p>
+        <a class="pick-url" href="https://www.youtube.com/watch?v=RlfGi6q-ss0" target="_blank" rel="noopener">https://www.youtube.com/watch?v=RlfGi6q-ss0</a>
+      </div>
+    </article>
+    
+    <article class="pick-card">
+      <a class="pick-cover" href="https://www.youtube.com/watch?v=1IkZ5NrEf3A" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/1IkZ5NrEf3A/hqdefault.jpg" alt="World Labs｜Interactive Characters for Marble Worlds with Three.js" loading="lazy">
+        <span class="pick-play">▶</span>
+      </a>
+      <div class="pick-body">
+        <div class="pick-tech">適合：Three.js / WebXR / AI Character</div>
+        <h4>World Labs｜Interactive Characters for Marble Worlds with Three.js</h4>
+        <p><strong>為什麼看：</strong>看 Web 3D 世界中互動角色如何成立。</p>
+        <a class="pick-url" href="https://www.youtube.com/watch?v=1IkZ5NrEf3A" target="_blank" rel="noopener">https://www.youtube.com/watch?v=1IkZ5NrEf3A</a>
+      </div>
+    </article>
+    
+    <article class="pick-card">
+      <a class="pick-cover" href="https://youtu.be/QBEtbXtCIcU" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/QBEtbXtCIcU/hqdefault.jpg" alt="TouchDesigner｜KantanMapper Projection Mapping" loading="lazy">
+        <span class="pick-play">▶</span>
+      </a>
+      <div class="pick-body">
+        <div class="pick-tech">適合：TouchDesigner / 投影</div>
+        <h4>TouchDesigner｜KantanMapper Projection Mapping</h4>
+        <p><strong>為什麼看：</strong>快速理解 Projection Mapping 的基本工作流程。</p>
+        <a class="pick-url" href="https://youtu.be/QBEtbXtCIcU" target="_blank" rel="noopener">https://youtu.be/QBEtbXtCIcU</a>
+      </div>
+    </article>
+    
+    <article class="pick-card">
+      <a class="pick-cover" href="https://www.youtube.com/watch?v=1VBw_QBVY4M" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/1VBw_QBVY4M/hqdefault.jpg" alt="TouchDesigner｜360° Projection of AI-Diffused Content" loading="lazy">
+        <span class="pick-play">▶</span>
+      </a>
+      <div class="pick-body">
+        <div class="pick-tech">適合：AI Visual / 360° Projection</div>
+        <h4>TouchDesigner｜360° Projection of AI-Diffused Content</h4>
+        <p><strong>為什麼看：</strong>把 AI 內容轉成沉浸式空間投影的直接案例。</p>
+        <a class="pick-url" href="https://www.youtube.com/watch?v=1VBw_QBVY4M" target="_blank" rel="noopener">https://www.youtube.com/watch?v=1VBw_QBVY4M</a>
+      </div>
+    </article>
+    
+    <article class="pick-card">
+      <a class="pick-cover" href="https://www.youtube.com/watch?v=6MP48RFhe2Y" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/6MP48RFhe2Y/hqdefault.jpg" alt="VTuber Studio with Three.js, React &amp; VRM" loading="lazy">
+        <span class="pick-play">▶</span>
+      </a>
+      <div class="pick-body">
+        <div class="pick-tech">適合：VRM / VTuber / Web</div>
+        <h4>VTuber Studio with Three.js, React &amp; VRM</h4>
+        <p><strong>為什麼看：</strong>看 Web、VRM、Avatar 與互動前端怎麼整合。</p>
+        <a class="pick-url" href="https://www.youtube.com/watch?v=6MP48RFhe2Y" target="_blank" rel="noopener">https://www.youtube.com/watch?v=6MP48RFhe2Y</a>
+      </div>
+    </article>
+    
+    <article class="pick-card">
+      <a class="pick-cover" href="https://www.youtube.com/watch?v=983BpAhzfSQ" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/983BpAhzfSQ/hqdefault.jpg" alt="XGRIDS｜Gaussian Splat UE Plugin" loading="lazy">
+        <span class="pick-play">▶</span>
+      </a>
+      <div class="pick-body">
+        <div class="pick-tech">適合：3D Scan / Digital Twin / UE</div>
+        <h4>XGRIDS｜Gaussian Splat UE Plugin</h4>
+        <p><strong>為什麼看：</strong>理解大尺度 Gaussian Splats 如何進 Unreal Engine。</p>
+        <a class="pick-url" href="https://www.youtube.com/watch?v=983BpAhzfSQ" target="_blank" rel="noopener">https://www.youtube.com/watch?v=983BpAhzfSQ</a>
+      </div>
+    </article>
+    
+    <article class="pick-card">
+      <a class="pick-cover" href="https://www.youtube.com/watch?v=0p8h4acyq7o" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/0p8h4acyq7o/hqdefault.jpg" alt="QuickMagic / Cascadeur / Blender Motion Capture Workflow" loading="lazy">
+        <span class="pick-play">▶</span>
+      </a>
+      <div class="pick-body">
+        <div class="pick-tech">適合：Mocap / Avatar / Animation</div>
+        <h4>QuickMagic / Cascadeur / Blender Motion Capture Workflow</h4>
+        <p><strong>為什麼看：</strong>看角色動作資料從 Mocap 到動畫修正的整體流程。</p>
+        <a class="pick-url" href="https://www.youtube.com/watch?v=0p8h4acyq7o" target="_blank" rel="noopener">https://www.youtube.com/watch?v=0p8h4acyq7o</a>
+      </div>
+    </article>
+    
+  </div>
+
+  <h3 style="margin-top:38px">研究所 Virtual Production｜精選 10 支</h3>
+  <div class="featured-grid">
+    
+    <article class="pick-card">
+      <a class="pick-cover" href="https://www.youtube.com/watch?v=tp6Fv9XymXg" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/tp6Fv9XymXg/hqdefault.jpg" alt="Sony｜Virtual Production Tool Set Tutorial" loading="lazy">
+        <span class="pick-play">▶</span>
+      </a>
+      <div class="pick-body">
+        <div class="pick-tech">適合：VP 全貌 / Color</div>
+        <h4>Sony｜Virtual Production Tool Set Tutorial</h4>
+        <p><strong>為什麼看：</strong>看 VP 現場工具、攝影機與顯示校準概念。</p>
+        <a class="pick-url" href="https://www.youtube.com/watch?v=tp6Fv9XymXg" target="_blank" rel="noopener">https://www.youtube.com/watch?v=tp6Fv9XymXg</a>
+      </div>
+    </article>
+    
+    <article class="pick-card">
+      <a class="pick-cover" href="https://youtu.be/cMsuZtyEupA" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/cMsuZtyEupA/hqdefault.jpg" alt="Unreal Engine｜Fallout Virtual Production" loading="lazy">
+        <span class="pick-play">▶</span>
+      </a>
+      <div class="pick-body">
+        <div class="pick-tech">適合：VAD / ICVFX</div>
+        <h4>Unreal Engine｜Fallout Virtual Production</h4>
+        <p><strong>為什麼看：</strong>大型製作如何把 UE 與實拍流程整合。</p>
+        <a class="pick-url" href="https://youtu.be/cMsuZtyEupA" target="_blank" rel="noopener">https://youtu.be/cMsuZtyEupA</a>
+      </div>
+    </article>
+    
+    <article class="pick-card">
+      <a class="pick-cover" href="https://www.youtube.com/watch?v=POkvDsbtraM" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/POkvDsbtraM/hqdefault.jpg" alt="Lightcraft｜Replacing a $50K Volume Stage" loading="lazy">
+        <span class="pick-play">▶</span>
+      </a>
+      <div class="pick-body">
+        <div class="pick-tech">適合：Virtual Camera / Indie VP</div>
+        <h4>Lightcraft｜Replacing a $50K Volume Stage</h4>
+        <p><strong>為什麼看：</strong>低成本虛擬製作替代方案與成本思維。</p>
+        <a class="pick-url" href="https://www.youtube.com/watch?v=POkvDsbtraM" target="_blank" rel="noopener">https://www.youtube.com/watch?v=POkvDsbtraM</a>
+      </div>
+    </article>
+    
+    <article class="pick-card">
+      <a class="pick-cover" href="https://www.youtube.com/watch?v=v8Sh-O-Yqjg" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/v8Sh-O-Yqjg/hqdefault.jpg" alt="Jetset + Blender Virtual Greenscreen" loading="lazy">
+        <span class="pick-play">▶</span>
+      </a>
+      <div class="pick-body">
+        <div class="pick-tech">適合：Green Screen / Tracking</div>
+        <h4>Jetset + Blender Virtual Greenscreen</h4>
+        <p><strong>為什麼看：</strong>快速看虛擬綠幕、追蹤與 Blender 的合成方式。</p>
+        <a class="pick-url" href="https://www.youtube.com/watch?v=v8Sh-O-Yqjg" target="_blank" rel="noopener">https://www.youtube.com/watch?v=v8Sh-O-Yqjg</a>
+      </div>
+    </article>
+    
+    <article class="pick-card">
+      <a class="pick-cover" href="https://www.youtube.com/watch?v=KEd5pRBo-8I" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/KEd5pRBo-8I/hqdefault.jpg" alt="Can Gaussian Splats Replace Location Shoots?" loading="lazy">
+        <span class="pick-play">▶</span>
+      </a>
+      <div class="pick-body">
+        <div class="pick-tech">適合：Gaussian Splat / Location Replacement</div>
+        <h4>Can Gaussian Splats Replace Location Shoots?</h4>
+        <p><strong>為什麼看：</strong>直接討論掃描場景是否能取代實景外拍。</p>
+        <a class="pick-url" href="https://www.youtube.com/watch?v=KEd5pRBo-8I" target="_blank" rel="noopener">https://www.youtube.com/watch?v=KEd5pRBo-8I</a>
+      </div>
+    </article>
+    
+    <article class="pick-card">
+      <a class="pick-cover" href="https://www.youtube.com/watch?v=W9QIyBNADG4" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/W9QIyBNADG4/hqdefault.jpg" alt="Scan a Cave → Unreal Engine" loading="lazy">
+        <span class="pick-play">▶</span>
+      </a>
+      <div class="pick-body">
+        <div class="pick-tech">適合：Photogrammetry / UE</div>
+        <h4>Scan a Cave → Unreal Engine</h4>
+        <p><strong>為什麼看：</strong>完整看掃描、重建、整理、導入 UE 的場景流程。</p>
+        <a class="pick-url" href="https://www.youtube.com/watch?v=W9QIyBNADG4" target="_blank" rel="noopener">https://www.youtube.com/watch?v=W9QIyBNADG4</a>
+      </div>
+    </article>
+    
+    <article class="pick-card">
+      <a class="pick-cover" href="https://www.youtube.com/watch?v=Q6FjqfvtRps" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/Q6FjqfvtRps/hqdefault.jpg" alt="CosmosFilm｜綠幕也能做虛擬拍攝" loading="lazy">
+        <span class="pick-play">▶</span>
+      </a>
+      <div class="pick-body">
+        <div class="pick-tech">適合：Green Screen / UE</div>
+        <h4>CosmosFilm｜綠幕也能做虛擬拍攝</h4>
+        <p><strong>為什麼看：</strong>從傳統綠幕切入 Virtual Production，適合建立比較基準。</p>
+        <a class="pick-url" href="https://www.youtube.com/watch?v=Q6FjqfvtRps" target="_blank" rel="noopener">https://www.youtube.com/watch?v=Q6FjqfvtRps</a>
+      </div>
+    </article>
+    
+    <article class="pick-card">
+      <a class="pick-cover" href="https://youtu.be/Ub0MmjYy0b0" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/Ub0MmjYy0b0/hqdefault.jpg" alt="Compositing Academy｜Merge CGI with Live Action" loading="lazy">
+        <span class="pick-play">▶</span>
+      </a>
+      <div class="pick-body">
+        <div class="pick-tech">適合：Nuke / Compositing</div>
+        <h4>Compositing Academy｜Merge CGI with Live Action</h4>
+        <p><strong>為什麼看：</strong>看 CGI 與實拍融合時邊緣與接縫怎麼處理。</p>
+        <a class="pick-url" href="https://youtu.be/Ub0MmjYy0b0" target="_blank" rel="noopener">https://youtu.be/Ub0MmjYy0b0</a>
+      </div>
+    </article>
+    
+    <article class="pick-card">
+      <a class="pick-cover" href="https://www.youtube.com/watch?v=2kQzfng264w" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/2kQzfng264w/hqdefault.jpg" alt="The Making of The Batman" loading="lazy">
+        <span class="pick-play">▶</span>
+      </a>
+      <div class="pick-body">
+        <div class="pick-tech">適合：LED Volume / Cinematography</div>
+        <h4>The Making of The Batman</h4>
+        <p><strong>為什麼看：</strong>高階電影虛擬製作的經典案例。</p>
+        <a class="pick-url" href="https://www.youtube.com/watch?v=2kQzfng264w" target="_blank" rel="noopener">https://www.youtube.com/watch?v=2kQzfng264w</a>
+      </div>
+    </article>
+    
+    <article class="pick-card">
+      <a class="pick-cover" href="https://www.youtube.com/watch?v=M-vtf2TpopY" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/M-vtf2TpopY/hqdefault.jpg" alt="The Silent Killer of Virtual Production" loading="lazy">
+        <span class="pick-play">▶</span>
+      </a>
+      <div class="pick-body">
+        <div class="pick-tech">適合：Moire / Sync / Display</div>
+        <h4>The Silent Killer of Virtual Production</h4>
+        <p><strong>為什麼看：</strong>聚焦 VP 現場常被忽略的技術風險。</p>
+        <a class="pick-url" href="https://www.youtube.com/watch?v=M-vtf2TpopY" target="_blank" rel="noopener">https://www.youtube.com/watch?v=M-vtf2TpopY</a>
+      </div>
+    </article>
+    
+  </div>
+</section>
+
 <section id="sources">
-  <div class="eyebrow">04 · SOURCE LIBRARY</div>
+  <div class="eyebrow">05 · SOURCE LIBRARY</div>
   <h2>完整來源：封面＋原始連結＋簡短說明</h2>
   <p class="lead">你剛剛提的需求我一起補上了。現在就算不是 YouTube 圖示卡，也會有一段簡短說明，包含「這個連結大概是什麼、適合怎麼用」。</p>
   <div class="track-toggle">
