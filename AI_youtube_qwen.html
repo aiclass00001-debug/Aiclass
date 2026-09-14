@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 2026｜操作歸零・經驗複利 · TCIMAGE/AI CLASS</title>
+<style>
+:root{--bg:#070b14;--panel:#0f1626;--card:#131c30;--line:#22304a;--txt:#e8eefb;--sub:#93a3bd;--acc:#4cc3ff;--acc2:#b57bff;--ok:#3ddc97;--warn:#ffcf5c;--bad:#ff6b81}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:"Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;overflow-x:hidden}
+.bg-grid{position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(76,195,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(76,195,255,.05) 1px,transparent 1px);background-size:48px 48px;animation:gridMove 26s linear infinite;pointer-events:none}
+@keyframes gridMove{to{background-position:48px 48px}}
+.orb{position:fixed;border-radius:50%;filter:blur(100px);opacity:.18;z-index:0;animation:drift 18s ease-in-out infinite alternate;pointer-events:none}
+.orb.a{width:460px;height:460px;background:#1d6fff;top:-140px;left:-120px}
+.orb.b{width:400px;height:400px;background:#8b2fff;top:35%;right:-130px;animation-delay:-6s}
+.orb.c{width:320px;height:320px;background:#00c98d;bottom:-90px;left:22%;animation-delay:-11s;opacity:.1}
+@keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(60px,-50px) scale(1.15)}}
+#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+.star{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;animation:twinkle 4s infinite}
+@keyframes twinkle{0%,100%{opacity:.08}50%{opacity:.55}}
+.progress{position:fixed;top:0;left:0;height:3px;width:100%;z-index:60;background:rgba(255,255,255,.06)}
+.progress .bar{height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--acc2),var(--ok));box-shadow:0 0 12px var(--acc)}
+header{position:fixed;top:3px;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:11px 22px;background:rgba(7,11,20,.8);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.badge{border:1px solid var(--line);border-radius:999px;padding:5px 15px;color:var(--acc);font-size:11.5px;letter-spacing:2px;white-space:nowrap}
+nav{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;max-width:70%}
+nav::-webkit-scrollbar{display:none}
+nav a{color:var(--sub);text-decoration:none;font-size:12.5px;padding:6px 12px;border-radius:8px;white-space:nowrap;transition:.25s}
+nav a:hover{color:var(--acc)}
+nav a.on{color:#04101f;background:linear-gradient(90deg,var(--acc),var(--acc2));font-weight:700;box-shadow:0 0 16px rgba(76,195,255,.4)}
+.wrap{position:relative;z-index:2;max-width:1150px;margin:0 auto;padding:0 22px}
+section{padding:96px 0 30px}
+.sec-head{margin-bottom:34px}
+.sec-num{font-size:12px;letter-spacing:3px;color:var(--acc);margin-bottom:10px}
+.gtitle{font-size:clamp(24px,3.6vw,40px);line-height:1.3;margin-bottom:14px;background:linear-gradient(90deg,#4cc3ff,#b57bff,#3ddc97,#4cc3ff);background-size:300% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 7s linear infinite}
+@keyframes shine{to{background-position:300% center}}
+.lead{color:var(--sub);max-width:840px;line-height:1.9;font-size:15px}
+.note{margin-top:26px;border-left:3px solid var(--ok);background:var(--panel);border-radius:0 14px 14px 0;padding:16px 22px;color:var(--sub);font-size:13.5px;line-height:1.85}
+.note.warn{border-color:var(--warn)}
+.note b{color:var(--ok)}.note.warn b{color:var(--warn)}
+.rv{opacity:0;transform:translateY(34px);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.7,.3,1)}
+.rv.vis{opacity:1;transform:none}
+.rv[data-d="1"]{transition-delay:.1s}.rv[data-d="2"]{transition-delay:.2s}.rv[data-d="3"]{transition-delay:.3s}.rv[data-d="4"]{transition-delay:.4s}.rv[data-d="5"]{transition-delay:.5s}
+.hero{min-height:92vh;display:flex;flex-direction:column;justify-content:center;padding-top:120px}
+.hero .kicker{font-size:13px;letter-spacing:4px;color:var(--sub);margin-bottom:16px}
+.hero h1{font-size:clamp(38px,6.5vw,72px);line-height:1.15;margin-bottom:22px;background:linear-gradient(90deg,#4cc3ff,#b57bff,#3ddc97,#4cc3ff);background-size:300% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s linear infinite}
+.hero p{color:var(--sub);max-width:800px;line-height:2;font-size:15.5px;margin-bottom:14px}
+.kv{display:flex;gap:16px;flex-wrap:wrap;margin-top:34px}
+.kv .k{border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:18px 24px;flex:1;min-width:230px;transition:.3s}
+.kv .k:hover{transform:translateY(-5px);border-color:var(--acc);box-shadow:0 12px 30px rgba(0,0,0,.4)}
+.kv .k small{color:var(--sub);font-size:12px;display:block;margin-bottom:8px;letter-spacing:1px}
+.kv .k .big{font-size:16px;line-height:1.6}
+.kv .k.down .big{color:var(--bad)}.kv .k.up .big{color:var(--ok)}.kv .k.times .big{color:var(--acc2)}
+.kv .k .arrow{font-size:13px;margin-top:6px;display:block;color:var(--sub)}
+.scrollhint{margin-top:56px;color:var(--sub);font-size:13px;animation:bob 1.8s ease-in-out infinite;display:inline-block}
+@keyframes bob{0%,100%{transform:translateY(0);opacity:.6}50%{transform:translateY(8px);opacity:1}}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:20px}
+.mini{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;transition:.3s;position:relative;overflow:hidden}
+.mini::before{content:"";position:absolute;top:0;left:-80%;width:60%;height:100%;background:linear-gradient(100deg,transparent,rgba(76,195,255,.07),transparent);transition:left .6s}
+.mini:hover::before{left:120%}
+.mini:hover{border-color:var(--acc);transform:translateY(-5px);box-shadow:0 12px 30px rgba(0,0,0,.45)}
+.mini .tag{display:inline-block;font-size:11px;letter-spacing:1px;color:var(--acc);border:1px solid rgba(76,195,255,.35);border-radius:999px;padding:3px 12px;margin-bottom:12px}
+.mini .stat{font-size:22px;font-weight:800;color:var(--warn);margin-bottom:6px}
+.mini h4{font-size:16px;margin-bottom:8px}
+.mini p{color:var(--sub);font-size:13px;line-height:1.8}
+.mini ul{list-style:none;margin-top:6px}
+.mini li{color:var(--sub);font-size:12.5px;line-height:1.75;padding:4px 0 4px 20px;position:relative}
+.mini li::before{content:"▸";position:absolute;left:2px;color:var(--ok)}
+.mini .punch{margin-top:12px;border-top:1px dashed var(--line);padding-top:10px;color:var(--warn);font-size:12.5px}
+.tbl{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:8px}
+.tbl th,.tbl td{border:1px solid var(--line);padding:11px 15px;text-align:left}
+.tbl th{background:var(--panel);color:var(--acc);font-size:12.5px;letter-spacing:1px}
+.tbl td{color:var(--sub)}.tbl td:first-child{color:var(--txt)}
+.tbl tbody tr{transition:.2s}.tbl tbody tr:hover{background:rgba(76,195,255,.06)}
+.tbl .up{color:var(--ok);font-weight:700}.tbl .down{color:var(--bad);font-weight:700}
+.vs-wrap{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:stretch;margin:8px 0}
+.vs-wrap.two{grid-template-columns:1fr 1fr;gap:20px}
+.vs-box{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;transition:.3s}
+.vs-box:hover{transform:translateY(-4px)}
+.vs-box.old{border-color:rgba(255,107,129,.3)}
+.vs-box.new{border-color:rgba(61,220,151,.35);box-shadow:0 0 24px rgba(61,220,151,.08)}
+.vs-box h4{font-size:15px;margin-bottom:12px}
+.vs-box.old h4{color:var(--bad)}.vs-box.new h4{color:var(--ok)}
+.vs-box p{color:var(--sub);font-size:13px;line-height:1.8}
+.vs-mid{display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;color:var(--acc2);text-shadow:0 0 16px rgba(181,123,255,.6);animation:floaty 3s ease-in-out infinite}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.flow{display:flex;align-items:stretch;flex-wrap:wrap;justify-content:center;gap:0;margin:26px 0 8px}
+.fnode{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;min-width:110px;max-width:170px;text-align:center;transition:.3s}
+.fnode:hover{border-color:var(--acc);transform:translateY(-5px);box-shadow:0 10px 26px rgba(76,195,255,.2)}
+.fnode .ico{font-size:22px;display:block;margin-bottom:6px}
+.fnode b{font-size:13px;display:block}
+.fnode small{color:var(--sub);font-size:11px;display:block;margin-top:4px;line-height:1.5}
+.farrow{width:44px;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0}
+.farrow::before{content:"";position:absolute;left:3px;right:3px;height:2px;background:repeating-linear-gradient(90deg,var(--acc) 0 6px,transparent 6px 12px);opacity:.5;animation:dashRun 1.2s linear infinite}
+@keyframes dashRun{to{background-position:12px 0}}
+.farrow::after{content:"";position:absolute;width:6px;height:6px;border-radius:50%;background:var(--acc);box-shadow:0 0 10px var(--acc);animation:dotRun 2.4s ease-in-out infinite}
+@keyframes dotRun{0%{left:4px;opacity:0}15%{opacity:1}85%{opacity:1}100%{left:calc(100% - 10px);opacity:0}}
+.cases{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;perspective:1200px}
+.case{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:transform .2s ease-out,box-shadow .3s,border-color .3s;transform-style:preserve-3d;display:block;text-decoration:none;color:inherit}
+.case:hover{border-color:var(--acc);box-shadow:0 18px 44px rgba(0,0,0,.5),0 0 26px rgba(76,195,255,.18)}
+.thumb{position:relative;aspect-ratio:16/9;overflow:hidden;background:#000}
+.thumb img{width:100%;height:100%;object-fit:cover;transition:transform .55s;opacity:.92}
+.case:hover .thumb img{transform:scale(1.08);opacity:1}
+.play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.play span{width:52px;height:52px;border-radius:50%;background:rgba(0,0,0,.55);border:2px solid rgba(255,255,255,.9);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;padding-left:4px;animation:pulse 2s infinite;backdrop-filter:blur(3px)}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(76,195,255,.55)}70%{box-shadow:0 0 0 20px rgba(76,195,255,0)}100%{box-shadow:0 0 0 0 rgba(76,195,255,0)}}
+.fittag{position:absolute;top:10px;left:10px;background:rgba(7,11,20,.82);border:1px solid var(--acc);color:var(--acc);font-size:11px;border-radius:999px;padding:4px 12px;backdrop-filter:blur(4px)}
+.case-body{padding:16px 18px 18px}
+.case-body h4{font-size:14.5px;line-height:1.55;margin-bottom:8px}
+.case-body .why{color:var(--sub);font-size:12.5px;line-height:1.7;margin-bottom:10px}
+.case-body .why b{color:var(--ok);font-weight:600}
+.case-body .src{color:var(--acc);font-size:11px;opacity:.8}
+.xcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px;margin-top:16px}
+.xcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;text-decoration:none;color:inherit;transition:.3s;display:block}
+.xcard:hover{border-color:var(--acc2);transform:translateY(-4px);box-shadow:0 10px 26px rgba(0,0,0,.45)}
+.xcard .xh{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.xcard .xh .xi{font-weight:900;color:#fff;background:#000;width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.xcard .xh span{font-size:13px;color:var(--acc2)}
+.xcard h5{font-size:14px;margin-bottom:8px;line-height:1.5}
+.xcard p{color:var(--sub);font-size:12px;line-height:1.65}
+.xcard .xurl{display:block;margin-top:10px;color:var(--acc);font-size:10.5px;word-break:break-all;opacity:.75}
+.extlinks{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.extlinks a{font-size:12px;color:var(--sub);border:1px solid var(--line);border-radius:999px;padding:6px 16px;text-decoration:none;transition:.25s;background:var(--panel)}
+.extlinks a:hover{color:var(--acc);border-color:var(--acc);transform:translateY(-2px)}
+.srcs{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.src{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:.28s;display:block;text-decoration:none;color:inherit}
+.src:hover{border-color:var(--acc2);transform:translateY(-4px);box-shadow:0 10px 26px rgba(0,0,0,.45)}
+.src .sthumb{position:relative;aspect-ratio:16/9;overflow:hidden;background:var(--panel)}
+.src .sthumb img{width:100%;height:100%;object-fit:cover;opacity:.85;transition:transform .5s}
+.src:hover .sthumb img{transform:scale(1.07);opacity:1}
+.src .stype{position:absolute;top:8px;left:8px;font-size:10.5px;border-radius:999px;padding:3px 10px;backdrop-filter:blur(4px);background:rgba(7,11,20,.82);border:1px solid var(--bad);color:var(--bad)}
+.src .stype.video{border-color:var(--acc);color:var(--acc)}
+.src .sbody{padding:12px 14px 14px}
+.src .sbody h5{font-size:12.5px;line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.src .sbody .surl{display:block;margin-top:7px;color:var(--acc);font-size:10px;word-break:break-all;opacity:.7}
+/* 演講圖卡 */
+.kcases{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
+.kcase{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:.3s}
+.kcase:hover{border-color:var(--acc2);transform:translateY(-5px);box-shadow:0 14px 34px rgba(0,0,0,.5)}
+.kframe{position:relative;aspect-ratio:16/9;background:#000}
+.kframe img{position:relative;z-index:1;width:100%;height:100%;object-fit:cover;display:block}
+.slide-mock{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:44px;background:linear-gradient(135deg,#16233c,#241a3d 60%,#123)}
+.kcase .kbody{padding:16px 18px 18px}
+.kcase .kbody .kdate{font-size:11px;color:var(--acc2);letter-spacing:1px;margin-bottom:6px}
+.kcase .kbody h4{font-size:14.5px;margin-bottom:8px}
+.kcase .kbody p{color:var(--sub);font-size:12.5px;line-height:1.7}
+.kcase .kbody a{display:inline-block;margin-top:10px;font-size:11px;color:var(--acc);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:5px 14px;transition:.25s}
+.kcase .kbody a:hover{border-color:var(--acc)}
+.qs{display:grid;gap:12px;margin-top:18px}
+.q{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 18px;font-size:13.5px;color:var(--sub);line-height:1.75;transition:.25s}
+.q:hover{border-color:var(--warn);color:var(--txt);transform:translateX(6px)}
+.q b{color:var(--warn)}
+.take{background:linear-gradient(135deg,rgba(76,195,255,.08),rgba(181,123,255,.08));border:1px solid var(--line);border-radius:22px;padding:44px 34px;text-align:center;margin-top:20px}
+.take .big{font-size:clamp(20px,3vw,32px);line-height:1.6;margin-bottom:22px}
+.take .big em{font-style:normal;background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.formula{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.formula span{border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:10px 18px;font-size:13px;color:var(--sub);transition:.3s}
+.formula span:hover{border-color:var(--ok);color:var(--ok);transform:translateY(-3px)}
+.formula i{font-style:normal;color:var(--acc2);align-self:center}
+footer.credit{position:relative;z-index:2;text-align:center;padding:44px 20px 60px;color:var(--sub);font-size:12px;letter-spacing:1.5px;opacity:.7}
+@media(max-width:820px){.vs-wrap,.vs-wrap.two{grid-template-columns:1fr}.vs-mid{padding:4px}}
+@media(max-width:640px){.farrow{width:100%;height:30px}.farrow::before{left:50%;right:auto;top:3px;bottom:3px;width:2px;height:auto;background:repeating-linear-gradient(180deg,var(--acc) 0 6px,transparent 6px 12px)}.farrow::after{animation:dotRunV 2.4s ease-in-out infinite;left:calc(50% - 3px)}@keyframes dotRunV{0%{top:3px;opacity:0}15%{opacity:1}85%{opacity:1}100%{top:calc(100% - 9px);opacity:0}}.flow{flex-direction:column;align-items:center}}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="orb a"></div><div class="orb b"></div><div class="orb c"></div>
+<div id="stars"></div>
+<div class="progress"><div class="bar" id="pbar"></div></div>
+<header>
+  <div class="badge">TCIMAGE/AI CLASS · 2026 FALL</div>
+  <nav id="nav"></nav>
+</header>
+<div class="wrap">
+
+<section class="hero" id="top">
+  <div class="kicker rv">2026 秋季 · 傳播學院 AI 產業報告</div>
+  <h1 class="rv" data-d="1">操作歸零。<br>經驗複利。</h1>
+  <p class="rv" data-d="2">AI 讓每個人都能開始，卻讓「知道要做什麼、哪裡錯、怎麼交付」變得更值錢。這堂課不追工具清單，而是理解這兩年工作流程到底被改寫了什麼。</p>
+  <p class="rv" data-d="3">AI 不會替你累積經驗。但會放大你的每一次判斷。</p>
+  <div class="kv">
+    <div class="k down rv" data-d="1"><small>操作價值</small><div class="big">快捷鍵、重複點選、制式步驟</div><span class="arrow">↓ 快速商品化</span></div>
+    <div class="k up rv" data-d="2"><small>判斷價值</small><div class="big">需求、品質、風險、取捨</div><span class="arrow">↑ 強烈升值</span></div>
+    <div class="k times rv" data-d="3"><small>經驗複利</small><div class="big">錯誤 → 規則 → Pipeline × AI Agent</div><span class="arrow">× 從回答 → 規劃 → 執行</span></div>
+  </div>
+  <span class="scrollhint rv" data-d="4">▼ 往下捲動，開始閱讀</span>
+</section>
+
+<section id="industry">
+  <div class="sec-head rv"><div class="sec-num">01 · INDUSTRY REALITY</div><h2 class="gtitle">老闆看到的不是炫技，是效率差</h2>
+  <p class="lead">真正驅動企業採用 AI 的，是時間 × 成本 × 人數，而不是「這個模型很酷」。</p></div>
+  <div class="grid">
+    <div class="mini rv"><span class="tag">3D 標準資產</span><div class="stat"><span class="num" data-n="4">0</span> 小時 → <span class="num" data-n="2">0</span> 分鐘</div><p>家具、燈具、線板等標準化項目，最容易先進入「AI 初稿 → 人工精修」。</p></div>
+    <div class="mini rv" data-d="1"><span class="tag">網站專案</span><div class="stat"><span class="num" data-n="1">0</span> 年 → <span class="num" data-n="5">0</span> 天</div><p>不是 5 天變完美，而是先上線，再快速迭代；速度來自需求拆解與部署。</p></div>
+    <div class="mini rv" data-d="2"><span class="tag">ERP / 行政</span><div class="stat">例行工作少 <span class="num" data-n="1">0</span> 人</div><p>資料輸入、掃描訂單、報表與重複行政，最容易流程化與自動化。</p></div>
+  </div>
+  <div class="note warn rv" data-d="3"><b>注意：</b>上面數字是業界個案，用來看趨勢，不代表所有公司的平均成效。真正重要的是：AI 先壓縮「可描述、可重複、可驗收」的工作。</div>
+</section>
+
+<section id="gap">
+  <div class="sec-head rv"><div class="sec-num">02 · THE GAP</div><h2 class="gtitle">起跑線沒有歸零，差距反而可能更大</h2>
+  <p class="lead">同一個 AI，老手與新手看到的不是同一件事。語音、Prompt、Agent 讓下指令變簡單；但老手知道尺寸、法規、敘事、品牌、畫面、交付與風險。新手常常連結果哪裡不合理都看不出來。</p></div>
+  <div class="note rv" data-d="1"><b>AI 不是平均放大每個人；它先放大已經會判斷的人。</b></div>
+  <table class="tbl rv" data-d="2">
+    <thead><tr><th>能力</th><th>AI 時代趨勢</th></tr></thead>
+    <tbody>
+      <tr><td>純軟體操作</td><td class="down">快速商品化 ↓</td></tr>
+      <tr><td>定義問題</td><td class="up">升值 ↑</td></tr>
+      <tr><td>跨工具整合</td><td class="up">升值 ↑</td></tr>
+      <tr><td>驗收與責任</td><td class="up">強烈升值 ↑↑</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="junior">
+  <div class="sec-head rv"><div class="sec-num">03 · JUNIOR TASK COMPRESSION</div><h2 class="gtitle">真正危險的，是「入行階梯」被壓縮</h2>
+  <p class="lead">以前新人靠基礎工作換經驗；現在 AI 先吃掉大量初階任務，公司又不一定願意負擔長期培養成本。</p></div>
+  <div class="flow rv">
+    <div class="fnode"><b>01 工作條件差</b><small>低薪、長工時、現場辛苦</small></div><div class="farrow"></div>
+    <div class="fnode"><b>02 新人離開</b><small>回報與職涯不夠清楚</small></div><div class="farrow"></div>
+    <div class="fnode"><b>03 公司少教</b><small>培訓成本難回收</small></div><div class="farrow"></div>
+    <div class="fnode"><b>04 AI 補人力</b><small>老手＋AI 壓縮初階職缺</small></div><div class="farrow"></div>
+    <div class="fnode"><b>05 人才斷層</b><small>沒有 Junior，就沒有未來 Senior</small></div>
+  </div>
+  <div class="note warn rv" data-d="1">這不是單純怪年輕人不耐操。離開可能是對低回報、差環境與模糊職涯的理性選擇；但創作與專業工作也確實需要反覆修改、挫折承受與完成責任。</div>
+  <div class="grid" style="margin-top:26px">
+    <div class="mini rv"><span class="tag">📝 文案初稿</span><p>AI 可以先給 10 版，但誰知道哪一版能用？</p></div>
+    <div class="mini rv" data-d="1"><span class="tag">🎬 短影音粗剪</span><p>AI 可以加字幕、剪重點、做變體。</p></div>
+    <div class="mini rv" data-d="2"><span class="tag">📊 資料整理</span><p>搜尋、摘要、分類、簡報初稿都能先完成。</p></div>
+    <div class="mini rv"><span class="tag">🖼️ KV / Banner</span><p>第一版視覺不再需要從空白開始。</p></div>
+    <div class="mini rv" data-d="1"><span class="tag">🌐 簡單網站</span><p>從「學語法」逐漸變成「描述需求＋驗收」。</p></div>
+    <div class="mini rv" data-d="2"><span class="tag">🧩 重複行政</span><p>整理、改格式、轉檔、排版都會被壓縮。</p></div>
+  </div>
+</section>
+
+<section id="edu">
+  <div class="sec-head rv"><div class="sec-num">04 · EDUCATION</div><h2 class="gtitle">大學不會消失，會消失的是「教完＝學會」</h2></div>
+  <div class="vs-wrap">
+    <div class="vs-box old rv"><h4>🔴 舊大學｜Knowledge Provider</h4><p>老師講、學生抄 → 背工具與操作 → 考完、交完、忘掉 → 文憑代替能力證據。</p></div>
+    <div class="vs-mid rv" data-d="1">VS</div>
+    <div class="vs-box new rv" data-d="2"><h4>🟢 新大學｜Experience Studio</h4><p>真實專案 → 遇到問題 → 問 AI → 補學知識 → 回場驗證 → 反覆退件 → 沉澱成自己的判例與作品。</p></div>
+  </div>
+  <div class="flow rv" data-d="2" style="margin-top:30px">
+    <div class="fnode"><span class="ico">🎯</span><b>真實專案</b></div><div class="farrow"></div>
+    <div class="fnode"><span class="ico">❓</span><b>問題</b></div><div class="farrow"></div>
+    <div class="fnode"><span class="ico">🤖</span><b>AI</b></div><div class="farrow"></div>
+    <div class="fnode"><span class="ico">📚</span><b>補學</b></div><div class="farrow"></div>
+    <div class="fnode"><span class="ico">🧪</span><b>驗證</b></div><div class="farrow"></div>
+    <div class="fnode"><span class="ico">🗂️</span><b>判例</b></div>
+  </div>
+</section>
+
+<section id="film">
+  <div class="sec-head rv"><div class="sec-num">06 · AI FILM</div><h2 class="gtitle">AI 影片已從「做一個鏡頭」進入「製片流程」</h2>
+  <p class="lead">要教的不是平台按鈕，而是完整製片思維。角色鎖定、鏡頭單元、跨鏡連續性、聲音與「本鏡頭結束狀態」，已經比單純寫「8K、cinematic」重要。</p></div>
+  <div class="flow rv">
+    <div class="fnode"><b>Idea</b></div><div class="farrow"></div>
+    <div class="fnode"><b>Character</b></div><div class="farrow"></div>
+    <div class="fnode"><b>Shot Design</b></div><div class="farrow"></div>
+    <div class="fnode"><b>Continuity</b></div><div class="farrow"></div>
+    <div class="fnode"><b>Sound</b></div><div class="farrow"></div>
+    <div class="fnode"><b>Edit</b></div>
+  </div>
+  <div class="cases" id="filmCases"></div>
+  <div class="xcards" id="filmX"></div>
+</section>
+
+<section id="3d">
+  <div class="sec-head rv"><div class="sec-num">07 · AI × 3D</div><h2 class="gtitle">3D 操作門檻在下降，但「空間判斷」沒有消失</h2>
+  <p class="lead">自然語言、Python、Computer Use 逐漸能操作 3D 軟體。快捷鍵價值下降，模型是否合理的判斷價值上升。3D 不一定是成品，也可能是 AI Film 的 Previz、角色一致性骨架、Web 互動、UE5、XR 與 Digital Twin 的共享資料層。</p></div>
+  <div class="flow rv">
+    <div class="fnode"><b>參考圖 / CAD</b></div><div class="farrow"></div>
+    <div class="fnode"><b>AI / Reconstruction</b></div><div class="farrow"></div>
+    <div class="fnode"><b>Blender / SketchUp</b></div><div class="farrow"></div>
+    <div class="fnode"><b>UE / Web 3D</b></div><div class="farrow"></div>
+    <div class="fnode"><b>Film / XR / Game</b></div>
+  </div>
+  <div class="cases" id="threeDCases"></div>
+  <div class="xcards" id="threeDX"></div>
+</section>
+
+<section id="agent">
+  <div class="sec-head rv"><div class="sec-num">08 · AGENT ERA</div><h2 class="gtitle">下一階段不是 Chatbot，是「會做事的 AI」</h2>
+  <p class="lead">從 Trend Radar、AI Film Agent、自動建站，到操作瀏覽器與軟體，AI 正從「回答你」轉向「替你執行多步驟任務」。</p></div>
+  <div class="grid">
+    <div class="mini rv"><span class="tag">① Goal</span><p>講目標，不只是講一步。</p></div>
+    <div class="mini rv" data-d="1"><span class="tag">② Plan</span><p>AI 拆解工作與順序。</p></div>
+    <div class="mini rv" data-d="2"><span class="tag">③ Action</span><p>開工具、讀檔、寫程式、呼叫 API、操作網站。</p></div>
+    <div class="mini rv" data-d="3"><span class="tag">④ Check</span><p>比對結果、找錯、再執行。</p></div>
+    <div class="mini rv" data-d="4"><span class="tag">⑤ Human Sign-off</span><p>高風險與最終責任仍由人確認。</p></div>
+  </div>
+  <div class="xcards" id="agentX"></div>
+</section>
+
+<section id="career">
+  <div class="sec-head rv"><div class="sec-num">09 · CAREER</div><h2 class="gtitle">未來稀缺的不是 Generation，是 Direction</h2>
+  <p class="lead">AI 最先壓縮的是初稿、整理、套版、制式內容。對學生來說，最危險的不是「AI 會不會取代全部工作」，而是你是否只停留在最容易自動化的那一層。</p></div>
+  <div class="note rv"><b>真正升值的 5 種能力：</b>Creative Direction · Art Direction · Narrative Direction · Technical Direction · Editorial Judgment。<br>AI 可以產生 100 張圖。你要回答的是：哪一張值得留下？為什麼？</div>
+  <div class="cases" id="careerCases"></div>
+</section>
+
+<section id="prcrisis">
+  <div class="sec-head rv"><div class="sec-num">10 · AI × PR CRISIS</div><h2 class="gtitle">AI 不只改工具，也會改「組織怎麼犯錯」</h2>
+  <p class="lead">生成速度越快，品牌決策、溝通流程、受眾理解與風險預判就越重要。以下用世新相關真實事件，讓大一直接看「AI 技術問題」如何變成「品牌與公關問題」。</p></div>
+  <div class="vs-wrap two">
+    <div class="vs-box rv"><h4>CASE 01 · 系所整併＋「AI」冠名爭議</h4><p>2026 年初，世新大學曾研議將「數位多媒體設計學系」與「資訊傳播學系」整併，新系名暫定為「AI應用媒體設計系」。學生針對專業定位、溝通時程、課程與設備、「AI」是否應成為系名核心等問題提出反彈；校方後續宣布不推動整併，兩系維持既有架構。</p></div>
+    <div class="vs-box rv" data-d="1"><h4>CASE 02 · AI 影片、招生內容與社群炎上</h4><p>AI 可以快速生成影片、文案與大量社群內容，但「能發布」不等於「適合發布」。世新相關社群曾出現對 AI 招生影片、宣傳內容與帳號操作方式的質疑；技術只是工具，真正需要負責的是人類的內容策略、審稿與回應。</p></div>
+  </div>
+  <div class="cases" id="prCases" style="margin-top:20px"></div>
+  <div class="extlinks rv" data-d="1">
+    <a href="https://www.cna.com.tw/news/ahel/202601050056.aspx" target="_blank">中央社 ↗</a>
+    <a href="https://news.tvbs.com.tw/life/3091850" target="_blank">TVBS ↗</a>
+    <a href="https://www.dcard.tw/f/shu/p/260591425" target="_blank">學生觀點／Dcard ↗</a>
+    <a href="https://www.dcard.tw/f/shu/p/260455690" target="_blank">世新招生 AI 影片質疑 ↗</a>
+    <a href="https://www.overseas.edu.tw/department/mass-communication/" target="_blank">招生頁面：AI × 傳播定位 ↗</a>
+  </div>
+  <div class="flow rv" data-d="2" style="margin-top:30px">
+    <div class="fnode"><b>Brand Strategy</b></div><div class="farrow"></div>
+    <div class="fnode"><b>Audience Insight</b></div><div class="farrow"></div>
+    <div class="fnode"><b>Creative Concept</b></div><div class="farrow"></div>
+    <div class="fnode"><b>AI / Human Production</b></div><div class="farrow"></div>
+    <div class="fnode"><b>PR Risk Check</b></div><div class="farrow"></div>
+    <div class="fnode"><b>Release</b></div><div class="farrow"></div>
+    <div class="fnode"><b>Response</b></div>
+  </div>
+  <div class="note warn rv" data-d="2"><b>課堂重點：</b>AI 可以幫你做影片，但不會替你承擔「為什麼要這樣拍」的責任。Generation ≠ Judgment ≠ Responsibility。AI 把製作門檻降得越低，「要不要做、為什麼做、誰負責」就越重要。</div>
+  <div class="qs rv" data-d="3">
+    <div class="q"><b>討論：</b>在系名加上「AI」，是在增加品牌價值，還是在縮窄原本專業？</div>
+    <div class="q"><b>討論：</b>這支影片的問題，是「用了 AI」，還是內容本身沒有說服受眾？</div>
+    <div class="q"><b>討論：</b>一個品牌發布內容前，誰應該負責 Audience Insight 與 Risk Check？</div>
+    <div class="q"><b>討論：</b>當留言開始質疑時，第一個回應應該解釋技術，還是先理解受眾在不滿什麼？</div>
+    <div class="q"><b>討論：</b>AI 讓內容成本接近零後，「內容越多」真的等於「傳播越有效」嗎？</div>
+  </div>
+</section>
+
+<section id="risk">
+  <div class="sec-head rv"><div class="sec-num">11 · RISK</div><h2 class="gtitle">Agent 越強，風險越不是「答錯」而已</h2></div>
+  <div class="grid" id="riskGrid"></div>
+</section>
+
+<section id="workflow">
+  <div class="sec-head rv"><div class="sec-num">12 · AI CREATIVE WORKFLOW</div><h2 class="gtitle">大一最值得學的不是 Prompt 技巧，而是 Human-in-the-loop</h2></div>
+  <div class="flow rv">
+    <div class="fnode"><b>Human Intent</b></div><div class="farrow"></div>
+    <div class="fnode"><b>AI Exploration</b></div><div class="farrow"></div>
+    <div class="fnode"><b>Human Selection</b></div><div class="farrow"></div>
+    <div class="fnode"><b>Controlled Gen</b></div><div class="farrow"></div>
+    <div class="fnode"><b>Human Correction</b></div><div class="farrow"></div>
+    <div class="fnode"><b>Provenance</b></div><div class="farrow"></div>
+    <div class="fnode"><b>Publish</b></div>
+  </div>
+  <div class="note warn rv" data-d="1"><b>不要：</b>Prompt → Generate → 直接交作業。<br><b>要：</b>留下你的選擇、修改、錯誤、來源與理由，讓作品可以被追溯。</div>
+</section>
+
+<section id="experience">
+  <div class="sec-head rv"><div class="sec-num">13 · FROM ASSET TO EXPERIENCE</div><h2 class="gtitle">你不是只做「內容」，你可以開始設計「體驗」</h2></div>
+  <div class="grid">
+    <div class="mini rv"><span class="tag">1 · AI Generated Asset</span><p>圖片、角色、背景、聲音、材質、3D asset。</p></div>
+    <div class="mini rv" data-d="1"><span class="tag">2 · AI Generated Content</span><p>漫畫、影片、動畫、廣告、短劇、網站。</p></div>
+    <div class="mini rv" data-d="2"><span class="tag">3 · AI Generated Experience</span><p>互動敘事、Virtual World、XR、Digital Twin、AI NPC。</p></div>
+  </div>
+  <div class="note rv" data-d="3"><b>創作者的角色，正在從 Asset Maker → Content Creator → Experience Director。</b></div>
+</section>
+
+<section id="action">
+  <div class="sec-head rv"><div class="sec-num">14 · FRESHMAN ACTION PLAN</div><h2 class="gtitle">不必現在交作業，但可以開始留下證據</h2></div>
+  <table class="tbl rv">
+    <thead><tr><th>階段</th><th>你可以做什麼</th><th>留下什麼證據</th></tr></thead>
+    <tbody>
+      <tr><td>第一次</td><td>定義受眾與用途，完成一件小作品，找出至少一個 AI 錯誤。</td><td>原始輸出＋修改版＋一句反思</td></tr>
+      <tr><td>第二次</td><td>畫 Workflow，標出人與 AI 分工，加入人工檢查點。</td><td>流程圖＋時間／成本記錄</td></tr>
+      <tr><td>準備求職</td><td>比較 Human / AI / Hybrid 三版，說明授權與修改理由。</td><td>可播放成品＋Case Study</td></tr>
+    </tbody>
+  </table>
+  <div class="grid" style="margin-top:24px">
+    <div class="mini rv"><span class="tag">🎯 需求清楚</span></div>
+    <div class="mini rv" data-d="1"><span class="tag">🧩 流程可重複</span></div>
+    <div class="mini rv" data-d="2"><span class="tag">🔍 錯誤能驗證</span></div>
+    <div class="mini rv" data-d="3"><span class="tag">📦 成品可交付</span></div>
+  </div>
+</section>
+
+<section id="talks">
+  <div class="sec-head rv"><div class="sec-num">15.4 · FIVE TALKS, ONE TREND</div><h2 class="gtitle">五場演講其實都在講同一件事：把工具變成流程</h2>
+  <p class="lead"><a href="https://drive.google.com/drive/folders/1N771_2SydAcpbhZOnayX69uiY1kVje41?usp=drive_link" target="_blank" style="color:var(--acc)">查看 Google Drive 演講照片 / 簡報 ↗</a></p></div>
+  <div class="grid" id="talkGrid"></div>
+</section>
+
+<section id="visuals">
+  <div class="sec-head rv"><div class="sec-num">15.5 · KEYNOTE VISUALS</div><h2 class="gtitle">現場簡報圖：一張圖講一個流程轉折</h2>
+  <p class="lead">上課先講結論，再直接用圖回到案例。（把現場照片放進 HTML 旁的 <code style="color:var(--acc)">lecture/</code> 資料夾、照下方檔名命名，就會自動顯示；沒放圖時顯示漸層佔位框。）</p></div>
+  <div class="kcases" id="kGrid"></div>
+</section>
+
+<section id="summer">
+  <div class="sec-head rv"><div class="sec-num">15.6 · SUMMER TALKS & AI COMICS</div><h2 class="gtitle">暑假演講帶回來的三個變化：AI 在重寫創作流程</h2></div>
+  <div class="grid" id="summerGrid"></div>
+  <div class="flow rv" data-d="2" style="margin-top:30px">
+    <div class="fnode"><b>人的意圖</b></div><div class="farrow"></div>
+    <div class="fnode"><b>AI 生成</b></div><div class="farrow"></div>
+    <div class="fnode"><b>人工判斷</b></div><div class="farrow"></div>
+    <div class="fnode"><b>修改</b></div><div class="farrow"></div>
+    <div class="fnode"><b>連貫性檢查</b></div><div class="farrow"></div>
+    <div class="fnode"><b>編排</b></div><div class="farrow"></div>
+    <div class="fnode"><b>完稿</b></div>
+  </div>
+  <div class="note rv" data-d="2"><b>可以直接給大一做的比較題：</b>同一題目各做一版 —— A 全 AI / B 全人工 / C Human + AI Hybrid。最後不只比畫面，而是要求學生說明：哪個版本自己最能控制？哪裡失去控制？哪一步最需要專業判斷？</div>
+</section>
+
+<section id="taiwan">
+  <div class="sec-head rv"><div class="sec-num">15.7 · TAIWAN.MD</div><h2 class="gtitle">讓 AI 讀懂台灣：文化成為可被 AI 讀取的基礎設施</h2>
+  <p class="lead">不是單純做一個「台灣百科網站」，而是把文化、歷史、觀點與知識整理成 AI-friendly 的 Markdown 知識系統。當 AI 會讀、會整理、會生成之後，誰來決定它讀到的是什麼？</p></div>
+  <div class="grid" id="twGrid"></div>
+  <div class="note rv" data-d="2"><b>課堂可以直接問：</b>如果 AI 未來會替我們解釋台灣，那它讀到的台灣，是誰整理的？誰決定哪些內容重要？這就是「AI 內容生成」往「AI 知識治理」跨出去的一步。</div>
+</section>
+
+<section id="sources">
+  <div class="sec-head rv"><div class="sec-num">16 · COMPLETE SOURCE AUDIT</div><h2 class="gtitle">完整 YouTube / Shorts 來源索引</h2>
+  <p class="lead">Shorts 會標記 SHORT；點封面或網址都會前往原始 YouTube。</p></div>
+  <div class="srcs" id="srcGrid"></div>
+</section>
+
+<section id="discussion">
+  <div class="take rv">
+    <div class="big">課堂最後 10 分鐘：不要考，拿來辯論。<br>如果 AI 能幫你完成 90% 的作品，<br>剩下 10% 的你，應該負責什麼？</div>
+    <div class="formula">
+      <span>基本功</span><i>×</i><span>專業</span><i>×</i><span>審美</span><i>×</i><span>判斷</span><i>×</i><span>AI 槓桿</span>
+    </div>
+  </div>
+</section>
+
+</div>
+<footer class="credit">TCIMAGE / AI CLASS · 2026 · 操作歸零・經驗複利</footer>
+
+<script>
+const thumb=id=>`https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+const filmCases=[["OFD9blyx204","How I Made a 1-Minute AI Film With Only 2 Prompts","GenAI with Keera","只看 2 個 Prompt 怎麼撐起一支完整短片，理解「少指令、多流程」。","https://www.youtube.com/watch?v=OFD9blyx204"]];
+const filmX=[
+ ["@higgsfield_ai","Higgsfield：110 分鐘 AI 長片案例","AI 已經能產出長片級內容，重點是製片流程而非單顆鏡頭。","https://x.com/higgsfield_ai/status/2086868392510963820"],
+ ["@magnific","Magnific：Seedance 完整電影製作課","References → Story → Sound → Final Cut 的完整課程結構。","https://x.com/magnific/status/2087615187461566868"],
+ ["@cheerselflin","AI 影片鏡頭連續性 Prompt 結構","角色鎖定 / 鏡頭單元 / 結束狀態，是連續性的關鍵。","https://x.com/cheerselflin/status/2085250185396191401"]
+];
+const threeDCases=[
+ ["RKUCVCOoE60","Claude × SketchUp：建模自動化","Craftlab","看 AI 如何直接操作 SketchUp 完成建模。","https://www.youtube.com/watch?v=RKUCVCOoE60"],
+ ["dq-9FY5aenM","Seedance 2.5 + Blender 精確控制","真探玩赚 AI","AI 影片工具與 3D 軟體結合的精確控制案例。","https://www.youtube.com/watch?v=dq-9FY5aenM"],
+ ["0_wvqH_BXw0","Tripo AI 3D Modeling Update","素人がAIで作ってみた","圖像轉 3D 模型的實際操作與限制。","https://www.youtube.com/watch?v=0_wvqH_BXw0"]
+];
+const threeDX=[
+ ["@NickDevFE","img2threejs：Image → 3D → Three.js","從一張圖直接生成可在 Web 3D 中使用的模型。","https://x.com/NickDevFE/status/2091881864743281026"],
+ ["@Khazix0918","GPT-6 Astra 操作 Blender","自然語言直接操作 3D 軟體的案例。","https://x.com/Khazix0918/status/2097201246973366417"]
+];
+const agentX=[
+ ["@higgsfield","GPT-6 Astra + AR：AI 直接生成互動體驗","Agent 開始直接產出空間互動體驗，不只是文字或圖。","https://x.com/higgsfield/status/2097494221318234401"],
+ ["@studio_oneroom","MiniMax H3 角色控制案例","Reference Character / Prompt Control 的角色一致性操作。","https://x.com/studio_oneroom/status/2091485010515914784"]
+];
+const careerCases=[
+ ["EmoZd6kkDNk","AI 時代「薑是老的辣」？資深工作者為何更吃香","親子天下","理解經驗與判斷在 AI 時代為什麼升值。","https://www.youtube.com/watch?v=EmoZd6kkDNk"],
+ ["k_ZSarGq6jA","矽谷瘋狂裁員：AI 只是藉口？","志祺七七","從產業面看 AI 對就業的真實影響。","https://www.youtube.com/watch?v=k_ZSarGq6jA"],
+ ["PrswA6jvqPo","人人都能用 AI 寫網站，SaaS 還需要存在嗎？","佳達的 AI 思考研究室","思考「人人都能做」之後，專業價值在哪裡。","https://youtu.be/PrswA6jvqPo"]
+];
+const prCases=[["bR_hE0zm1PY","世新「資傳・數媒系整併」學生轟「蹭 AI」 校方喊卡","TVBS NEWS · 2026/01/05","CASE 01 已確認事件的新聞報導，課堂可直接播放作為案例開場。","https://www.youtube.com/watch?v=bR_hE0zm1PY"]];
+const risks=[
+ ["🔑","API Key / 隱私","工作軌跡、程式碼、分享檔案可能殘留秘密與個資。"],
+ ["🧨","Prompt Injection","外部內容可能藏惡意指令，誘導 Agent 執行未授權操作。"],
+ ["©","版權 / 肖像","能生成不代表能商用。素材、人物、聲音、品牌與授權仍要確認。"],
+ ["🪞","幻覺","講得像真的，不等於是真的。查證能力反而更重要。"],
+ ["🧱","平台依賴","模型、價格、點數、方案、API 都會變，不能把整個專業綁死在單一網站。"],
+ ["🧠","認知外包","如果連選擇與判斷都外包，最後只剩下最容易被下一版 AI 取代的「會按生成」。"]
+];
+const talks=[
+ ["07.26 · NVIDIA","工具 → AI OS","Skill、Memory、Workflow、Evaluation。作品做一次，Pipeline 可以複製。"],
+ ["08.07 · 製片的算盤","先算、先看、先改","AI、Previs、VFX 更早進場。降低製作門檻，不等於降低好看門檻。"],
+ ["08.21 · Virtual Production","解除拍攝限制","實拍、Proxy、LED、CG、AI 混合，複雜度移往前期與系統整合。"],
+ ["09.03 · StartSphere","Junior Task 壓縮","小型 Lead＋Pipeline TD 團隊可以完成過去更多人力的工作，純 Operator 空間縮小。"],
+ ["09.04 · AI 漫畫","Generation ≠ Creation","人工線條＋AI 上色＋人工修正。決定哪裡自動化，本身就是專業。"]
+];
+/* 演講圖：把照片放進 lecture/ 資料夾並照 file 命名即可顯示 */
+const keynotes=[
+ ["🎨","09.04 · AI 漫畫","lecture-0904.jpg","全 AI / 全手繪 / 手繪＋AI 輔助：重點不是「像不像 AI」，而是有沒有創作者的思考。"],
+ ["🎬","08.07 · AI / VFX 製片流程","lecture-0807a.jpg","Real Footage, Escalated Into Imagination：實拍保留 Camera Work、Performance、Production Design，再把世界用 AI/VFX 擴張。"],
+ ["🖥️","07.26 · NVIDIA RTX AI PC","lecture-0726.jpg","同一套 AI OS，編排實體與數位兩種空間：AI OS 不只是螢幕裡的 Agent。"],
+ ["🔁","08.07 · Iterative Loop","lecture-0807b.jpg","Linear Pipeline → Iterative Loop：回頭不是失誤，而是 AI 時代製程的一部分。"],
+ ["🎥","08.21 · Virtual Production","lecture-0821.jpg","Real-Time 3D Environment｜雙機拍攝：實拍、Real-time 3D、追蹤與攝影機系統開始融合。"]
+];
+const summer=[
+ ["2026/07/26 · NVIDIA RTX AI PC Seminar","AI 下一階段：不是更多工具，是一套 AI OS",["AI 從單點工具，走向「可持續運作的工作系統」。","Agent、長期記憶、跨模型調度與雲地混合開始成為基礎能力。","最後仍需要人的驗證、護欄與判斷。"],"課堂一句話：不要只學 AI App，要學會設計 AI Workflow。"],
+ ["2026/08/07 · 陳信吉｜空總演講","特效與 AI 要提早進前期，不是最後才來救火",["劇本、Storyboard、Previs、棚型選擇、預算與後期，是一條連續的製作決策鏈。","先分析畫面真正困難在哪，再決定實拍、CG、LED、綠幕或 AI。","Previs 不只是畫漂亮分鏡，而是成本與風險管理工具。"],"課堂一句話：換工具，不等於換流程；真正要改的是決策方式。"],
+ ["2026/09 · StartSphere Taipei｜AI 漫畫場","曾建華漫畫場：AI 漫畫不是「生一張漂亮圖」",["比較全 AI、全手繪、手繪＋AI 輔助三種創作方式。","真正要看的是誰決定故事、構圖、角色表演、修改與最終責任。","漫畫核心：Story → Shot Design → Continuity → Sequence → Rhythm → Consistency。"],"課堂一句話：單張圖追求漂亮；漫畫追求「讀得下去」。"]
+];
+const twLinks=[
+ ["WEB","taiwan.md｜開源、AI-friendly 的台灣知識庫","把文化、歷史、觀點整理成 AI 可讀的 Markdown 知識系統。","https://taiwan.md/"],
+ ["ABOUT","Taiwan.md About｜理念與知識生命體","Muse、MonoLab 與 CONCEPT / SEMIONT 概念說明。","https://taiwan.md/about/"],
+ ["EVENT","NVIDIA RTX AI PC 講座｜吳哲宇 × Taiwan.md","演講活動頁：AI OS × 知識基礎設施的現場對話。","https://events.nvidia.com/rtx-ai-pc-seminar-taiwan"]
+];
+const allSrc=[
+ ["HeS-law0WF0","AI 101｜你所有的學生都已經是 AI 人才，問題是老師…",0],
+ ["RKUCVCOoE60","Craftlab｜Claude × SketchUp 建模自動化",0],
+ ["MSoDoCj1fLE","ZZ Dream｜本地模型開發 FPS 遊戲",0],
+ ["iQiRS47FgOI","昌健胡說｜AI 專家警告：2030 前…",1],
+ ["RGrdYCtibAM","鏡新聞｜授權肖像變遊戲分身：我們用 AI 不是被 AI 用",0],
+ ["4EwKO45uJ2w","建築學長｜GPT-6 建築室內應用盤點",0],
+ ["Unfp5vb08P8","師父商學院｜AI 一天、人間十年…",0],
+ ["dq-9FY5aenM","真探玩賺 AI｜Seedance 2.5 + Blender",0],
+ ["jc1PRd_Kf54","Arion 3D｜40 全流程 01",0],
+ ["i8B433mTOcE","TuTu生活志｜AI 真能無腦起號賺錢？",0],
+ ["PA9CCLPRerg","Deprecated Fork｜Cyberpunk with DLSS 5",0],
+ ["XuoqKYxDHVc","The Economist｜Elon Musk full-length interview",0],
+ ["dR8dO4GPoBg","Mark 的地球漫步｜GPT-6 Astra 自主工作全紀錄 EP.01",0],
+ ["PrswA6jvqPo","佳達的 AI 思考研究室｜人人都能用 AI 寫網站，SaaS 還需要存在嗎？",0],
+ ["k_ZSarGq6jA","志祺七七｜矽谷瘋狂裁員，真實原因是什麼？",0],
+ ["oFp1btvsVtM","玩遊戲做遊戲的老劉｜AI 做 3D 遊戲的時代已經到來",0],
+ ["0lbGvBJzUe4","電腦王阿達｜IG / TikTok 爆款影片一鍵複製？",0],
+ ["xWlFd0jwxAk","AI 101｜Ed Zitron：2027 年 OpenAI…",0],
+ ["ERXDmLqmS94","Sixth Tone｜China's Shift From Short-Drama Sets to AI Factories",0],
+ ["EmoZd6kkDNk","親子天下｜AI 時代「薑是老的辣」？",0],
+ ["OFD9blyx204","GenAI with Keera｜1-Minute AI Film With Only 2 Prompts",0],
+ ["ggwOHpwpDoU","ZZ Dream｜本地模型操作 Blender 建模教程",0],
+ ["EmY6UK1xAPc","小語同學｜李飛飛：AI 正把人分成兩類",1],
+ ["ZrYNgLIdAr0","YouTube Shorts｜原始短影音案例",1],
+ ["EiIxa2ONJF4","Aiden_0｜MiniMax H3 + VOSR + DLSS 超分",0],
+ ["86ALhc0udWI","臭臭虎｜AI + Unreal 做 GTA 台灣版",0],
+ ["am1DCQjrTqc","AI 101｜住台北的美國分析師談 AI 競爭",0],
+ ["1aGpJQ8BMLI","The Diary Of A CEO｜Bitcoin interview",0],
+ ["Qh9xgjd38VI","feeel.d｜GPT-6 Astra：圖面 → SketchUp 建模",0],
+ ["t2CnFIWASAo","三立財經 iNEWS｜AI 競賽踩煞車？",0],
+ ["0_wvqH_BXw0","素人がAIで作ってみた｜Tripo AI 3D Modeling",0],
+ ["iIKc-HpVqks","AI 101｜李飛飛 Atlas：三支 iPhone…",0],
+ ["EydPAWMf-qc","Mark 的地球漫步｜GPT-6 Astra 自主工作全紀錄 EP.02",0],
+ ["KOAybkE7_vw","ZZ Dream｜DeepSeek-V4.1-Flash 生成 iPhone Duo…",0]
+];
+function caseCard([id,title,src,why,url],d){return `<a class="case rv" data-d="${d}" href="${url}" target="_blank">
+ <div class="thumb"><img src="${thumb(id)}" alt="" loading="lazy"><div class="play"><span>▶</span></div><span class="fittag">${src}</span></div>
+ <div class="case-body"><h4>${title}</h4><div class="why"><b>為什麼看：</b>${why}</div><span class="src">${url}</span></div></a>`;}
+function xCard([h,t,p,u],d){return `<a class="xcard rv" data-d="${d}" href="${u}" target="_blank">
+ <div class="xh"><span class="xi">𝕏</span><span>${h}</span></div><h5>${t}</h5><p>${p}</p><span class="xurl">${u}</span></a>`;}
+document.getElementById("filmCases").innerHTML=filmCases.map((c,i)=>caseCard(c,i%4)).join("");
+document.getElementById("filmX").innerHTML=filmX.map((c,i)=>xCard(c,i%4)).join("");
+document.getElementById("threeDCases").innerHTML=threeDCases.map((c,i)=>caseCard(c,i%4)).join("");
+document.getElementById("threeDX").innerHTML=threeDX.map((c,i)=>xCard(c,i%4)).join("");
+document.getElementById("agentX").innerHTML=agentX.map((c,i)=>xCard(c,i%4)).join("");
+document.getElementById("careerCases").innerHTML=careerCases.map((c,i)=>caseCard(c,i%4)).join("");
+document.getElementById("prCases").innerHTML=prCases.map((c,i)=>caseCard(c,i%4)).join("");
+document.getElementById("riskGrid").innerHTML=risks.map(([i,t,p],k)=>`<div class="mini rv" data-d="${k%4}"><span class="tag">${i} ${t}</span><p>${p}</p></div>`).join("");
+document.getElementById("talkGrid").innerHTML=talks.map(([d,t,p],k)=>`<div class="mini rv" data-d="${k%4}"><span class="tag">${d}</span><h4>${t}</h4><p>${p}</p></div>`).join("");
+document.getElementById("kGrid").innerHTML=keynotes.map(([e,d,f,p],k)=>`<div class="kcase rv" data-d="${k%4}">
+ <div class="kframe"><div class="slide-mock"><span>${e}</span></div><img src="lecture/${f}" alt="${d}" loading="lazy" onerror="this.remove()"></div>
+ <div class="kbody"><div class="kdate">${d}</div><h4>${d.split("·")[1]||d}</h4><p>${p}</p>
+ <a href="https://drive.google.com/drive/folders/1N771_2SydAcpbhZOnayX69uiY1kVje41?usp=drive_link" target="_blank">Drive 原始簡報 ↗</a></div></div>`).join("");
+document.getElementById("summerGrid").innerHTML=summer.map(([d,t,ps,punch],k)=>`<div class="mini rv" data-d="${k%4}"><span class="tag">${d}</span><h4>${t}</h4><ul>${ps.map(p=>`<li>${p}</li>`).join("")}</ul><div class="punch">${punch}</div></div>`).join("");
+document.getElementById("twGrid").innerHTML=twLinks.map(([tag,t,p,u],k)=>`<a class="mini rv" data-d="${k%4}" style="text-decoration:none;color:inherit" href="${u}" target="_blank"><span class="tag">${tag}</span><h4>${t}</h4><p>${p}</p></a>`).join("");
+document.getElementById("srcGrid").innerHTML=allSrc.map(([id,t,s],k)=>`<a class="src rv" data-d="${k%5}" href="https://www.youtube.com/${s?'shorts/':'watch?v='}${id}" target="_blank">
+ <div class="sthumb"><img src="${thumb(id)}" alt="" loading="lazy"><span class="stype ${s?'':'video'}">${s?'SHORT':'▶ VIDEO'}</span></div>
+ <div class="sbody"><h5>${t}</h5><span class="surl">youtube.com/${s?'shorts':'watch'} · ${id}</span></div></a>`).join("");
+const navData=[["top","首頁"],["industry","產業"],["gap","斷層"],["junior","Junior"],["edu","教育"],["film","AI 影片"],["3d","AI×3D"],["agent","Agent"],["career","職涯"],["prcrisis","公關"],["risk","風險"],["action","行動"],["talks","演講"],["visuals","演講圖"],["summer","漫畫場"],["taiwan","Taiwan.md"],["sources","來源"],["discussion","討論"]];
+const nav=document.getElementById("nav");
+nav.innerHTML=navData.map(([id,t])=>`<a href="#${id}" data-id="${id}">${t}</a>`).join("");
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(!e.isIntersecting)return;e.target.classList.add("vis");
+ e.target.querySelectorAll(".num").forEach(n=>{if(n.dataset.done)return;n.dataset.done=1;const t=+n.dataset.n;let v=0;const step=Math.max(1,Math.ceil(t/20));
+ const it=setInterval(()=>{v+=step;if(v>=t){v=t;clearInterval(it)}n.textContent=v},40);});});},{threshold:.12});
+document.querySelectorAll(".rv").forEach(el=>io.observe(el));
+const bar=document.getElementById("pbar");
+const secs=[...document.querySelectorAll("section[id]")];
+const navLinks=[...nav.querySelectorAll("a")];
+function onScroll(){const h=document.documentElement;bar.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+"%";
+ let cur=secs[0].id;secs.forEach(s=>{if(s.getBoundingClientRect().top<=130)cur=s.id});
+ navLinks.forEach(a=>a.classList.toggle("on",a.dataset.id===cur));}
+addEventListener("scroll",onScroll,{passive:true});onScroll();
+document.querySelectorAll(".case,.src,.kcase").forEach(card=>{
+ card.addEventListener("mousemove",e=>{const r=card.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+ card.style.transform=`perspective(900px) rotateY(${x*7}deg) rotateX(${-y*7}deg) translateY(-4px)`;});
+ card.addEventListener("mouseleave",()=>card.style.transform="");});
+const st=document.getElementById("stars");
+for(let i=0;i<60;i++){const s=document.createElement("div");s.className="star";s.style.left=Math.random()*100+"%";s.style.top=Math.random()*100+"%";s.style.animationDelay=(Math.random()*4)+"s";s.style.animationDuration=(2.5+Math.random()*3.5)+"s";st.appendChild(s);}
+</script>
+</body>
+</html>
