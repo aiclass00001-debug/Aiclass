@@ -1,1946 +1,637 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>VR / XR × Virtual Production｜TCIMAGE LAB</title>
 <style>
-:root{--bg:#050811;--panel:#0c1322;--text:#eef6ff;--muted:#9eb0c8;--cyan:#24e8ff;--pink:#ff45cf;--lime:#b9ff5a;--amber:#ffd166;--line:rgba(255,255,255,.09)}
-*{box-sizing:border-box} html{scroll-behavior:smooth}
-body{margin:0;background:radial-gradient(circle at 15% 0,rgba(36,232,255,.12),transparent 28%),radial-gradient(circle at 90% 5%,rgba(255,69,207,.1),transparent 25%),linear-gradient(#050811,#07101b 60%,#05070d);color:var(--text);font-family:Inter,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;line-height:1.7}
-a{color:var(--cyan);text-decoration:none} p{margin:0 0 10px}
-nav{position:sticky;top:0;z-index:20;background:rgba(5,8,14,.82);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
-nav .in{max-width:1250px;margin:auto;padding:11px 18px;display:flex;gap:14px;align-items:center;overflow:auto} nav b{white-space:nowrap} nav a{font-size:13px;white-space:nowrap;color:#d2dceb}
-.hero{max-width:1250px;margin:auto;padding:76px 22px 52px;display:grid;grid-template-columns:1.25fr .75fr;gap:30px;align-items:center}
-.k{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid rgba(36,232,255,.3);background:rgba(36,232,255,.05);color:#c8fbff;font-size:12px}
-h1{font-size:clamp(48px,7vw,96px);line-height:.95;letter-spacing:-.055em;margin:18px 0}
-.grad{background:linear-gradient(90deg,#fff,var(--cyan),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent}
-.herobox{padding:22px;border:1px solid var(--line);border-radius:22px;background:rgba(12,19,34,.82)} .hero-stat{padding:11px 0;border-bottom:1px solid rgba(255,255,255,.08)} .hero-stat:last-child{border-bottom:0}
-section{max-width:1250px;margin:auto;padding:64px 22px} .eyebrow{font-size:12px;font-weight:900;color:var(--cyan);letter-spacing:.12em} h2{font-size:clamp(34px,4.5vw,58px);line-height:1.08;margin:6px 0 14px;letter-spacing:-.035em} h3{font-size:24px;margin:5px 0 12px} .lead{color:#bfd0e2;max-width:950px}
-.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:17px} .card{grid-column:span 4;padding:20px;border:1px solid var(--line);border-radius:20px;background:rgba(12,19,34,.82)} .card p{color:#acbdd0}
-.flow{display:flex;flex-wrap:wrap;gap:10px;align-items:center} .step{padding:10px 14px;border:1px solid rgba(36,232,255,.25);border-radius:999px;background:rgba(36,232,255,.05);font-weight:800} .arr{color:var(--pink);font-weight:900}
-.split{display:grid;grid-template-columns:1fr 1fr;gap:18px} .panel{padding:20px;border:1px solid var(--line);border-radius:20px;background:rgba(12,19,34,.82)} .callout{padding:18px 20px;border:1px solid rgba(185,255,90,.25);border-radius:18px;background:rgba(185,255,90,.06)}
-.track-toggle{display:flex;gap:10px;margin:20px 0} button{border:1px solid var(--line);background:#0c1422;color:#dbe8f6;padding:10px 14px;border-radius:999px;font-weight:900;cursor:pointer} button.active{background:linear-gradient(90deg,var(--cyan),#8af7ff);color:#001014}
-.sources{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:20px} .hidden{display:none}
-.src-card{border:1px solid var(--line);border-radius:17px;overflow:hidden;background:rgba(10,15,26,.92)}
-.cover{position:relative;display:block;aspect-ratio:16/9;background:#03060b;overflow:hidden}
-.cover img{width:100%;height:100%;object-fit:cover;display:block;transition:.2s} .cover:hover img{transform:scale(1.02)}
-.play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:56px;height:42px;border-radius:14px;background:rgba(255,0,0,.95);display:grid;place-items:center;color:#fff;font-weight:900;font-size:22px;box-shadow:0 8px 24px rgba(0,0,0,.35)}
-.badge{position:absolute;right:10px;top:10px;background:rgba(0,0,0,.72);border:1px solid rgba(255,255,255,.16);padding:4px 8px;border-radius:999px;font-size:10px;font-weight:900;color:#fff}
-.fallback{width:100%;height:100%;display:grid;place-items:center;background:linear-gradient(135deg,rgba(36,232,255,.12),rgba(255,69,207,.12));font-size:56px;font-weight:1000;color:#eaf7ff}
-.src-body{padding:14px 14px 16px} .src-body h4{font-size:15px;line-height:1.45;margin:0 0 8px} .desc{font-size:13px;color:#d2deeb} .note{font-size:12px;color:var(--muted)} .url{display:block;font-size:11px;line-height:1.45;word-break:break-all;color:#bfefff;text-decoration:underline;text-underline-offset:2px}
-footer{max-width:1250px;margin:0 auto;padding:30px 22px 60px;color:var(--muted)}
-@media(max-width:900px){.hero,.split{grid-template-columns:1fr} .card{grid-column:span 12} .sources{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:620px){.sources{grid-template-columns:1fr}}
+:root{--bg:#070b14;--panel:#0f1626;--card:#131c30;--line:#22304a;--txt:#e8eefb;--sub:#93a3bd;--acc:#4cc3ff;--acc2:#b57bff;--ok:#3ddc97;--warn:#ffcf5c}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--txt);font-family:"Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;overflow:hidden}
 
-.featured-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:18px}
-.pick-card{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:linear-gradient(180deg,rgba(16,25,43,.92),rgba(8,12,21,.94));box-shadow:0 14px 38px rgba(0,0,0,.24)}
-.pick-cover{position:relative;display:block;aspect-ratio:16/9;background:#000;overflow:hidden}
-.pick-cover img{width:100%;height:100%;object-fit:cover;display:block;transition:.22s}
-.pick-cover:hover img{transform:scale(1.025);filter:brightness(.92)}
-.pick-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:58px;height:43px;border-radius:14px;background:rgba(255,0,0,.95);display:grid;place-items:center;color:white;font-size:22px;font-weight:900;box-shadow:0 8px 24px rgba(0,0,0,.4)}
-.pick-body{padding:15px}
-.pick-tech{font-size:10px;font-weight:900;letter-spacing:.08em;color:var(--pink);text-transform:uppercase}
-.pick-body h4{font-size:16px;line-height:1.42;margin:5px 0 9px}
-.pick-body p{font-size:13px;color:#c5d3e2;line-height:1.55}
-.pick-url{display:block;font-size:10px;word-break:break-all;color:#bfefff;text-decoration:underline;text-underline-offset:2px}
-@media(max-width:1000px){.featured-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:650px){.featured-grid{grid-template-columns:1fr}}
+/* ===== 背景層 ===== */
+.bg-grid{position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(76,195,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(76,195,255,.05) 1px,transparent 1px);background-size:48px 48px;animation:gridMove 24s linear infinite}
+@keyframes gridMove{to{background-position:48px 48px}}
+.orb{position:fixed;border-radius:50%;filter:blur(90px);opacity:.22;z-index:0;animation:drift 16s ease-in-out infinite alternate}
+.orb.a{width:420px;height:420px;background:#1d6fff;top:-120px;left:-100px}
+.orb.b{width:380px;height:380px;background:#8b2fff;bottom:-100px;right:-80px;animation-delay:-6s}
+.orb.c{width:300px;height:300px;background:#00c98d;top:40%;left:55%;animation-delay:-11s;opacity:.12}
+@keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(60px,-40px) scale(1.15)}}
+#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+.star{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;animation:twinkle 4s infinite}
+@keyframes twinkle{0%,100%{opacity:.08}50%{opacity:.55}}
 
+/* ===== 頂部 ===== */
+.progress{position:fixed;top:0;left:0;height:3px;width:100%;z-index:50;background:rgba(255,255,255,.06)}
+.progress .bar{height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--acc2),var(--ok));transition:width .5s cubic-bezier(.2,.7,.3,1);box-shadow:0 0 12px var(--acc)}
+header{position:fixed;top:3px;left:0;right:0;z-index:40;display:flex;justify-content:space-between;align-items:center;padding:12px 22px;background:rgba(7,11,20,.75);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.badge{border:1px solid var(--line);border-radius:999px;padding:5px 16px;color:var(--acc);font-size:12px;letter-spacing:2px;animation:floaty 4s ease-in-out infinite}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.pager{display:flex;gap:10px;align-items:center}
+.pager button{background:var(--panel);border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:7px 16px;cursor:pointer;font-size:13px;transition:.25s;font-family:inherit}
+.pager button:hover{border-color:var(--acc);color:var(--acc);box-shadow:0 0 14px rgba(76,195,255,.35);transform:translateY(-1px)}
+#pageInfo{font-size:12px;color:var(--sub);min-width:46px;text-align:center;font-variant-numeric:tabular-nums}
+
+/* ===== Slide 系統 ===== */
+main{position:relative;z-index:2;height:100vh;padding-top:60px}
+.slide{position:absolute;inset:60px 0 0;overflow-y:auto;overflow-x:hidden;padding:46px 5vw 110px;opacity:0;pointer-events:none;transform:translateY(34px) scale(.985);transition:opacity .55s ease,transform .55s cubic-bezier(.2,.7,.3,1);scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+.slide.active{opacity:1;pointer-events:auto;transform:none}
+.slide::-webkit-scrollbar{width:6px}.slide::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+.slide-num{font-size:12px;letter-spacing:3px;color:var(--acc);margin-bottom:10px;opacity:.9}
+.gtitle{font-size:clamp(26px,4vw,46px);line-height:1.25;margin-bottom:14px;background:linear-gradient(90deg,#4cc3ff,#b57bff,#3ddc97,#4cc3ff);background-size:300% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 7s linear infinite}
+@keyframes shine{to{background-position:300% center}}
+.lead{color:var(--sub);max-width:820px;line-height:1.9;font-size:15px;margin-bottom:34px}
+@keyframes rise{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+.slide.active .stagger{animation:rise .6s cubic-bezier(.2,.7,.3,1) both;animation-delay:calc(var(--i,0)*80ms)}
+
+/* ===== Hero ===== */
+#hero{text-align:center;display:flex;flex-direction:column;justify-content:center;align-items:center}
+#hero .kicker{font-size:13px;letter-spacing:4px;color:var(--sub);margin-bottom:18px}
+#hero h1{font-size:clamp(32px,5.5vw,60px);line-height:1.22;margin-bottom:20px;background:linear-gradient(90deg,#4cc3ff,#b57bff,#3ddc97,#4cc3ff);background-size:300% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s linear infinite}
+#hero p{color:var(--sub);max-width:780px;line-height:1.95;font-size:15px;margin-bottom:12px}
+.chips{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:30px}
+.chip{border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:12px 22px;font-size:13px;color:var(--sub);transition:.3s;cursor:default}
+.chip:hover{border-color:var(--acc);color:var(--acc);transform:translateY(-4px);box-shadow:0 8px 24px rgba(76,195,255,.18)}
+.chip b{color:var(--txt);display:block;font-size:15px;margin-bottom:3px}
+.hint{margin-top:52px;color:var(--sub);font-size:13px;animation:bob 1.8s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0);opacity:.6}50%{transform:translateY(8px);opacity:1}}
+
+/* ===== Pipeline ===== */
+.pipeline{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;justify-content:center;margin:44px 0 20px}
+.pnode{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 22px;min-width:150px;max-width:190px;text-align:center;position:relative;transition:.3s}
+.pnode:hover{border-color:var(--acc);transform:translateY(-6px);box-shadow:0 10px 30px rgba(76,195,255,.22)}
+.pnode .ico{font-size:26px;margin-bottom:8px;display:block;animation:floaty 3.5s ease-in-out infinite}
+.pnode h4{font-size:14px;margin-bottom:5px}
+.pnode small{color:var(--sub);font-size:11px;line-height:1.5;display:block}
+.parrow{width:56px;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0}
+.parrow::before{content:"";position:absolute;left:4px;right:4px;height:2px;background:repeating-linear-gradient(90deg,var(--acc) 0 6px,transparent 6px 12px);opacity:.5;animation:dashRun 1.2s linear infinite}
+@keyframes dashRun{to{background-position:12px 0}}
+.parrow::after{content:"";position:absolute;width:7px;height:7px;border-radius:50%;background:var(--acc);box-shadow:0 0 10px var(--acc);animation:dotRun 2.2s ease-in-out infinite}
+@keyframes dotRun{0%{left:6px;opacity:0}15%{opacity:1}85%{opacity:1}100%{left:calc(100% - 12px);opacity:0}}
+.core-line{margin-top:26px;text-align:center;font-size:15px;color:var(--txt);border:1px solid var(--line);border-radius:999px;padding:12px 26px;display:inline-block;background:var(--panel)}
+.core-wrap{text-align:center}
+.core-line b{color:var(--ok)}
+
+/* ===== 一般卡片 ===== */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;margin-top:10px}
+.mini{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;transition:.3s;position:relative;overflow:hidden}
+.mini::before{content:"";position:absolute;top:0;left:-80%;width:60%;height:100%;background:linear-gradient(100deg,transparent,rgba(76,195,255,.07),transparent);transition:left .6s}
+.mini:hover::before{left:120%}
+.mini:hover{border-color:var(--acc);transform:translateY(-5px);box-shadow:0 12px 30px rgba(0,0,0,.4)}
+.mini .tag{display:inline-block;font-size:11px;letter-spacing:1px;color:var(--acc);border:1px solid rgba(76,195,255,.35);border-radius:999px;padding:3px 12px;margin-bottom:12px}
+.mini h4{font-size:17px;margin-bottom:8px}
+.mini p{color:var(--sub);font-size:13px;line-height:1.8}
+.note{margin-top:30px;border-left:3px solid var(--ok);background:var(--panel);border-radius:0 14px 14px 0;padding:18px 24px;color:var(--sub);font-size:14px;line-height:1.9}
+.note b{color:var(--ok)}
+
+/* ===== VS 面板 ===== */
+.vs-wrap{display:grid;grid-template-columns:1fr auto 1fr;gap:18px;align-items:stretch;margin:20px 0 26px}
+.vs-box{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px;transition:.3s}
+.vs-box:hover{transform:translateY(-5px)}
+.vs-box.old{border-color:rgba(255,207,92,.3)}
+.vs-box.new{border-color:rgba(61,220,151,.35);box-shadow:0 0 24px rgba(61,220,151,.08)}
+.vs-box h4{font-size:16px;margin-bottom:14px}
+.vs-box .flowline{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:14px}
+.vs-box .step{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:12px}
+.vs-box .ar{color:var(--acc)}
+.vs-box p{color:var(--sub);font-size:13px;line-height:1.8}
+.vs-mid{display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:var(--acc2);text-shadow:0 0 18px rgba(181,123,255,.6);animation:floaty 3s ease-in-out infinite}
+@media(max-width:820px){.vs-wrap{grid-template-columns:1fr}.vs-mid{padding:4px}}
+
+/* ===== Tabs ===== */
+.tabs{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:26px}
+.tab{padding:10px 24px;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--sub);cursor:pointer;font-size:13px;transition:.3s;font-family:inherit}
+.tab:hover{border-color:var(--acc);color:var(--acc)}
+.tab.on{background:linear-gradient(90deg,var(--acc),var(--acc2));color:#04101f;border-color:transparent;font-weight:700;box-shadow:0 0 20px rgba(76,195,255,.4)}
+.panel{display:none;animation:panelIn .5s cubic-bezier(.2,.7,.3,1)}
+.panel.on{display:block}
+@keyframes panelIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.count-line{color:var(--sub);font-size:13px;margin-bottom:18px}
+.count-line b{color:var(--acc);font-size:20px;font-variant-numeric:tabular-nums}
+
+/* ===== 案例卡（含 3D tilt）===== */
+.cases{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px;perspective:1200px}
+.case{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:transform .2s ease-out,box-shadow .3s,border-color .3s;transform-style:preserve-3d;will-change:transform}
+.case:hover{border-color:var(--acc);box-shadow:0 18px 44px rgba(0,0,0,.5),0 0 26px rgba(76,195,255,.18)}
+.thumb{position:relative;aspect-ratio:16/9;overflow:hidden;background:#000}
+.thumb img{width:100%;height:100%;object-fit:cover;transition:transform .55s;opacity:.92}
+.case:hover .thumb img{transform:scale(1.09);opacity:1}
+.play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.play span{width:54px;height:54px;border-radius:50%;background:rgba(0,0,0,.55);border:2px solid rgba(255,255,255,.9);color:#fff;display:flex;align-items:center;justify-content:center;font-size:19px;padding-left:4px;animation:pulse 2s infinite;backdrop-filter:blur(3px)}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(76,195,255,.55)}70%{box-shadow:0 0 0 20px rgba(76,195,255,0)}100%{box-shadow:0 0 0 0 rgba(76,195,255,0)}}
+.fit{position:absolute;top:10px;left:10px;background:rgba(7,11,20,.82);border:1px solid var(--acc);color:var(--acc);font-size:11px;border-radius:999px;padding:4px 12px;backdrop-filter:blur(4px)}
+.case-body{padding:18px 20px 20px}
+.case-body h4{font-size:15px;line-height:1.55;margin-bottom:8px}
+.case-body .why{color:var(--sub);font-size:12.5px;line-height:1.75;margin-bottom:12px}
+.case-body .why b{color:var(--ok);font-weight:600}
+.case-body a{color:var(--acc);font-size:11.5px;text-decoration:none;word-break:break-all;opacity:.85;transition:.25s}
+.case-body a:hover{opacity:1;text-shadow:0 0 8px rgba(76,195,255,.6)}
+
+/* ===== 來源庫小卡 ===== */
+.srcs{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.src{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:.28s;display:block;text-decoration:none;color:inherit}
+.src:hover{border-color:var(--acc2);transform:translateY(-4px);box-shadow:0 10px 26px rgba(0,0,0,.45)}
+.src .sthumb{position:relative;aspect-ratio:16/9;overflow:hidden;background:var(--panel)}
+.src .sthumb img{width:100%;height:100%;object-fit:cover;opacity:.85;transition:transform .5s}
+.src:hover .sthumb img{transform:scale(1.07);opacity:1}
+.src .stype{position:absolute;top:8px;left:8px;font-size:10.5px;border-radius:999px;padding:3px 10px;backdrop-filter:blur(4px);background:rgba(7,11,20,.8);border:1px solid var(--line)}
+.src .sbody{padding:13px 15px 15px}
+.src .sbody h5{font-size:13px;margin-bottom:5px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.src .sbody p{color:var(--sub);font-size:11px;line-height:1.65;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.src .sbody .surl{display:block;margin-top:8px;color:var(--acc);font-size:10.5px;word-break:break-all;opacity:.75}
+.gh-ico{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:34px;color:var(--sub);background:linear-gradient(135deg,#101828,#1a2440)}
+
+/* ===== AI VTuber 對戰 ===== */
+.battle{display:grid;grid-template-columns:1fr 70px 1fr;gap:14px;align-items:stretch;margin-bottom:26px}
+.fighter{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;transition:.3s;position:relative;overflow:hidden}
+.fighter:hover{transform:translateY(-5px)}
+.fighter.kit{border-color:rgba(76,195,255,.4)}
+.fighter.onair{border-color:rgba(181,123,255,.4)}
+.fighter .fname{font-size:19px;font-weight:800;margin-bottom:4px}
+.fighter.kit .fname{color:var(--acc)}
+.fighter.onair .fname{color:var(--acc2)}
+.fighter .frole{font-size:12px;color:var(--sub);margin-bottom:14px}
+.fighter ul{list-style:none}
+.fighter li{font-size:12.5px;color:var(--sub);line-height:1.7;padding:5px 0 5px 22px;position:relative}
+.fighter li::before{content:"▸";position:absolute;left:4px;color:var(--ok)}
+.fighter li.no::before{content:"✕";color:#ff6b81}
+.fighter a{display:inline-block;margin-top:14px;font-size:11.5px;color:var(--acc);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:6px 16px;transition:.25s}
+.fighter a:hover{border-color:var(--acc);box-shadow:0 0 14px rgba(76,195,255,.35)}
+.vs-mid2{display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:var(--warn);text-shadow:0 0 16px rgba(255,207,92,.6);animation:floaty 2.6s ease-in-out infinite}
+@media(max-width:820px){.battle{grid-template-columns:1fr}.vs-mid2{padding:2px}}
+.cmp{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px}
+.cmp th,.cmp td{border:1px solid var(--line);padding:9px 13px;text-align:left}
+.cmp th{background:var(--panel);color:var(--acc);font-size:12px;letter-spacing:1px}
+.cmp td{color:var(--sub)}
+.cmp td:first-child{color:var(--txt)}
+.cmp tr{transition:.2s}
+.cmp tbody tr:hover{background:rgba(76,195,255,.05)}
+.verdict{margin-top:22px;text-align:center;font-size:15px;color:var(--sub);line-height:2}
+.verdict b{color:var(--ok)}
+
+/* ===== Takeaway ===== */
+#takeaway{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+#takeaway .big{font-size:clamp(24px,4vw,44px);line-height:1.5;margin-bottom:34px}
+#takeaway .big em{font-style:normal;background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.formula{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:40px}
+.formula span{border:1px solid var(--line);background:var(--panel);border-radius:12px;padding:12px 20px;font-size:14px;color:var(--sub);transition:.3s}
+.formula span:hover{border-color:var(--ok);color:var(--ok);transform:translateY(-4px)}
+.formula i{font-style:normal;color:var(--acc2);align-self:center;font-size:18px}
+
+/* ===== 底部圓點 ===== */
+.dots{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:40;background:rgba(7,11,20,.7);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:999px;padding:9px 16px}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--line);cursor:pointer;transition:.3s;border:none}
+.dot.on{background:var(--acc);box-shadow:0 0 10px var(--acc);transform:scale(1.35)}
+.dot:hover{background:var(--acc2)}
+footer.credit{position:fixed;bottom:24px;right:22px;z-index:40;font-size:11px;color:var(--sub);opacity:.6;letter-spacing:1px}
+@media(max-width:640px){footer.credit{display:none}.parrow{width:100%;height:34px}.parrow::before{left:50%;right:auto;top:4px;bottom:4px;width:2px;height:auto;background:repeating-linear-gradient(180deg,var(--acc) 0 6px,transparent 6px 12px)}.parrow::after{animation:dotRunV 2.2s ease-in-out infinite;left:calc(50% - 3px)}@keyframes dotRunV{0%{top:4px;opacity:0}15%{opacity:1}85%{opacity:1}100%{top:calc(100% - 10px);opacity:0}}.pipeline{flex-direction:column;align-items:center}}
 </style>
 </head>
 <body>
-<nav><div class="in"><b>TCIMAGE/<span style="color:var(--cyan)">VR·VP CLASS</span></b><a href="#overview">課程地圖</a><a href="#vr">大三 VR/XR</a><a href="#vp">研究所 VP</a><a href="#featured">精選案例</a><a href="#sources">完整來源</a></div></nav>
 
-<header class="hero">
-  <div>
-    <span class="k">2026 · VR / XR · UE5 · Virtual Production</span>
-    <h1><span class="grad">從虛擬世界</span><br>到鏡頭裡的世界</h1>
-    <p class="lead">把兩份收集資料整理成同一套「沉浸式互動 × 虛擬場景合成」教材：大三走 VR / MR / WebXR / VTuber / Projection Mapping；研究所走 UE5、綠幕、Nuke、LED Volume、nDisplay、ICVFX 與色彩管理。</p>
-  </div>
-  <div class="herobox">
-    <div class="hero-stat"><b>大三：</b>互動、空間、Avatar、WebXR</div>
-    <div class="hero-stat"><b>研究所：</b>合成、虛擬攝影、LED、Color Pipeline</div>
-    <div class="hero-stat"><b>共同核心：</b>Real-time 3D → Experience / Shot</div>
+<div class="bg-grid"></div>
+<div class="orb a"></div><div class="orb b"></div><div class="orb c"></div>
+<div id="stars"></div>
+<div class="progress"><div class="bar" id="pbar"></div></div>
+
+<header>
+  <div class="badge">TCIMAGE/VR·VP CLASS · 2026</div>
+  <div class="pager">
+    <button id="prev">← 上一頁</button>
+    <span id="pageInfo">1 / 7</span>
+    <button id="next">下一頁 →</button>
   </div>
 </header>
 
 <main>
-<section id="overview">
-  <div class="eyebrow">01 · COURSE MAP</div>
-  <h2>兩門課其實是同一條 Real-time Pipeline 的兩端</h2>
-  <div class="flow">
-    <span class="step">3D / Scan / AI Asset</span><span class="arr">→</span>
-    <span class="step">UE5 / Three.js</span><span class="arr">→</span>
-    <span class="step">Tracking / Interaction</span><span class="arr">→</span>
-    <span class="step">VR / MR / WebXR</span><span class="arr">→</span>
-    <span class="step">Camera / LED / Composite</span><span class="arr">→</span>
-    <span class="step">Experience / Film</span>
+
+<!-- ============ SLIDE 0 · HERO ============ -->
+<section class="slide active" id="hero">
+  <div class="kicker stagger" style="--i:0">2026 · VR / XR · UE5 · VIRTUAL PRODUCTION</div>
+  <h1 class="stagger" style="--i:1">從虛擬世界<br>到鏡頭裡的世界</h1>
+  <p class="stagger" style="--i:2">把兩份收集資料整理成同一套「沉浸式互動 × 虛擬場景合成」教材：<br>大三走 VR / MR / WebXR / VTuber / Projection Mapping；研究所走 UE5、綠幕、Nuke、LED Volume、nDisplay、ICVFX 與色彩管理。</p>
+  <div class="chips">
+    <div class="chip stagger" style="--i:3"><b>大三</b>互動、空間、Avatar、WebXR</div>
+    <div class="chip stagger" style="--i:4"><b>研究所</b>合成、虛擬攝影、LED、Color Pipeline</div>
+    <div class="chip stagger" style="--i:5"><b>共同核心</b>Real-time 3D → Experience / Shot</div>
   </div>
+  <div class="hint stagger" style="--i:6">▼ 按「下一頁」或鍵盤 → 開始</div>
 </section>
 
-<section id="vr">
-  <div class="eyebrow">02 · JUNIOR / VR & XR</div>
-  <h2>大三 VR 課：不是只戴頭盔，而是設計「空間中的互動」</h2>
+<!-- ============ SLIDE 1 · COURSE MAP ============ -->
+<section class="slide" id="map">
+  <div class="slide-num stagger" style="--i:0">01 · COURSE MAP</div>
+  <h2 class="gtitle stagger" style="--i:1">兩門課其實是同一條 Real-time Pipeline 的兩端</h2>
+  <div class="pipeline">
+    <div class="pnode stagger" style="--i:2"><span class="ico">🧊</span><h4>3D / Scan / AI Asset</h4><small>資產來源：建模、掃描、AI 生成</small></div>
+    <div class="parrow stagger" style="--i:3"></div>
+    <div class="pnode stagger" style="--i:4"><span class="ico">🎮</span><h4>UE5 / Three.js</h4><small>即時引擎與 Web 3D</small></div>
+    <div class="parrow stagger" style="--i:5"></div>
+    <div class="pnode stagger" style="--i:6"><span class="ico">🎯</span><h4>Tracking / Interaction</h4><small>追蹤、互動、Avatar 驅動</small></div>
+    <div class="parrow stagger" style="--i:7"></div>
+    <div class="pnode stagger" style="--i:8"><span class="ico">🥽</span><h4>VR / MR / WebXR</h4><small>沉浸式體驗輸出（大三）</small></div>
+    <div class="parrow stagger" style="--i:9"></div>
+    <div class="pnode stagger" style="--i:10"><span class="ico">🎥</span><h4>Camera / LED / Composite</h4><small>虛擬攝影與現場合成（研究所）</small></div>
+    <div class="parrow stagger" style="--i:11"></div>
+    <div class="pnode stagger" style="--i:12"><span class="ico">🏁</span><h4>Experience / Film</h4><small>最終交付：體驗或影像</small></div>
+  </div>
+  <div class="core-wrap stagger" style="--i:13"><div class="core-line">共同核心：<b>Real-time 3D → Experience / Shot</b></div></div>
+</section>
+
+<!-- ============ SLIDE 2 · JUNIOR VR/XR ============ -->
+<section class="slide" id="vr">
+  <div class="slide-num stagger" style="--i:0">02 · JUNIOR / VR &amp; XR</div>
+  <h2 class="gtitle stagger" style="--i:1">大三 VR 課：不是只戴頭盔，而是設計「空間中的互動」</h2>
   <div class="grid">
-    <div class="card"><h3>Meta MR × UE5</h3><p>從 UE5.5 Mixed Reality Game、Passthrough、空間定位開始，把虛擬物件真正放進現實環境。</p></div>
-    <div class="card"><h3>WebXR × Three.js</h3><p>瀏覽器直接進 VR，搭配 WebXR Samples、Three.js、VRM，適合 Quest 與跨平台教學。</p></div>
-    <div class="card"><h3>VTuber × Motion</h3><p>VRM、VMC、Live Link、BlendShape、身體與臉部動作串接，形成即時 Avatar Pipeline。</p></div>
-    <div class="card"><h3>Projection Mapping</h3><p>TouchDesigner + KantanMapper、360° AI 內容投影，把「虛擬場景」投到真實建築與空間。</p></div>
-    <div class="card"><h3>AR / MR 快速原型</h3><p>MAKAR 鯨鯊、MR 天燈等案例，讓學生理解內容、空間錨點、互動與體驗設計。</p></div>
-    <div class="card"><h3>3D Reconstruction</h3><p>Gaussian Splats、即時場景重建、XGRIDS / UE Plugin，從掃描走向可即時瀏覽的數位場景。</p></div>
+    <div class="mini stagger" style="--i:2"><span class="tag">MR × ENGINE</span><h4>Meta MR × UE5</h4><p>從 UE5.5 Mixed Reality Game、Passthrough、空間定位開始，把虛擬物件真正放進現實環境。</p></div>
+    <div class="mini stagger" style="--i:3"><span class="tag">WEB 3D</span><h4>WebXR × Three.js</h4><p>瀏覽器直接進 VR，搭配 WebXR Samples、Three.js、VRM，適合 Quest 與跨平台教學。</p></div>
+    <div class="mini stagger" style="--i:4"><span class="tag">AVATAR</span><h4>VTuber × Motion</h4><p>VRM、VMC、Live Link、BlendShape、身體與臉部動作串接，形成即時 Avatar Pipeline。</p></div>
+    <div class="mini stagger" style="--i:5"><span class="tag">SPACE</span><h4>Projection Mapping</h4><p>TouchDesigner + KantanMapper、360° AI 內容投影，把「虛擬場景」投到真實建築與空間。</p></div>
+    <div class="mini stagger" style="--i:6"><span class="tag">PROTOTYPE</span><h4>AR / MR 快速原型</h4><p>MAKAR 鯨鯊、MR 天燈等案例，讓學生理解內容、空間錨點、互動與體驗設計。</p></div>
+    <div class="mini stagger" style="--i:7"><span class="tag">SCAN</span><h4>3D Reconstruction</h4><p>Gaussian Splats、即時場景重建、XGRIDS / UE Plugin，從掃描走向可即時瀏覽的數位場景。</p></div>
   </div>
-  <div class="callout" style="margin-top:18px"><strong>大三主線：</strong>不是「學一堆 XR 工具」，而是讓學生能把 3D 資產 → 互動 → 空間體驗 → 展示，做成完整作品。</div>
+  <div class="note stagger" style="--i:8"><b>大三主線：</b>不是「學一堆 XR 工具」，而是讓學生能把 3D 資產 → 互動 → 空間體驗 → 展示，做成完整作品。</div>
 </section>
 
-<section id="vp">
-  <div class="eyebrow">03 · GRADUATE / VIRTUAL PRODUCTION</div>
-  <h2>研究所：從「後製合成」走到「拍攝現場就是合成系統」</h2>
-  <div class="split">
-    <div class="panel">
-      <h3>傳統路線</h3>
-      <div class="flow"><span class="step">Green Screen</span><span class="arr">→</span><span class="step">Keying</span><span class="arr">→</span><span class="step">Nuke</span><span class="arr">→</span><span class="step">CG Composite</span></div>
+<!-- ============ SLIDE 3 · GRADUATE VP ============ -->
+<section class="slide" id="vp">
+  <div class="slide-num stagger" style="--i:0">03 · GRADUATE / VIRTUAL PRODUCTION</div>
+  <h2 class="gtitle stagger" style="--i:1">研究所：從「後製合成」走到「拍攝現場就是合成系統」</h2>
+  <div class="vs-wrap">
+    <div class="vs-box old stagger" style="--i:2">
+      <h4>🟡 傳統路線</h4>
+      <div class="flowline"><span class="step">Green Screen</span><span class="ar">→</span><span class="step">Keying</span><span class="ar">→</span><span class="step">Nuke</span><span class="ar">→</span><span class="step">CG Composite</span></div>
       <p>優點是後期控制最大；代價是「先拍再算」，燈光、反射、邊緣與溢色要靠後製救。</p>
     </div>
-    <div class="panel">
-      <h3>Virtual Production 路線</h3>
-      <div class="flow"><span class="step">VAD / UE5</span><span class="arr">→</span><span class="step">nDisplay</span><span class="arr">→</span><span class="step">Tracking</span><span class="arr">→</span><span class="step">ICVFX / LED</span></div>
+    <div class="vs-mid stagger" style="--i:3">VS</div>
+    <div class="vs-box new stagger" style="--i:4">
+      <h4>🟢 Virtual Production 路線</h4>
+      <div class="flowline"><span class="step">VAD / UE5</span><span class="ar">→</span><span class="step">nDisplay</span><span class="ar">→</span><span class="step">Tracking</span><span class="ar">→</span><span class="step">ICVFX / LED</span></div>
       <p>把合成前移到拍攝現場，讓前景光影、反射與導演決策同步發生。</p>
     </div>
   </div>
-  <div class="grid" style="margin-top:20px">
-    <div class="card"><h3>nDisplay / Genlock</h3><p>不是把 HDMI 插到 LED 牆就完成。場景需要分割、同步與多節點輸出，還要避免黑線與閃爍。</p></div>
-    <div class="card"><h3>Inner / Outer Frustum</h3><p>鏡頭內視錐用高品質動態透視；外視錐主要負責環境光與反射，是 ICVFX 效率的核心。</p></div>
-    <div class="card"><h3>Color Pipeline</h3><p>RAW / Log、OCIO、OpenVPCal、Rec.2020 / PQ、Creative LUT，並避免 Double Tone Mapping。</p></div>
+  <div class="grid">
+    <div class="mini stagger" style="--i:5"><span class="tag">SYNC</span><h4>nDisplay / Genlock</h4><p>不是把 HDMI 插到 LED 牆就完成。場景需要分割、同步與多節點輸出，還要避免黑線與閃爍。</p></div>
+    <div class="mini stagger" style="--i:6"><span class="tag">ICVFX CORE</span><h4>Inner / Outer Frustum</h4><p>鏡頭內視錐用高品質動態透視；外視錐主要負責環境光與反射，是 ICVFX 效率的核心。</p></div>
+    <div class="mini stagger" style="--i:7"><span class="tag">COLOR</span><h4>Color Pipeline</h4><p>RAW / Log、OCIO、OpenVPCal、Rec.2020 / PQ、Creative LUT，並避免 Double Tone Mapping。</p></div>
   </div>
-  <div class="callout" style="margin-top:18px"><strong>研究題目直接可以做 A/B Test：</strong>同一個 UE5 場景，分別走「綠幕＋Nuke」與「LED＋ICVFX」，比較時間、成本、邊緣品質、人物光影、色彩一致性與導演控制。</div>
+  <div class="note stagger" style="--i:8"><b>研究題目直接可以做 A/B Test：</b>同一個 UE5 場景，分別走「綠幕＋Nuke」與「LED＋ICVFX」，比較時間、成本、邊緣品質、人物光影、色彩一致性與導演控制。</div>
 </section>
 
-
-<section id="featured">
-  <div class="eyebrow">04 · FEATURED CASES</div>
-  <h2>上課先看這些：精選案例</h2>
-  <p class="lead">完整來源很多，但課堂不需要一次翻 100 多個。這區只留最值得現場播放、最容易帶出技術觀念的案例。</p>
-
-  <h3 style="margin-top:30px">大三 VR / XR｜精選 7 支</h3>
-  <div class="featured-grid">
-    
-    <article class="pick-card">
-      <a class="pick-cover" href="https://www.youtube.com/watch?v=RlfGi6q-ss0" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/RlfGi6q-ss0/hqdefault.jpg" alt="Meta Mixed Reality Game in UE5.5" loading="lazy">
-        <span class="pick-play">▶</span>
-      </a>
-      <div class="pick-body">
-        <div class="pick-tech">適合：MR / Quest / UE5</div>
-        <h4>Meta Mixed Reality Game in UE5.5</h4>
-        <p><strong>為什麼看：</strong>看 Passthrough、空間定位與 MR 遊戲如何整合。</p>
-        <a class="pick-url" href="https://www.youtube.com/watch?v=RlfGi6q-ss0" target="_blank" rel="noopener">https://www.youtube.com/watch?v=RlfGi6q-ss0</a>
-      </div>
-    </article>
-    
-    <article class="pick-card">
-      <a class="pick-cover" href="https://www.youtube.com/watch?v=1IkZ5NrEf3A" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/1IkZ5NrEf3A/hqdefault.jpg" alt="World Labs｜Interactive Characters for Marble Worlds with Three.js" loading="lazy">
-        <span class="pick-play">▶</span>
-      </a>
-      <div class="pick-body">
-        <div class="pick-tech">適合：Three.js / WebXR / AI Character</div>
-        <h4>World Labs｜Interactive Characters for Marble Worlds with Three.js</h4>
-        <p><strong>為什麼看：</strong>看 Web 3D 世界中互動角色如何成立。</p>
-        <a class="pick-url" href="https://www.youtube.com/watch?v=1IkZ5NrEf3A" target="_blank" rel="noopener">https://www.youtube.com/watch?v=1IkZ5NrEf3A</a>
-      </div>
-    </article>
-    
-    <article class="pick-card">
-      <a class="pick-cover" href="https://youtu.be/QBEtbXtCIcU" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/QBEtbXtCIcU/hqdefault.jpg" alt="TouchDesigner｜KantanMapper Projection Mapping" loading="lazy">
-        <span class="pick-play">▶</span>
-      </a>
-      <div class="pick-body">
-        <div class="pick-tech">適合：TouchDesigner / 投影</div>
-        <h4>TouchDesigner｜KantanMapper Projection Mapping</h4>
-        <p><strong>為什麼看：</strong>快速理解 Projection Mapping 的基本工作流程。</p>
-        <a class="pick-url" href="https://youtu.be/QBEtbXtCIcU" target="_blank" rel="noopener">https://youtu.be/QBEtbXtCIcU</a>
-      </div>
-    </article>
-    
-    <article class="pick-card">
-      <a class="pick-cover" href="https://www.youtube.com/watch?v=1VBw_QBVY4M" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/1VBw_QBVY4M/hqdefault.jpg" alt="TouchDesigner｜360° Projection of AI-Diffused Content" loading="lazy">
-        <span class="pick-play">▶</span>
-      </a>
-      <div class="pick-body">
-        <div class="pick-tech">適合：AI Visual / 360° Projection</div>
-        <h4>TouchDesigner｜360° Projection of AI-Diffused Content</h4>
-        <p><strong>為什麼看：</strong>把 AI 內容轉成沉浸式空間投影的直接案例。</p>
-        <a class="pick-url" href="https://www.youtube.com/watch?v=1VBw_QBVY4M" target="_blank" rel="noopener">https://www.youtube.com/watch?v=1VBw_QBVY4M</a>
-      </div>
-    </article>
-    
-    <article class="pick-card">
-      <a class="pick-cover" href="https://www.youtube.com/watch?v=6MP48RFhe2Y" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/6MP48RFhe2Y/hqdefault.jpg" alt="VTuber Studio with Three.js, React &amp; VRM" loading="lazy">
-        <span class="pick-play">▶</span>
-      </a>
-      <div class="pick-body">
-        <div class="pick-tech">適合：VRM / VTuber / Web</div>
-        <h4>VTuber Studio with Three.js, React &amp; VRM</h4>
-        <p><strong>為什麼看：</strong>看 Web、VRM、Avatar 與互動前端怎麼整合。</p>
-        <a class="pick-url" href="https://www.youtube.com/watch?v=6MP48RFhe2Y" target="_blank" rel="noopener">https://www.youtube.com/watch?v=6MP48RFhe2Y</a>
-      </div>
-    </article>
-    
-    <article class="pick-card">
-      <a class="pick-cover" href="https://www.youtube.com/watch?v=983BpAhzfSQ" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/983BpAhzfSQ/hqdefault.jpg" alt="XGRIDS｜Gaussian Splat UE Plugin" loading="lazy">
-        <span class="pick-play">▶</span>
-      </a>
-      <div class="pick-body">
-        <div class="pick-tech">適合：3D Scan / Digital Twin / UE</div>
-        <h4>XGRIDS｜Gaussian Splat UE Plugin</h4>
-        <p><strong>為什麼看：</strong>理解大尺度 Gaussian Splats 如何進 Unreal Engine。</p>
-        <a class="pick-url" href="https://www.youtube.com/watch?v=983BpAhzfSQ" target="_blank" rel="noopener">https://www.youtube.com/watch?v=983BpAhzfSQ</a>
-      </div>
-    </article>
-    
-    <article class="pick-card">
-      <a class="pick-cover" href="https://www.youtube.com/watch?v=0p8h4acyq7o" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/0p8h4acyq7o/hqdefault.jpg" alt="QuickMagic / Cascadeur / Blender Motion Capture Workflow" loading="lazy">
-        <span class="pick-play">▶</span>
-      </a>
-      <div class="pick-body">
-        <div class="pick-tech">適合：Mocap / Avatar / Animation</div>
-        <h4>QuickMagic / Cascadeur / Blender Motion Capture Workflow</h4>
-        <p><strong>為什麼看：</strong>看角色動作資料從 Mocap 到動畫修正的整體流程。</p>
-        <a class="pick-url" href="https://www.youtube.com/watch?v=0p8h4acyq7o" target="_blank" rel="noopener">https://www.youtube.com/watch?v=0p8h4acyq7o</a>
-      </div>
-    </article>
-    
+<!-- ============ SLIDE 4 · FEATURED CASES ============ -->
+<section class="slide" id="featured">
+  <div class="slide-num stagger" style="--i:0">04 · FEATURED CASES</div>
+  <h2 class="gtitle stagger" style="--i:1">上課先看這些：精選案例</h2>
+  <p class="lead stagger" style="--i:2">完整來源很多，但課堂不需要一次翻 100 多個。這區只留最值得現場播放、最容易帶出技術觀念的案例。</p>
+  <div class="tabs stagger" style="--i:3">
+    <button class="tab on" data-panel="fVR">大三 VR / XR · 精選 <b data-count="7">0</b> 支</button>
+    <button class="tab" data-panel="fVP">研究所 VP · 精選 <b data-count="10">0</b> 支</button>
+    <button class="tab" data-panel="fAI">🤖 AI VTuber 專案比較</button>
   </div>
-
-  <h3 style="margin-top:38px">研究所 Virtual Production｜精選 10 支</h3>
-  <div class="featured-grid">
-    
-    <article class="pick-card">
-      <a class="pick-cover" href="https://www.youtube.com/watch?v=tp6Fv9XymXg" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/tp6Fv9XymXg/hqdefault.jpg" alt="Sony｜Virtual Production Tool Set Tutorial" loading="lazy">
-        <span class="pick-play">▶</span>
-      </a>
-      <div class="pick-body">
-        <div class="pick-tech">適合：VP 全貌 / Color</div>
-        <h4>Sony｜Virtual Production Tool Set Tutorial</h4>
-        <p><strong>為什麼看：</strong>看 VP 現場工具、攝影機與顯示校準概念。</p>
-        <a class="pick-url" href="https://www.youtube.com/watch?v=tp6Fv9XymXg" target="_blank" rel="noopener">https://www.youtube.com/watch?v=tp6Fv9XymXg</a>
+  <div class="panel on" id="fVR"><div class="cases" id="casesVR"></div></div>
+  <div class="panel" id="fVP"><div class="cases" id="casesVP"></div></div>
+  <div class="panel" id="fAI">
+    <div class="battle">
+      <div class="fighter kit">
+        <div class="fname">AITuber Kit</div>
+        <div class="frole">一站式 Web 應用｜給創作者的「完成品」</div>
+        <ul>
+          <li>內建完整 UI，雙擊即可啟動</li>
+          <li>YouTube 直播讀留言自動回覆</li>
+          <li>遊戲實況模式（AI 看畫面吐槽）</li>
+          <li>數位看板＋鏡頭人臉偵測打招呼</li>
+          <li>VRM / Live2D / PngTuber 全支援</li>
+          <li class="no">封裝在 Next.js 內，不易改底層</li>
+        </ul>
+        <a href="https://github.com/tegnike/aituber-kit" target="_blank">⌥ github.com/tegnike/aituber-kit</a>
       </div>
-    </article>
-    
-    <article class="pick-card">
-      <a class="pick-cover" href="https://youtu.be/cMsuZtyEupA" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/cMsuZtyEupA/hqdefault.jpg" alt="Unreal Engine｜Fallout Virtual Production" loading="lazy">
-        <span class="pick-play">▶</span>
-      </a>
-      <div class="pick-body">
-        <div class="pick-tech">適合：VAD / ICVFX</div>
-        <h4>Unreal Engine｜Fallout Virtual Production</h4>
-        <p><strong>為什麼看：</strong>大型製作如何把 UE 與實拍流程整合。</p>
-        <a class="pick-url" href="https://youtu.be/cMsuZtyEupA" target="_blank" rel="noopener">https://youtu.be/cMsuZtyEupA</a>
+      <div class="vs-mid2">VS</div>
+      <div class="fighter onair">
+        <div class="fname">AITuber OnAir</div>
+        <div class="frole">模組化 TS 工具庫｜給工程師的「積木」</div>
+        <ul>
+          <li>npm 模組化套件，自由組裝</li>
+          <li>Three.js / React / VRM 原生模板</li>
+          <li>適合 WebXR 課程底層實作教學</li>
+          <li>CLI 一鍵 scaffold 新專案</li>
+          <li>觀眾關係系統（點數/等級/成就）</li>
+          <li class="no">需自行開發 UI，門檻較高</li>
+        </ul>
+        <a href="https://github.com/shinshin86/aituber-onair" target="_blank">⌥ github.com/shinshin86/aituber-onair</a>
       </div>
-    </article>
-    
-    <article class="pick-card">
-      <a class="pick-cover" href="https://www.youtube.com/watch?v=POkvDsbtraM" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/POkvDsbtraM/hqdefault.jpg" alt="Lightcraft｜Replacing a $50K Volume Stage" loading="lazy">
-        <span class="pick-play">▶</span>
-      </a>
-      <div class="pick-body">
-        <div class="pick-tech">適合：Virtual Camera / Indie VP</div>
-        <h4>Lightcraft｜Replacing a $50K Volume Stage</h4>
-        <p><strong>為什麼看：</strong>低成本虛擬製作替代方案與成本思維。</p>
-        <a class="pick-url" href="https://www.youtube.com/watch?v=POkvDsbtraM" target="_blank" rel="noopener">https://www.youtube.com/watch?v=POkvDsbtraM</a>
-      </div>
-    </article>
-    
-    <article class="pick-card">
-      <a class="pick-cover" href="https://www.youtube.com/watch?v=v8Sh-O-Yqjg" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/v8Sh-O-Yqjg/hqdefault.jpg" alt="Jetset + Blender Virtual Greenscreen" loading="lazy">
-        <span class="pick-play">▶</span>
-      </a>
-      <div class="pick-body">
-        <div class="pick-tech">適合：Green Screen / Tracking</div>
-        <h4>Jetset + Blender Virtual Greenscreen</h4>
-        <p><strong>為什麼看：</strong>快速看虛擬綠幕、追蹤與 Blender 的合成方式。</p>
-        <a class="pick-url" href="https://www.youtube.com/watch?v=v8Sh-O-Yqjg" target="_blank" rel="noopener">https://www.youtube.com/watch?v=v8Sh-O-Yqjg</a>
-      </div>
-    </article>
-    
-    <article class="pick-card">
-      <a class="pick-cover" href="https://www.youtube.com/watch?v=KEd5pRBo-8I" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/KEd5pRBo-8I/hqdefault.jpg" alt="Can Gaussian Splats Replace Location Shoots?" loading="lazy">
-        <span class="pick-play">▶</span>
-      </a>
-      <div class="pick-body">
-        <div class="pick-tech">適合：Gaussian Splat / Location Replacement</div>
-        <h4>Can Gaussian Splats Replace Location Shoots?</h4>
-        <p><strong>為什麼看：</strong>直接討論掃描場景是否能取代實景外拍。</p>
-        <a class="pick-url" href="https://www.youtube.com/watch?v=KEd5pRBo-8I" target="_blank" rel="noopener">https://www.youtube.com/watch?v=KEd5pRBo-8I</a>
-      </div>
-    </article>
-    
-    <article class="pick-card">
-      <a class="pick-cover" href="https://www.youtube.com/watch?v=W9QIyBNADG4" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/W9QIyBNADG4/hqdefault.jpg" alt="Scan a Cave → Unreal Engine" loading="lazy">
-        <span class="pick-play">▶</span>
-      </a>
-      <div class="pick-body">
-        <div class="pick-tech">適合：Photogrammetry / UE</div>
-        <h4>Scan a Cave → Unreal Engine</h4>
-        <p><strong>為什麼看：</strong>完整看掃描、重建、整理、導入 UE 的場景流程。</p>
-        <a class="pick-url" href="https://www.youtube.com/watch?v=W9QIyBNADG4" target="_blank" rel="noopener">https://www.youtube.com/watch?v=W9QIyBNADG4</a>
-      </div>
-    </article>
-    
-    <article class="pick-card">
-      <a class="pick-cover" href="https://www.youtube.com/watch?v=Q6FjqfvtRps" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/Q6FjqfvtRps/hqdefault.jpg" alt="CosmosFilm｜綠幕也能做虛擬拍攝" loading="lazy">
-        <span class="pick-play">▶</span>
-      </a>
-      <div class="pick-body">
-        <div class="pick-tech">適合：Green Screen / UE</div>
-        <h4>CosmosFilm｜綠幕也能做虛擬拍攝</h4>
-        <p><strong>為什麼看：</strong>從傳統綠幕切入 Virtual Production，適合建立比較基準。</p>
-        <a class="pick-url" href="https://www.youtube.com/watch?v=Q6FjqfvtRps" target="_blank" rel="noopener">https://www.youtube.com/watch?v=Q6FjqfvtRps</a>
-      </div>
-    </article>
-    
-    <article class="pick-card">
-      <a class="pick-cover" href="https://youtu.be/Ub0MmjYy0b0" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/Ub0MmjYy0b0/hqdefault.jpg" alt="Compositing Academy｜Merge CGI with Live Action" loading="lazy">
-        <span class="pick-play">▶</span>
-      </a>
-      <div class="pick-body">
-        <div class="pick-tech">適合：Nuke / Compositing</div>
-        <h4>Compositing Academy｜Merge CGI with Live Action</h4>
-        <p><strong>為什麼看：</strong>看 CGI 與實拍融合時邊緣與接縫怎麼處理。</p>
-        <a class="pick-url" href="https://youtu.be/Ub0MmjYy0b0" target="_blank" rel="noopener">https://youtu.be/Ub0MmjYy0b0</a>
-      </div>
-    </article>
-    
-    <article class="pick-card">
-      <a class="pick-cover" href="https://www.youtube.com/watch?v=2kQzfng264w" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/2kQzfng264w/hqdefault.jpg" alt="The Making of The Batman" loading="lazy">
-        <span class="pick-play">▶</span>
-      </a>
-      <div class="pick-body">
-        <div class="pick-tech">適合：LED Volume / Cinematography</div>
-        <h4>The Making of The Batman</h4>
-        <p><strong>為什麼看：</strong>高階電影虛擬製作的經典案例。</p>
-        <a class="pick-url" href="https://www.youtube.com/watch?v=2kQzfng264w" target="_blank" rel="noopener">https://www.youtube.com/watch?v=2kQzfng264w</a>
-      </div>
-    </article>
-    
-    <article class="pick-card">
-      <a class="pick-cover" href="https://www.youtube.com/watch?v=M-vtf2TpopY" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/M-vtf2TpopY/hqdefault.jpg" alt="The Silent Killer of Virtual Production" loading="lazy">
-        <span class="pick-play">▶</span>
-      </a>
-      <div class="pick-body">
-        <div class="pick-tech">適合：Moire / Sync / Display</div>
-        <h4>The Silent Killer of Virtual Production</h4>
-        <p><strong>為什麼看：</strong>聚焦 VP 現場常被忽略的技術風險。</p>
-        <a class="pick-url" href="https://www.youtube.com/watch?v=M-vtf2TpopY" target="_blank" rel="noopener">https://www.youtube.com/watch?v=M-vtf2TpopY</a>
-      </div>
-    </article>
-    
-  </div>
-</section>
-
-<section id="sources">
-  <div class="eyebrow">05 · SOURCE LIBRARY</div>
-  <h2>完整來源：封面＋原始連結＋簡短說明</h2>
-  <p class="lead">你剛剛提的需求我一起補上了。現在就算不是 YouTube 圖示卡，也會有一段簡短說明，包含「這個連結大概是什麼、適合怎麼用」。</p>
-  <div class="track-toggle">
-    <button id="bvr" class="active" onclick="showTrack('vr')">大三 VR / XR（31 個來源）</button>
-    <button id="bvp" onclick="showTrack('vp')">研究所 VP / 合成（81 個來源）</button>
-  </div>
-  <div id="src-vr" class="sources">
-    <article class="src-card">
-      <a class="cover" href="https://youtu.be/UgA2p9A2-Q0?t=418" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/UgA2p9A2-Q0/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://youtu.be/UgA2p9A2-Q0?t=418" target="_blank" rel="noopener">https://youtu.be/UgA2p9A2-Q0?t=418</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://youtu.be/5d6mZNA_5sg?t=285" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/5d6mZNA_5sg/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://youtu.be/5d6mZNA_5sg?t=285" target="_blank" rel="noopener">https://youtu.be/5d6mZNA_5sg?t=285</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://accel-city-exhibition.vercel.app/" target="_blank" rel="noopener">
-        <div class="fallback">↗</div>
-        <span class="badge">Web</span>
-      </a>
-      <div class="src-body">
-        <h4>加速城市 // 數媒系聯邦終極儀表板</h4>
-        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
-        <p class="note">來源平台：accel-city-exhibition.vercel.app｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://accel-city-exhibition.vercel.app/" target="_blank" rel="noopener">https://accel-city-exhibition.vercel.app/</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.fab.com/listings/b46926e1-fe3c-4c20-83f0-8be8ee5e8de5" target="_blank" rel="noopener">
-        <div class="fallback">FAB</div>
-        <span class="badge">Fab</span>
-      </a>
-      <div class="src-body">
-        <h4>加速城市 // 數媒系聯邦終極儀表板</h4>
-        <p class="desc">素材資源頁：可作為場景、資產與風格參考。</p>
-        <p class="note">來源平台：fab.com｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://www.fab.com/listings/b46926e1-fe3c-4c20-83f0-8be8ee5e8de5" target="_blank" rel="noopener">https://www.fab.com/listings/b46926e1-fe3c-4c20-83f0-8be8ee5e8de5</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=RlfGi6q-ss0" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/RlfGi6q-ss0/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=RlfGi6q-ss0" target="_blank" rel="noopener">https://www.youtube.com/watch?v=RlfGi6q-ss0</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://accel-city-exhibition.vercel.app/home.html" target="_blank" rel="noopener">
-        <div class="fallback">↗</div>
-        <span class="badge">Web</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
-        <p class="note">來源平台：accel-city-exhibition.vercel.app｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://accel-city-exhibition.vercel.app/home.html" target="_blank" rel="noopener">https://accel-city-exhibition.vercel.app/home.html</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=TO1Pvy-wCFc" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/TO1Pvy-wCFc/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=TO1Pvy-wCFc" target="_blank" rel="noopener">https://www.youtube.com/watch?v=TO1Pvy-wCFc</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=1IkZ5NrEf3A" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/1IkZ5NrEf3A/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=1IkZ5NrEf3A" target="_blank" rel="noopener">https://www.youtube.com/watch?v=1IkZ5NrEf3A</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.fab.com/listings/a0cbe964-b2e7-44b2-965c-febe2ec9b33a" target="_blank" rel="noopener">
-        <div class="fallback">FAB</div>
-        <span class="badge">Fab</span>
-      </a>
-      <div class="src-body">
-        <h4>360 Parallax card</h4>
-        <p class="desc">素材資源頁：可作為場景、資產與風格參考。</p>
-        <p class="note">來源平台：fab.com｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://www.fab.com/listings/a0cbe964-b2e7-44b2-965c-febe2ec9b33a" target="_blank" rel="noopener">https://www.fab.com/listings/a0cbe964-b2e7-44b2-965c-febe2ec9b33a</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.fab.com/listings/d8426949-1c95-4034-9cf4-ea0c9be511d5" target="_blank" rel="noopener">
-        <div class="fallback">FAB</div>
-        <span class="badge">Fab</span>
-      </a>
-      <div class="src-body">
-        <h4>360 Parallax card</h4>
-        <p class="desc">素材資源頁：可作為場景、資產與風格參考。</p>
-        <p class="note">來源平台：fab.com｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://www.fab.com/listings/d8426949-1c95-4034-9cf4-ea0c9be511d5" target="_blank" rel="noopener">https://www.fab.com/listings/d8426949-1c95-4034-9cf4-ea0c9be511d5</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://docs.idafaber3d.com/features/blendshapes#live-link-face-ue5" target="_blank" rel="noopener">
-        <div class="fallback">↗</div>
-        <span class="badge">Web</span>
-      </a>
-      <div class="src-body">
-        <h4>2026-07-12-23-38-44.bvh</h4>
-        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
-        <p class="note">來源平台：docs.idafaber3d.com｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://docs.idafaber3d.com/features/blendshapes#live-link-face-ue5" target="_blank" rel="noopener">https://docs.idafaber3d.com/features/blendshapes#live-link-face-ue5</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.kdocs.cn/l/cbMLAawWn4VS" target="_blank" rel="noopener">
-        <div class="fallback">↗</div>
-        <span class="badge">Web</span>
-      </a>
-      <div class="src-body">
-        <h4>2026-07-12-23-38-44.bvh</h4>
-        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
-        <p class="note">來源平台：kdocs.cn｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://www.kdocs.cn/l/cbMLAawWn4VS" target="_blank" rel="noopener">https://www.kdocs.cn/l/cbMLAawWn4VS</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://github.com/lifelike-and-believable/VMCLiveLink" target="_blank" rel="noopener">
-        <div class="fallback">GH</div>
-        <span class="badge">GitHub</span>
-      </a>
-      <div class="src-body">
-        <h4>GitHub</h4>
-        <p class="desc">程式／專案原始碼：適合延伸成實作、研究或工具測試。</p>
-        <p class="note">來源平台：GitHub｜點連結可查看原始碼與 README。</p>
-        <a class="url" href="https://github.com/lifelike-and-believable/VMCLiveLink" target="_blank" rel="noopener">https://github.com/lifelike-and-believable/VMCLiveLink</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=YPNO2xaAJ0k" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/YPNO2xaAJ0k/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=YPNO2xaAJ0k" target="_blank" rel="noopener">https://www.youtube.com/watch?v=YPNO2xaAJ0k</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://x.com/xingbugengming/status/2076973258117906905" target="_blank" rel="noopener">
-        <div class="fallback">𝕏</div>
-        <span class="badge">X</span>
-      </a>
-      <div class="src-body">
-        <h4>小奇说 (@xingbugengming)</h4>
-        <p class="desc">社群案例：通常是最新技術展示、流程分享或產業觀察。</p>
-        <p class="note">來源平台：X｜點連結可查看原始貼文與討論串。</p>
-        <a class="url" href="https://x.com/xingbugengming/status/2076973258117906905" target="_blank" rel="noopener">https://x.com/xingbugengming/status/2076973258117906905</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://youtu.be/QBEtbXtCIcU?si=emmX-sgkbtx5soEp" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/QBEtbXtCIcU/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://youtu.be/QBEtbXtCIcU?si=emmX-sgkbtx5soEp" target="_blank" rel="noopener">https://youtu.be/QBEtbXtCIcU?si=emmX-sgkbtx5soEp</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=1VBw_QBVY4M" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/1VBw_QBVY4M/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=1VBw_QBVY4M" target="_blank" rel="noopener">https://www.youtube.com/watch?v=1VBw_QBVY4M</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.makerar.com/tutorial_01?id=293" target="_blank" rel="noopener">
-        <div class="fallback">XR</div>
-        <span class="badge">MAKAR</span>
-      </a>
-      <div class="src-body">
-        <h4>MAKAR | 【XR專案教學】基隆港鯨鯊 AR 體驗怎麼做？...</h4>
-        <p class="desc">XR 教學連結：適合快速建立 AR / MR 專案原型。</p>
-        <p class="note">來源平台：makerar.com｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://www.makerar.com/tutorial_01?id=293" target="_blank" rel="noopener">https://www.makerar.com/tutorial_01?id=293</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.makerar.com/tutorial_01?id=187" target="_blank" rel="noopener">
-        <div class="fallback">XR</div>
-        <span class="badge">MAKAR</span>
-      </a>
-      <div class="src-body">
-        <h4>MAKAR | MR放天燈教學</h4>
-        <p class="desc">XR 教學連結：適合快速建立 AR / MR 專案原型。</p>
-        <p class="note">來源平台：makerar.com｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://www.makerar.com/tutorial_01?id=187" target="_blank" rel="noopener">https://www.makerar.com/tutorial_01?id=187</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://apps.apple.com/tw/app/makar-3d-scan/id6444039895" target="_blank" rel="noopener">
-        <div class="fallback">APP</div>
-        <span class="badge">App</span>
-      </a>
-      <div class="src-body">
-        <h4>App Store</h4>
-        <p class="desc">工具下載頁：方便學生安裝與現場測試。</p>
-        <p class="note">來源平台：apps.apple.com｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://apps.apple.com/tw/app/makar-3d-scan/id6444039895" target="_blank" rel="noopener">https://apps.apple.com/tw/app/makar-3d-scan/id6444039895</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://pimax.com/blogs/blogs/webxr" target="_blank" rel="noopener">
-        <div class="fallback">𝕏</div>
-        <span class="badge">X</span>
-      </a>
-      <div class="src-body">
-        <h4>Pimax Store</h4>
-        <p class="desc">社群案例：通常是最新技術展示、流程分享或產業觀察。</p>
-        <p class="note">來源平台：X｜點連結可查看原始貼文與討論串。</p>
-        <a class="url" href="https://pimax.com/blogs/blogs/webxr" target="_blank" rel="noopener">https://pimax.com/blogs/blogs/webxr</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://immersive-web.github.io/webxr-samples/" target="_blank" rel="noopener">
-        <div class="fallback">VR</div>
-        <span class="badge">WebXR</span>
-      </a>
-      <div class="src-body">
-        <h4>WebXR Samples</h4>
-        <p class="desc">WebXR 參考頁：可直接做瀏覽器 VR / XR 示範與測試。</p>
-        <p class="note">來源平台：immersive-web.github.io｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://immersive-web.github.io/webxr-samples/" target="_blank" rel="noopener">https://immersive-web.github.io/webxr-samples/</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://youtu.be/BCKEYrCfvHs?si=NqdoX52fx7rI-KvH" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/BCKEYrCfvHs/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://youtu.be/BCKEYrCfvHs?si=NqdoX52fx7rI-KvH" target="_blank" rel="noopener">https://youtu.be/BCKEYrCfvHs?si=NqdoX52fx7rI-KvH</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=5L5oIqg27z8" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/5L5oIqg27z8/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=5L5oIqg27z8" target="_blank" rel="noopener">https://www.youtube.com/watch?v=5L5oIqg27z8</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://github.com/Robbyant/lingbot-map" target="_blank" rel="noopener">
-        <div class="fallback">GH</div>
-        <span class="badge">GitHub</span>
-      </a>
-      <div class="src-body">
-        <h4>GitHub</h4>
-        <p class="desc">程式／專案原始碼：適合延伸成實作、研究或工具測試。</p>
-        <p class="note">來源平台：GitHub｜點連結可查看原始碼與 README。</p>
-        <a class="url" href="https://github.com/Robbyant/lingbot-map" target="_blank" rel="noopener">https://github.com/Robbyant/lingbot-map</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://x.com/thesupermanmx/status/2077779856050606155" target="_blank" rel="noopener">
-        <div class="fallback">𝕏</div>
-        <span class="badge">X</span>
-      </a>
-      <div class="src-body">
-        <h4>Superman (@thesupermanmx)</h4>
-        <p class="desc">社群案例：通常是最新技術展示、流程分享或產業觀察。</p>
-        <p class="note">來源平台：X｜點連結可查看原始貼文與討論串。</p>
-        <a class="url" href="https://x.com/thesupermanmx/status/2077779856050606155" target="_blank" rel="noopener">https://x.com/thesupermanmx/status/2077779856050606155</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=6MP48RFhe2Y" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/6MP48RFhe2Y/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=6MP48RFhe2Y" target="_blank" rel="noopener">https://www.youtube.com/watch?v=6MP48RFhe2Y</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://github.com/wass08/r3f-vrm-final" target="_blank" rel="noopener">
-        <div class="fallback">GH</div>
-        <span class="badge">GitHub</span>
-      </a>
-      <div class="src-body">
-        <h4>GitHub</h4>
-        <p class="desc">程式／專案原始碼：適合延伸成實作、研究或工具測試。</p>
-        <p class="note">來源平台：GitHub｜點連結可查看原始碼與 README。</p>
-        <a class="url" href="https://github.com/wass08/r3f-vrm-final" target="_blank" rel="noopener">https://github.com/wass08/r3f-vrm-final</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://share.gemini.google/lwVBopacW4As" target="_blank" rel="noopener">
-        <div class="fallback">↗</div>
-        <span class="badge">Web</span>
-      </a>
-      <div class="src-body">
-        <h4>Gemini</h4>
-        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
-        <p class="note">來源平台：share.gemini.google｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://share.gemini.google/lwVBopacW4As" target="_blank" rel="noopener">https://share.gemini.google/lwVBopacW4As</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=983BpAhzfSQ" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/983BpAhzfSQ/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=983BpAhzfSQ" target="_blank" rel="noopener">https://www.youtube.com/watch?v=983BpAhzfSQ</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=0p8h4acyq7o" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/0p8h4acyq7o/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=0p8h4acyq7o" target="_blank" rel="noopener">https://www.youtube.com/watch?v=0p8h4acyq7o</a>
-      </div>
-    </article>
     </div>
-  <div id="src-vp" class="sources hidden">
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=tp6Fv9XymXg" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/tp6Fv9XymXg/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=tp6Fv9XymXg" target="_blank" rel="noopener">https://www.youtube.com/watch?v=tp6Fv9XymXg</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://gemini.google.com/share/7ec0d6549495" target="_blank" rel="noopener">
-        <div class="fallback">AI</div>
-        <span class="badge">Gemini</span>
-      </a>
-      <div class="src-body">
-        <h4>Gemini</h4>
-        <p class="desc">延伸討論連結：可作為課堂筆記或 AI 整理內容。</p>
-        <p class="note">來源平台：gemini.google.com｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://gemini.google.com/share/7ec0d6549495" target="_blank" rel="noopener">https://gemini.google.com/share/7ec0d6549495</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://gemini.google.com/share/6879b53d45ac" target="_blank" rel="noopener">
-        <div class="fallback">AI</div>
-        <span class="badge">Gemini</span>
-      </a>
-      <div class="src-body">
-        <h4>Gemini</h4>
-        <p class="desc">延伸討論連結：可作為課堂筆記或 AI 整理內容。</p>
-        <p class="note">來源平台：gemini.google.com｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://gemini.google.com/share/6879b53d45ac" target="_blank" rel="noopener">https://gemini.google.com/share/6879b53d45ac</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=e0aqex2J7gE" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/e0aqex2J7gE/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=e0aqex2J7gE" target="_blank" rel="noopener">https://www.youtube.com/watch?v=e0aqex2J7gE</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.vttlab.com/#course-collection-02" target="_blank" rel="noopener">
-        <div class="fallback">↗</div>
-        <span class="badge">Web</span>
-      </a>
-      <div class="src-body">
-        <h4>資深視覺特效總監 Michael Parker 解析 VAD （虛擬美術部門）的工作流程，以在羅馬的市集廣場拍一場對話戲為例 # Part3 在流程前期，VAD 通常會根據美術概念圖或分鏡稿，建立「灰模環境（graybox）」， 主要是用來討論鏡頭運動與場景結構。當導演與攝影師確認後，我們再進一步細化，加入材質、光影與特效。最後交付的資產，會是能在 Unreal Engine 中即時播放的高品質場景。</h4>
-        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
-        <p class="note">來源平台：vttlab.com｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://www.vttlab.com/#course-collection-02" target="_blank" rel="noopener">https://www.vttlab.com/#course-collection-02</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=UYPlhUxjy7M" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/UYPlhUxjy7M/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=UYPlhUxjy7M" target="_blank" rel="noopener">https://www.youtube.com/watch?v=UYPlhUxjy7M</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=Q6FjqfvtRps&amp;t=326s" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/Q6FjqfvtRps/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=Q6FjqfvtRps&amp;t=326s" target="_blank" rel="noopener">https://www.youtube.com/watch?v=Q6FjqfvtRps&amp;t=326s</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=mA0dqmewdOI" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/mA0dqmewdOI/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=mA0dqmewdOI" target="_blank" rel="noopener">https://www.youtube.com/watch?v=mA0dqmewdOI</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://youtu.be/-TYiNTdwJdE?t=1633" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/-TYiNTdwJdE/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://youtu.be/-TYiNTdwJdE?t=1633" target="_blank" rel="noopener">https://youtu.be/-TYiNTdwJdE?t=1633</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://youtu.be/UgA2p9A2-Q0?t=418" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/UgA2p9A2-Q0/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://youtu.be/UgA2p9A2-Q0?t=418" target="_blank" rel="noopener">https://youtu.be/UgA2p9A2-Q0?t=418</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://youtu.be/cMsuZtyEupA" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/cMsuZtyEupA/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://youtu.be/cMsuZtyEupA" target="_blank" rel="noopener">https://youtu.be/cMsuZtyEupA</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://youtu.be/5d6mZNA_5sg?t=251" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/5d6mZNA_5sg/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://youtu.be/5d6mZNA_5sg?t=251" target="_blank" rel="noopener">https://youtu.be/5d6mZNA_5sg?t=251</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=POkvDsbtraM" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/POkvDsbtraM/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=POkvDsbtraM" target="_blank" rel="noopener">https://www.youtube.com/watch?v=POkvDsbtraM</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=v8Sh-O-Yqjg" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/v8Sh-O-Yqjg/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=v8Sh-O-Yqjg" target="_blank" rel="noopener">https://www.youtube.com/watch?v=v8Sh-O-Yqjg</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=KEd5pRBo-8I" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/KEd5pRBo-8I/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=KEd5pRBo-8I" target="_blank" rel="noopener">https://www.youtube.com/watch?v=KEd5pRBo-8I</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://pixojam.com/index.php/adrec-climber/" target="_blank" rel="noopener">
-        <div class="fallback">↗</div>
-        <span class="badge">Web</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
-        <p class="note">來源平台：pixojam.com｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://pixojam.com/index.php/adrec-climber/" target="_blank" rel="noopener">https://pixojam.com/index.php/adrec-climber/</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://pixojam.com/" target="_blank" rel="noopener">
-        <div class="fallback">↗</div>
-        <span class="badge">Web</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
-        <p class="note">來源平台：pixojam.com｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://pixojam.com/" target="_blank" rel="noopener">https://pixojam.com/</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=W9QIyBNADG4" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/W9QIyBNADG4/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=W9QIyBNADG4" target="_blank" rel="noopener">https://www.youtube.com/watch?v=W9QIyBNADG4</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://gemini.google.com/share/02f3da51bc63" target="_blank" rel="noopener">
-        <div class="fallback">AI</div>
-        <span class="badge">Gemini</span>
-      </a>
-      <div class="src-body">
-        <h4>Linsn LED</h4>
-        <p class="desc">延伸討論連結：可作為課堂筆記或 AI 整理內容。</p>
-        <p class="note">來源平台：gemini.google.com｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://gemini.google.com/share/02f3da51bc63" target="_blank" rel="noopener">https://gemini.google.com/share/02f3da51bc63</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.linsnled.com/zh-TW/virtual-production-led-wall.html#support" target="_blank" rel="noopener">
-        <div class="fallback">↗</div>
-        <span class="badge">Web</span>
-      </a>
-      <div class="src-body">
-        <h4>Linsn LED</h4>
-        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
-        <p class="note">來源平台：linsnled.com｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://www.linsnled.com/zh-TW/virtual-production-led-wall.html#support" target="_blank" rel="noopener">https://www.linsnled.com/zh-TW/virtual-production-led-wall.html#support</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=M-vtf2TpopY" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/M-vtf2TpopY/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=M-vtf2TpopY" target="_blank" rel="noopener">https://www.youtube.com/watch?v=M-vtf2TpopY</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://dcfilmschool.com/疫情時代新變革──「虛擬製作」如何改變影視產/" target="_blank" rel="noopener">
-        <div class="fallback">↗</div>
-        <span class="badge">Web</span>
-      </a>
-      <div class="src-body">
-        <h4>VFX Voice</h4>
-        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
-        <p class="note">來源平台：dcfilmschool.com｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://dcfilmschool.com/疫情時代新變革──「虛擬製作」如何改變影視產/" target="_blank" rel="noopener">https://dcfilmschool.com/疫情時代新變革──「虛擬製作」如何改變影視產/</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://vfxvoice.com/first-man-an-effects-odyssey/" target="_blank" rel="noopener">
-        <div class="fallback">↗</div>
-        <span class="badge">Web</span>
-      </a>
-      <div class="src-body">
-        <h4>VFX Voice</h4>
-        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
-        <p class="note">來源平台：vfxvoice.com｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://vfxvoice.com/first-man-an-effects-odyssey/" target="_blank" rel="noopener">https://vfxvoice.com/first-man-an-effects-odyssey/</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://partnerhelp.netflixstudios.com/hc/en-us/articles/7262346654995-Post-Production-Branded-Delivery-Specifications" target="_blank" rel="noopener">
-        <div class="fallback">↗</div>
-        <span class="badge">Web</span>
-      </a>
-      <div class="src-body">
-        <h4>Netflix | Partner Help Center</h4>
-        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
-        <p class="note">來源平台：partnerhelp.netflixstudios.com｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://partnerhelp.netflixstudios.com/hc/en-us/articles/7262346654995-Post-Production-Branded-Delivery-Specifications" target="_blank" rel="noopener">https://partnerhelp.netflixstudios.com/hc/en-us/articles/7262346654995-Post-Production-Branded-Delivery-Specifications</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=2kQzfng264w" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/2kQzfng264w/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=2kQzfng264w" target="_blank" rel="noopener">https://www.youtube.com/watch?v=2kQzfng264w</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://dev.epicgames.com/documentation/unreal-engine/in-camera-vfx-in-unreal-engine" target="_blank" rel="noopener">
-        <div class="fallback">↗</div>
-        <span class="badge">Web</span>
-      </a>
-      <div class="src-body">
-        <h4>Epic Games Developer</h4>
-        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
-        <p class="note">來源平台：dev.epicgames.com｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://dev.epicgames.com/documentation/unreal-engine/in-camera-vfx-in-unreal-engine" target="_blank" rel="noopener">https://dev.epicgames.com/documentation/unreal-engine/in-camera-vfx-in-unreal-engine</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.framestore.com/work/1899-virtual-production" target="_blank" rel="noopener">
-        <div class="fallback">↗</div>
-        <span class="badge">Web</span>
-      </a>
-      <div class="src-body">
-        <h4>1899 Virtual Production</h4>
-        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
-        <p class="note">來源平台：framestore.com｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://www.framestore.com/work/1899-virtual-production" target="_blank" rel="noopener">https://www.framestore.com/work/1899-virtual-production</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.arri.com/en/solutions/virtual-production/arri-vp-stage-integration" target="_blank" rel="noopener">
-        <div class="fallback">↗</div>
-        <span class="badge">Web</span>
-      </a>
-      <div class="src-body">
-        <h4>Create a Fixed Stage | ARRI Solutions</h4>
-        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
-        <p class="note">來源平台：arri.com｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://www.arri.com/en/solutions/virtual-production/arri-vp-stage-integration" target="_blank" rel="noopener">https://www.arri.com/en/solutions/virtual-production/arri-vp-stage-integration</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.academia.edu/95798129/Virtual_Production_in_Action_A_Case_Study_in_Virtual_Production_Implementation_A_Creative_Implementation_of_Expanded_Cinematography_and_Narratives_Figure_1_Selected_case_studies_in_Virtual_Production" target="_blank" rel="noopener">
-        <div class="fallback">↗</div>
-        <span class="badge">Web</span>
-      </a>
-      <div class="src-body">
-        <h4>Virtual_Production_Real_Time_Rendering_P.pdf</h4>
-        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
-        <p class="note">來源平台：academia.edu｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://www.academia.edu/95798129/Virtual_Production_in_Action_A_Case_Study_in_Virtual_Production_Implementation_A_Creative_Implementation_of_Expanded_Cinematography_and_Narratives_Figure_1_Selected_case_studies_in_Virtual_Production" target="_blank" rel="noopener">https://www.academia.edu/95798129/Virtual_Production_in_Action_A_Case_Study_in_Virtual_Production_Implementation_A_Creative_Implementation_of_Expanded_Cinematography_and_Narratives_Figure_1_Selected_case_studies_in_Virtual_Production</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://medium.com/search?q=VIRTUAL+PRODUCTION" target="_blank" rel="noopener">
-        <div class="fallback">↗</div>
-        <span class="badge">Web</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
-        <p class="note">來源平台：medium.com｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://medium.com/search?q=VIRTUAL+PRODUCTION" target="_blank" rel="noopener">https://medium.com/search?q=VIRTUAL+PRODUCTION</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=Eq_3pJN7F74" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/Eq_3pJN7F74/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=Eq_3pJN7F74" target="_blank" rel="noopener">https://www.youtube.com/watch?v=Eq_3pJN7F74</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=a78WoZeZGqI" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/a78WoZeZGqI/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=a78WoZeZGqI" target="_blank" rel="noopener">https://www.youtube.com/watch?v=a78WoZeZGqI</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://learn.foundry.com/nuke?category=keying_45" target="_blank" rel="noopener">
-        <div class="fallback">↗</div>
-        <span class="badge">Web</span>
-      </a>
-      <div class="src-body">
-        <h4>NUKE官方教學</h4>
-        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
-        <p class="note">來源平台：learn.foundry.com｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://learn.foundry.com/nuke?category=keying_45" target="_blank" rel="noopener">https://learn.foundry.com/nuke?category=keying_45</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://youtu.be/Ub0MmjYy0b0?si=HkvxuXuWdeEczTHj" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/Ub0MmjYy0b0/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://youtu.be/Ub0MmjYy0b0?si=HkvxuXuWdeEczTHj" target="_blank" rel="noopener">https://youtu.be/Ub0MmjYy0b0?si=HkvxuXuWdeEczTHj</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://youtu.be/muAgkhaoLDA?si=GbIPjQ0TrLrEGH-6" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/muAgkhaoLDA/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://youtu.be/muAgkhaoLDA?si=GbIPjQ0TrLrEGH-6" target="_blank" rel="noopener">https://youtu.be/muAgkhaoLDA?si=GbIPjQ0TrLrEGH-6</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://x.com/EHuanglu/status/2077091952252875189" target="_blank" rel="noopener">
-        <div class="fallback">𝕏</div>
-        <span class="badge">X</span>
-      </a>
-      <div class="src-body">
-        <h4>el.cine (@EHuanglu)</h4>
-        <p class="desc">社群案例：通常是最新技術展示、流程分享或產業觀察。</p>
-        <p class="note">來源平台：X｜點連結可查看原始貼文與討論串。</p>
-        <a class="url" href="https://x.com/EHuanglu/status/2077091952252875189" target="_blank" rel="noopener">https://x.com/EHuanglu/status/2077091952252875189</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://youtu.be/1DK0pCxevts?si=84HiLuw1MsiXRyoB" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/1DK0pCxevts/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://youtu.be/1DK0pCxevts?si=84HiLuw1MsiXRyoB" target="_blank" rel="noopener">https://youtu.be/1DK0pCxevts?si=84HiLuw1MsiXRyoB</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=sL3dcOoiTes" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/sL3dcOoiTes/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=sL3dcOoiTes" target="_blank" rel="noopener">https://www.youtube.com/watch?v=sL3dcOoiTes</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://github.com/Robbyant/lingbot-map" target="_blank" rel="noopener">
-        <div class="fallback">GH</div>
-        <span class="badge">GitHub</span>
-      </a>
-      <div class="src-body">
-        <h4>GitHub</h4>
-        <p class="desc">程式／專案原始碼：適合延伸成實作、研究或工具測試。</p>
-        <p class="note">來源平台：GitHub｜點連結可查看原始碼與 README。</p>
-        <a class="url" href="https://github.com/Robbyant/lingbot-map" target="_blank" rel="noopener">https://github.com/Robbyant/lingbot-map</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://x.com/thesupermanmx/status/2077779856050606155" target="_blank" rel="noopener">
-        <div class="fallback">𝕏</div>
-        <span class="badge">X</span>
-      </a>
-      <div class="src-body">
-        <h4>Superman (@thesupermanmx)</h4>
-        <p class="desc">社群案例：通常是最新技術展示、流程分享或產業觀察。</p>
-        <p class="note">來源平台：X｜點連結可查看原始貼文與討論串。</p>
-        <a class="url" href="https://x.com/thesupermanmx/status/2077779856050606155" target="_blank" rel="noopener">https://x.com/thesupermanmx/status/2077779856050606155</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=983BpAhzfSQ" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/983BpAhzfSQ/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=983BpAhzfSQ" target="_blank" rel="noopener">https://www.youtube.com/watch?v=983BpAhzfSQ</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=Y1KLFktW_ss" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/Y1KLFktW_ss/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=Y1KLFktW_ss" target="_blank" rel="noopener">https://www.youtube.com/watch?v=Y1KLFktW_ss</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=u3aNcQMij24" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/u3aNcQMij24/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=u3aNcQMij24" target="_blank" rel="noopener">https://www.youtube.com/watch?v=u3aNcQMij24</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=OpfxgD8tjOQ" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/OpfxgD8tjOQ/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=OpfxgD8tjOQ" target="_blank" rel="noopener">https://www.youtube.com/watch?v=OpfxgD8tjOQ</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://x.com/voyzlab/status/2079273717142851926?s=20" target="_blank" rel="noopener">
-        <div class="fallback">𝕏</div>
-        <span class="badge">X</span>
-      </a>
-      <div class="src-body">
-        <h4>Voyz (@voyzlab)</h4>
-        <p class="desc">社群案例：通常是最新技術展示、流程分享或產業觀察。</p>
-        <p class="note">來源平台：X｜點連結可查看原始貼文與討論串。</p>
-        <a class="url" href="https://x.com/voyzlab/status/2079273717142851926?s=20" target="_blank" rel="noopener">https://x.com/voyzlab/status/2079273717142851926?s=20</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=mVN7mUDscxw" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/mVN7mUDscxw/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=mVN7mUDscxw" target="_blank" rel="noopener">https://www.youtube.com/watch?v=mVN7mUDscxw</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://youtu.be/9dQ-NZwG800?si=4yNquBMG_hYw5ZLB" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/9dQ-NZwG800/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://youtu.be/9dQ-NZwG800?si=4yNquBMG_hYw5ZLB" target="_blank" rel="noopener">https://youtu.be/9dQ-NZwG800?si=4yNquBMG_hYw5ZLB</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://x.com/ModelCollapse38/status/2081372551293366746?s=20" target="_blank" rel="noopener">
-        <div class="fallback">𝕏</div>
-        <span class="badge">X</span>
-      </a>
-      <div class="src-body">
-        <h4>Encodium (@ModelCollapse38)</h4>
-        <p class="desc">社群案例：通常是最新技術展示、流程分享或產業觀察。</p>
-        <p class="note">來源平台：X｜點連結可查看原始貼文與討論串。</p>
-        <a class="url" href="https://x.com/ModelCollapse38/status/2081372551293366746?s=20" target="_blank" rel="noopener">https://x.com/ModelCollapse38/status/2081372551293366746?s=20</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=pa7Bvzewta0" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/pa7Bvzewta0/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=pa7Bvzewta0" target="_blank" rel="noopener">https://www.youtube.com/watch?v=pa7Bvzewta0</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.ledscreenboard.com/zh-TW/eagerled-led-volume-wall/" target="_blank" rel="noopener">
-        <div class="fallback">↗</div>
-        <span class="badge">Web</span>
-      </a>
-      <div class="src-body">
-        <h4>LED Screen Board - The official website of LED Screen Board, a leading LED screen supplier.</h4>
-        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
-        <p class="note">來源平台：ledscreenboard.com｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://www.ledscreenboard.com/zh-TW/eagerled-led-volume-wall/" target="_blank" rel="noopener">https://www.ledscreenboard.com/zh-TW/eagerled-led-volume-wall/</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.getop.com/post/影集-1899-採用創新的虛擬製作" target="_blank" rel="noopener">
-        <div class="fallback">↗</div>
-        <span class="badge">Web</span>
-      </a>
-      <div class="src-body">
-        <h4>GETOP</h4>
-        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
-        <p class="note">來源平台：getop.com｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://www.getop.com/post/影集-1899-採用創新的虛擬製作" target="_blank" rel="noopener">https://www.getop.com/post/影集-1899-採用創新的虛擬製作</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=dQL6N5Xzz2w" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/dQL6N5Xzz2w/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=dQL6N5Xzz2w" target="_blank" rel="noopener">https://www.youtube.com/watch?v=dQL6N5Xzz2w</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://x.com/ModelCollapse38/status/2083965504473948330" target="_blank" rel="noopener">
-        <div class="fallback">𝕏</div>
-        <span class="badge">X</span>
-      </a>
-      <div class="src-body">
-        <h4>Encodium (@ModelCollapse38)</h4>
-        <p class="desc">社群案例：通常是最新技術展示、流程分享或產業觀察。</p>
-        <p class="note">來源平台：X｜點連結可查看原始貼文與討論串。</p>
-        <a class="url" href="https://x.com/ModelCollapse38/status/2083965504473948330" target="_blank" rel="noopener">https://x.com/ModelCollapse38/status/2083965504473948330</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://learn.foundry.com/course/4691/view/practical-compositing-in-nuke-10-keying-best-practices" target="_blank" rel="noopener">
-        <div class="fallback">↗</div>
-        <span class="badge">Web</span>
-      </a>
-      <div class="src-body">
-        <h4>Foundry</h4>
-        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
-        <p class="note">來源平台：learn.foundry.com｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://learn.foundry.com/course/4691/view/practical-compositing-in-nuke-10-keying-best-practices" target="_blank" rel="noopener">https://learn.foundry.com/course/4691/view/practical-compositing-in-nuke-10-keying-best-practices</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=3buiBEfmx18" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/3buiBEfmx18/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=3buiBEfmx18" target="_blank" rel="noopener">https://www.youtube.com/watch?v=3buiBEfmx18</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://x.com/willeastcott/status/2084337442157478191" target="_blank" rel="noopener">
-        <div class="fallback">𝕏</div>
-        <span class="badge">X</span>
-      </a>
-      <div class="src-body">
-        <h4>Will Eastcott (@willeastcott)</h4>
-        <p class="desc">社群案例：通常是最新技術展示、流程分享或產業觀察。</p>
-        <p class="note">來源平台：X｜點連結可查看原始貼文與討論串。</p>
-        <a class="url" href="https://x.com/willeastcott/status/2084337442157478191" target="_blank" rel="noopener">https://x.com/willeastcott/status/2084337442157478191</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.bilibili.com/video/BV1sDuT69E2m?t=16.2" target="_blank" rel="noopener">
-        <div class="fallback">↗</div>
-        <span class="badge">Web</span>
-      </a>
-      <div class="src-body">
-        <h4>哔哩哔哩</h4>
-        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
-        <p class="note">來源平台：bilibili.com｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://www.bilibili.com/video/BV1sDuT69E2m?t=16.2" target="_blank" rel="noopener">https://www.bilibili.com/video/BV1sDuT69E2m?t=16.2</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.liblib.tv/" target="_blank" rel="noopener">
-        <div class="fallback">↗</div>
-        <span class="badge">Web</span>
-      </a>
-      <div class="src-body">
-        <h4>LibTV - 专业视频创作工具</h4>
-        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
-        <p class="note">來源平台：liblib.tv｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://www.liblib.tv/" target="_blank" rel="noopener">https://www.liblib.tv/</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://youtu.be/qrKhMgOlrF8?si=XM7K1FbyDBRoPUPP" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/qrKhMgOlrF8/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://youtu.be/qrKhMgOlrF8?si=XM7K1FbyDBRoPUPP" target="_blank" rel="noopener">https://youtu.be/qrKhMgOlrF8?si=XM7K1FbyDBRoPUPP</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://app.notion.com/p/MiniMax-H3-The-Next-Gen-Open-Weight-Multimodal-Generation-Model-3acbb3a8c3ae81618844cb0a3904e247#99c2495055c74d8fba4ba5da7c44fdb2" target="_blank" rel="noopener">
-        <div class="fallback">↗</div>
-        <span class="badge">Web</span>
-      </a>
-      <div class="src-body">
-        <h4>Justin&#x27;s Business Team on Notion</h4>
-        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
-        <p class="note">來源平台：app.notion.com｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://app.notion.com/p/MiniMax-H3-The-Next-Gen-Open-Weight-Multimodal-Generation-Model-3acbb3a8c3ae81618844cb0a3904e247#99c2495055c74d8fba4ba5da7c44fdb2" target="_blank" rel="noopener">https://app.notion.com/p/MiniMax-H3-The-Next-Gen-Open-Weight-Multimodal-Generation-Model-3acbb3a8c3ae81618844cb0a3904e247#99c2495055c74d8fba4ba5da7c44fdb2</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://app.notion.com/p/MiniMax-H3-The-Next-Gen-Open-Weight-Multimodal-Generation-Model-5cdd99c3d331822397f18130e7b480a8?source=copy_link】" target="_blank" rel="noopener">
-        <div class="fallback">↗</div>
-        <span class="badge">Web</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
-        <p class="note">來源平台：app.notion.com｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://app.notion.com/p/MiniMax-H3-The-Next-Gen-Open-Weight-Multimodal-Generation-Model-5cdd99c3d331822397f18130e7b480a8?source=copy_link】" target="_blank" rel="noopener">https://app.notion.com/p/MiniMax-H3-The-Next-Gen-Open-Weight-Multimodal-Generation-Model-5cdd99c3d331822397f18130e7b480a8?source=copy_link】</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.instagram.com/reels/DbC1XMLxcw5/" target="_blank" rel="noopener">
-        <div class="fallback">↗</div>
-        <span class="badge">Web</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
-        <p class="note">來源平台：instagram.com｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://www.instagram.com/reels/DbC1XMLxcw5/" target="_blank" rel="noopener">https://www.instagram.com/reels/DbC1XMLxcw5/</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://youtu.be/mVN7mUDscxw" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/mVN7mUDscxw/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://youtu.be/mVN7mUDscxw" target="_blank" rel="noopener">https://youtu.be/mVN7mUDscxw</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/shorts/vzlatM0ybns" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/vzlatM0ybns/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/shorts/vzlatM0ybns" target="_blank" rel="noopener">https://www.youtube.com/shorts/vzlatM0ybns</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://youtu.be/ocSTG1yqTmA?si=7MlK6e3Muj3Xoxll" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/ocSTG1yqTmA/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://youtu.be/ocSTG1yqTmA?si=7MlK6e3Muj3Xoxll" target="_blank" rel="noopener">https://youtu.be/ocSTG1yqTmA?si=7MlK6e3Muj3Xoxll</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=-o0CIAxfkXE" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/-o0CIAxfkXE/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=-o0CIAxfkXE" target="_blank" rel="noopener">https://www.youtube.com/watch?v=-o0CIAxfkXE</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=NshfJajOjJM" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/NshfJajOjJM/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=NshfJajOjJM" target="_blank" rel="noopener">https://www.youtube.com/watch?v=NshfJajOjJM</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=sXusmdNdJhc" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/sXusmdNdJhc/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=sXusmdNdJhc" target="_blank" rel="noopener">https://www.youtube.com/watch?v=sXusmdNdJhc</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=KNwzWG2riFY" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/KNwzWG2riFY/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=KNwzWG2riFY" target="_blank" rel="noopener">https://www.youtube.com/watch?v=KNwzWG2riFY</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=WeQQy83K4rg" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/WeQQy83K4rg/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=WeQQy83K4rg" target="_blank" rel="noopener">https://www.youtube.com/watch?v=WeQQy83K4rg</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=k9YVBSs6_mQ" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/k9YVBSs6_mQ/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=k9YVBSs6_mQ" target="_blank" rel="noopener">https://www.youtube.com/watch?v=k9YVBSs6_mQ</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://youtu.be/nd084X0n7t4" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/nd084X0n7t4/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://youtu.be/nd084X0n7t4" target="_blank" rel="noopener">https://youtu.be/nd084X0n7t4</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=uAoBQgakyi8" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/uAoBQgakyi8/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=uAoBQgakyi8" target="_blank" rel="noopener">https://www.youtube.com/watch?v=uAoBQgakyi8</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=Oiu896-yCUo" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/Oiu896-yCUo/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=Oiu896-yCUo" target="_blank" rel="noopener">https://www.youtube.com/watch?v=Oiu896-yCUo</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.bilibili.com/video/BV1Ew8o6PEbV?t=355.9" target="_blank" rel="noopener">
-        <div class="fallback">↗</div>
-        <span class="badge">Web</span>
-      </a>
-      <div class="src-body">
-        <h4>哔哩哔哩</h4>
-        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
-        <p class="note">來源平台：bilibili.com｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://www.bilibili.com/video/BV1Ew8o6PEbV?t=355.9" target="_blank" rel="noopener">https://www.bilibili.com/video/BV1Ew8o6PEbV?t=355.9</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://hyper3d.ai/r/2KYW8OAC讨论相关技术，互相分享教程，共同学习" target="_blank" rel="noopener">
-        <div class="fallback">↗</div>
-        <span class="badge">Web</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
-        <p class="note">來源平台：hyper3d.ai｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://hyper3d.ai/r/2KYW8OAC讨论相关技术，互相分享教程，共同学习" target="_blank" rel="noopener">https://hyper3d.ai/r/2KYW8OAC讨论相关技术，互相分享教程，共同学习</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://youtu.be/FnwT-C5k5Gs?si=UwdPt5EkjmAjo39z" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/FnwT-C5k5Gs/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtu.be｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://youtu.be/FnwT-C5k5Gs?si=UwdPt5EkjmAjo39z" target="_blank" rel="noopener">https://youtu.be/FnwT-C5k5Gs?si=UwdPt5EkjmAjo39z</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://x.com/yyyole/status/2095341330914533567?s=46&amp;t=u8kKHhz4GMjaoMv7Wg7dhw" target="_blank" rel="noopener">
-        <div class="fallback">𝕏</div>
-        <span class="badge">X</span>
-      </a>
-      <div class="src-body">
-        <h4>沐阳 (@yyyole)</h4>
-        <p class="desc">社群案例：通常是最新技術展示、流程分享或產業觀察。</p>
-        <p class="note">來源平台：X｜點連結可查看原始貼文與討論串。</p>
-        <a class="url" href="https://x.com/yyyole/status/2095341330914533567?s=46&amp;t=u8kKHhz4GMjaoMv7Wg7dhw" target="_blank" rel="noopener">https://x.com/yyyole/status/2095341330914533567?s=46&amp;t=u8kKHhz4GMjaoMv7Wg7dhw</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://tcimage-lab.netlify.app/" target="_blank" rel="noopener">
-        <div class="fallback">↗</div>
-        <span class="badge">Web</span>
-      </a>
-      <div class="src-body">
-        <h4>TCIMAGE/LAB — Streaming Portfolio</h4>
-        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
-        <p class="note">來源平台：tcimage-lab.netlify.app｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://tcimage-lab.netlify.app/" target="_blank" rel="noopener">https://tcimage-lab.netlify.app/</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.youtube.com/watch?v=iIKc-HpVqks&amp;t=301s" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/iIKc-HpVqks/hqdefault.jpg" alt="YouTube" loading="lazy"><span class="play">▶</span>
-        <span class="badge">YouTube</span>
-      </a>
-      <div class="src-body">
-        <h4>YouTube</h4>
-        <p class="desc">影片案例：可搭配課堂講解作為案例觀摩。</p>
-        <p class="note">來源平台：youtube.com｜點封面或網址可開啟原始影片。</p>
-        <a class="url" href="https://www.youtube.com/watch?v=iIKc-HpVqks&amp;t=301s" target="_blank" rel="noopener">https://www.youtube.com/watch?v=iIKc-HpVqks&amp;t=301s</a>
-      </div>
-    </article>
-    
-
-    <article class="src-card">
-      <a class="cover" href="https://www.threads.com/@leofongai/post/DdNkh-Dkcqp" target="_blank" rel="noopener">
-        <div class="fallback">↗</div>
-        <span class="badge">Web</span>
-      </a>
-      <div class="src-body">
-        <h4>Threads</h4>
-        <p class="desc">外部參考連結：可作為延伸閱讀或工具入口。</p>
-        <p class="note">來源平台：threads.com｜點網址可查看原始頁面。</p>
-        <a class="url" href="https://www.threads.com/@leofongai/post/DdNkh-Dkcqp" target="_blank" rel="noopener">https://www.threads.com/@leofongai/post/DdNkh-Dkcqp</a>
-      </div>
-    </article>
-    </div>
+    <table class="cmp">
+      <thead><tr><th>課程單元</th><th>推薦</th><th>教學用途</th></tr></thead>
+      <tbody>
+        <tr><td>大三｜VTuber × Motion</td><td>OnAir</td><td>理解 VRM + BlendShape + LLM 底層串接</td></tr>
+        <tr><td>大三｜WebXR × Three.js</td><td>OnAir</td><td>用 Starter Template 做 WebXR Avatar 互動</td></tr>
+        <tr><td>大三｜Projection Mapping</td><td>Kit</td><td>數位看板＋人臉偵測 → 投影互動展示</td></tr>
+        <tr><td>大三｜期末作品展示</td><td>Kit</td><td>學生專注體驗設計，技術門檻低</td></tr>
+        <tr><td>研究所｜互動系統整合</td><td>OnAir</td><td>作為 API 層整合進 UE5 / nDisplay 流程</td></tr>
+        <tr><td>研究所｜ICVFX 現場</td><td>Kit</td><td>現場「AI 角色即時互動」輔助工具</td></tr>
+      </tbody>
+    </table>
+    <div class="verdict">課堂 <b>Demo 用 Kit</b>，實作課 <b>練功用 OnAir</b>。</div>
+  </div>
 </section>
+
+<!-- ============ SLIDE 5 · SOURCE LIBRARY ============ -->
+<section class="slide" id="sources">
+  <div class="slide-num stagger" style="--i:0">05 · SOURCE LIBRARY</div>
+  <h2 class="gtitle stagger" style="--i:1">完整來源：封面＋原始連結＋簡短說明</h2>
+  <div class="tabs stagger" style="--i:2">
+    <button class="tab on" data-panel="sVR">大三 VR / XR（<b data-count="31">0</b> 個來源）</button>
+    <button class="tab" data-panel="sVP">研究所 VP / 合成（<b data-count="81">0</b> 個來源）</button>
+  </div>
+  <div class="panel on" id="sVR"><div class="srcs" id="srcVR"></div></div>
+  <div class="panel" id="sVP"><div class="srcs" id="srcVP"></div></div>
+</section>
+
+<!-- ============ SLIDE 6 · TAKEAWAY ============ -->
+<section class="slide" id="takeaway">
+  <div class="slide-num stagger" style="--i:0">TAKEAWAY</div>
+  <div class="big stagger" style="--i:1">這套教材不是要你們學一堆工具，<br>而是希望你们记住——<br><em>同一條 Real-time Pipeline，兩端都能站。</em></div>
+  <div class="formula">
+    <span class="stagger" style="--i:2">3D 資產</span><i class="stagger" style="--i:2">×</i>
+    <span class="stagger" style="--i:3">互動</span><i class="stagger" style="--i:3">×</i>
+    <span class="stagger" style="--i:4">空間</span><i class="stagger" style="--i:4">×</i>
+    <span class="stagger" style="--i:5">合成</span><i class="stagger" style="--i:5">×</i>
+    <span class="stagger" style="--i:6">色彩科學</span>
+  </div>
+  <p class="lead stagger" style="--i:7">大三做出「能展示的空間體驗」；研究所做出「能交付的鏡頭畫面」。<br>2026 · VR / XR × Virtual Production · For TCIMAGE LAB</p>
+</section>
+
 </main>
 
-<footer>TCIMAGE/LAB · VR / XR × Virtual Production · 2026</footer>
+<div class="dots" id="dots"></div>
+<footer class="credit">TCIMAGE/LAB · VR / XR × VP · 2026</footer>
 
 <script>
-function showTrack(x){
-  document.getElementById('src-vr').classList.toggle('hidden', x!=='vr');
-  document.getElementById('src-vp').classList.toggle('hidden', x!=='vp');
-  document.getElementById('bvr').classList.toggle('active', x==='vr');
-  document.getElementById('bvp').classList.toggle('active', x==='vp');
+/* ============ 資料 ============ */
+const featuredVR=[
+ ["RlfGi6q-ss0","Meta Mixed Reality Game in UE5.5","MR / Quest / UE5","看 Passthrough、空間定位與 MR 遊戲如何整合。","https://www.youtube.com/watch?v=RlfGi6q-ss0"],
+ ["1IkZ5NrEf3A","World Labs｜Interactive Characters for Marble Worlds with Three.js","Three.js / WebXR / AI Character","看 Web 3D 世界中互動角色如何成立。","https://www.youtube.com/watch?v=1IkZ5NrEf3A"],
+ ["QBEtbXtCIcU","TouchDesigner｜KantanMapper Projection Mapping","TouchDesigner / 投影","快速理解 Projection Mapping 的基本工作流程。","https://youtu.be/QBEtbXtCIcU"],
+ ["1VBw_QBVY4M","TouchDesigner｜360° Projection of AI-Diffused Content","AI Visual / 360° Projection","把 AI 內容轉成沉浸式空間投影的直接案例。","https://www.youtube.com/watch?v=1VBw_QBVY4M"],
+ ["6MP48RFhe2Y","VTuber Studio with Three.js, React & VRM","VRM / VTuber / Web","看 Web、VRM、Avatar 與互動前端怎麼整合。","https://www.youtube.com/watch?v=6MP48RFhe2Y"],
+ ["983BpAhzfSQ","XGRIDS｜Gaussian Splat UE Plugin","3D Scan / Digital Twin / UE","理解大尺度 Gaussian Splats 如何進 Unreal Engine。","https://www.youtube.com/watch?v=983BpAhzfSQ"],
+ ["0p8h4acyq7o","QuickMagic / Cascadeur / Blender Motion Capture Workflow","Mocap / Avatar / Animation","看角色動作資料從 Mocap 到動畫修正的整體流程。","https://www.youtube.com/watch?v=0p8h4acyq7o"]
+];
+const featuredVP=[
+ ["tp6Fv9XymXg","Sony｜Virtual Production Tool Set Tutorial","VP 全貌 / Color","看 VP 現場工具、攝影機與顯示校準概念。","https://www.youtube.com/watch?v=tp6Fv9XymXg"],
+ ["cMsuZtyEupA","Unreal Engine｜Fallout Virtual Production","VAD / ICVFX","大型製作如何把 UE 與實拍流程整合。","https://youtu.be/cMsuZtyEupA"],
+ ["POkvDsbtraM","Lightcraft｜Replacing a $50K Volume Stage","Virtual Camera / Indie VP","低成本虛擬製作替代方案與成本思維。","https://www.youtube.com/watch?v=POkvDsbtraM"],
+ ["v8Sh-O-Yqjg","Jetset + Blender Virtual Greenscreen","Green Screen / Tracking","快速看虛擬綠幕、追蹤與 Blender 的合成方式。","https://www.youtube.com/watch?v=v8Sh-O-Yqjg"],
+ ["KEd5pRBo-8I","Can Gaussian Splats Replace Location Shoots?","Gaussian Splat / Location","直接討論掃描場景是否能取代實景外拍。","https://www.youtube.com/watch?v=KEd5pRBo-8I"],
+ ["W9QIyBNADG4","Scan a Cave → Unreal Engine","Photogrammetry / UE","完整看掃描、重建、整理、導入 UE 的場景流程。","https://www.youtube.com/watch?v=W9QIyBNADG4"],
+ ["Q6FjqfvtRps","CosmosFilm｜綠幕也能做虛擬拍攝","Green Screen / UE","從傳統綠幕切入 VP，適合建立比較基準。","https://www.youtube.com/watch?v=Q6FjqfvtRps"],
+ ["Ub0MmjYy0b0","Compositing Academy｜Merge CGI with Live Action","Nuke / Compositing","看 CGI 與實拍融合時邊緣與接縫怎麼處理。","https://youtu.be/Ub0MmjYy0b0"],
+ ["2kQzfng264w","The Making of The Batman","LED Volume / Cinematography","高階電影虛擬製作的經典案例。","https://www.youtube.com/watch?v=2kQzfng264w"],
+ ["M-vtf2TpopY","The Silent Killer of Virtual Production","Moire / Sync / Display","聚焦 VP 現場常被忽略的技術風險。","https://www.youtube.com/watch?v=M-vtf2TpopY"]
+];
+/* 來源庫：[type, title, url] */
+const srcVR=[
+ ["yt","影片案例","https://youtu.be/UgA2p9A2-Q0?t=418"],["yt","影片案例","https://youtu.be/5d6mZNA_5sg?t=285"],
+ ["web","加速城市 // 數媒系聯邦終極儀表板","https://accel-city-exhibition.vercel.app/"],
+ ["fab","加速城市 // 數媒系聯邦終極儀表板","https://www.fab.com/listings/b46926e1-fe3c-4c20-83f0-8be8ee5e8de5"],
+ ["yt","Meta Mixed Reality Game in UE5.5","https://www.youtube.com/watch?v=RlfGi6q-ss0"],
+ ["web","加速城市儀表板（home）","https://accel-city-exhibition.vercel.app/home.html"],
+ ["yt","影片案例","https://www.youtube.com/watch?v=TO1Pvy-wCFc"],
+ ["yt","World Labs｜Interactive Characters","https://www.youtube.com/watch?v=1IkZ5NrEf3A"],
+ ["fab","360 Parallax card","https://www.fab.com/listings/a0cbe964-b2e7-44b2-965c-febe2ec9b33a"],
+ ["fab","360 Parallax card","https://www.fab.com/listings/d8426949-1c95-4034-9cf4-ea0c9be511d5"],
+ ["web","BlendShapes / Live Link Face UE5","https://docs.idafaber3d.com/features/blendshapes#live-link-face-ue5"],
+ ["web","BVH 動捕文件","https://www.kdocs.cn/l/cbMLAawWn4VS"],
+ ["gh","VMCLiveLink","https://github.com/lifelike-and-believable/VMCLiveLink"],
+ ["yt","影片案例","https://www.youtube.com/watch?v=YPNO2xaAJ0k"],
+ ["x","小奇说 (@xingbugengming)","https://x.com/xingbugengming/status/2076973258117906905"],
+ ["yt","TouchDesigner｜KantanMapper","https://youtu.be/QBEtbXtCIcU"],
+ ["yt","TouchDesigner｜360° AI Projection","https://www.youtube.com/watch?v=1VBw_QBVY4M"],
+ ["xr","MAKAR｜基隆港鯨鯊 AR 體驗教學","https://www.makerar.com/tutorial_01?id=293"],
+ ["xr","MAKAR｜MR 放天燈教學","https://www.makerar.com/tutorial_01?id=187"],
+ ["app","MAKAR 3D Scan（App Store）","https://apps.apple.com/tw/app/makar-3d-scan/id6444039895"],
+ ["x","Pimax WebXR Blog","https://pimax.com/blogs/blogs/webxr"],
+ ["vr","WebXR Samples","https://immersive-web.github.io/webxr-samples/"],
+ ["yt","影片案例","https://youtu.be/BCKEYrCfvHs"],
+ ["yt","影片案例","https://www.youtube.com/watch?v=5L5oIqg27z8"],
+ ["gh","lingbot-map","https://github.com/Robbyant/lingbot-map"],
+ ["x","Superman (@thesupermanmx)","https://x.com/thesupermanmx/status/2077779856050606155"],
+ ["yt","VTuber Studio with Three.js, React & VRM","https://www.youtube.com/watch?v=6MP48RFhe2Y"],
+ ["gh","wass08/r3f-vrm-final","https://github.com/wass08/r3f-vrm-final"],
+ ["ai","Gemini 共享筆記","https://share.gemini.google/lwVBopacW4As"],
+ ["yt","XGRIDS｜Gaussian Splat UE Plugin","https://www.youtube.com/watch?v=983BpAhzfSQ"],
+ ["yt","Mocap Workflow（QuickMagic/Cascadeur/Blender）","https://www.youtube.com/watch?v=0p8h4acyq7o"]
+];
+const srcVP=[
+ ["yt","Sony｜VP Tool Set Tutorial","https://www.youtube.com/watch?v=tp6Fv9XymXg"],
+ ["ai","Gemini 延伸討論","https://gemini.google.com/share/7ec0d6549495"],
+ ["ai","Gemini 延伸討論","https://gemini.google.com/share/6879b53d45ac"],
+ ["yt","影片案例","https://www.youtube.com/watch?v=e0aqex2J7gE"],
+ ["web","VTTLab｜VAD 工作流程解析","https://www.vttlab.com/#course-collection-02"],
+ ["yt","影片案例","https://www.youtube.com/watch?v=UYPlhUxjy7M"],
+ ["yt","CosmosFilm｜綠幕虛擬拍攝","https://www.youtube.com/watch?v=Q6FjqfvtRps&t=326s"],
+ ["yt","影片案例","https://www.youtube.com/watch?v=mA0dqmewdOI"],
+ ["yt","影片案例","https://youtu.be/-TYiNTdwJdE?t=1633"],
+ ["yt","影片案例","https://youtu.be/UgA2p9A2-Q0?t=418"],
+ ["yt","Fallout Virtual Production","https://youtu.be/cMsuZtyEupA"],
+ ["yt","影片案例","https://youtu.be/5d6mZNA_5sg?t=251"],
+ ["yt","Lightcraft｜Replacing a $50K Volume Stage","https://www.youtube.com/watch?v=POkvDsbtraM"],
+ ["yt","Jetset + Blender Virtual Greenscreen","https://www.youtube.com/watch?v=v8Sh-O-Yqjg"],
+ ["yt","Can Gaussian Splats Replace Location Shoots?","https://www.youtube.com/watch?v=KEd5pRBo-8I"],
+ ["web","Pixojam｜ADREC Climber","https://pixojam.com/index.php/adrec-climber/"],
+ ["web","Pixojam","https://pixojam.com/"],
+ ["yt","Scan a Cave → Unreal Engine","https://www.youtube.com/watch?v=W9QIyBNADG4"],
+ ["ai","Gemini｜Linsn LED 討論","https://gemini.google.com/share/02f3da51bc63"],
+ ["web","Linsn LED｜VP LED Wall","https://www.linsnled.com/zh-TW/virtual-production-led-wall.html#support"],
+ ["yt","The Silent Killer of Virtual Production","https://www.youtube.com/watch?v=M-vtf2TpopY"],
+ ["web","DC Film School｜虛擬製作如何改變影視產業","https://dcfilmschool.com/疫情時代新變革──「虛擬製作」如何改變影視產/"],
+ ["web","VFX Voice｜First Man: An Effects Odyssey","https://vfxvoice.com/first-man-an-effects-odyssey/"],
+ ["web","Netflix｜Post-Production Delivery Specs","https://partnerhelp.netflixstudios.com/hc/en-us/articles/7262346654995-Post-Production-Branded-Delivery-Specifications"],
+ ["yt","The Making of The Batman","https://www.youtube.com/watch?v=2kQzfng264w"],
+ ["web","Epic｜In-Camera VFX in UE","https://dev.epicgames.com/documentation/unreal-engine/in-camera-vfx-in-unreal-engine"],
+ ["web","Framestore｜1899 Virtual Production","https://www.framestore.com/work/1899-virtual-production"],
+ ["web","ARRI｜Create a Fixed Stage","https://www.arri.com/en/solutions/virtual-production/arri-vp-stage-integration"],
+ ["web","Academia｜Virtual Production Case Studies","https://www.academia.edu/95798129/Virtual_Production_in_Action_A_Case_Study_in_Virtual_Production_Implementation_A_Creative_Implementation_of_Expanded_Cinematography_and_Narratives_Figure_1_Selected_case_studies_in_Virtual_Production"],
+ ["web","Medium｜Virtual Production 搜尋","https://medium.com/search?q=VIRTUAL+PRODUCTION"],
+ ["yt","影片案例","https://www.youtube.com/watch?v=Eq_3pJN7F74"],
+ ["yt","影片案例","https://www.youtube.com/watch?v=a78WoZeZGqI"],
+ ["web","Foundry｜NUKE Keying 官方教學","https://learn.foundry.com/nuke?category=keying_45"],
+ ["yt","Compositing Academy｜Merge CGI with Live Action","https://youtu.be/Ub0MmjYy0b0"],
+ ["yt","影片案例","https://youtu.be/muAgkhaoLDA"],
+ ["x","el.cine (@EHuanglu)","https://x.com/EHuanglu/status/2077091952252875189"],
+ ["yt","影片案例","https://youtu.be/1DK0pCxevts"],
+ ["yt","影片案例","https://www.youtube.com/watch?v=sL3dcOoiTes"],
+ ["gh","lingbot-map","https://github.com/Robbyant/lingbot-map"],
+ ["x","Superman (@thesupermanmx)","https://x.com/thesupermanmx/status/2077779856050606155"],
+ ["yt","XGRIDS｜Gaussian Splat UE Plugin","https://www.youtube.com/watch?v=983BpAhzfSQ"],
+ ["yt","影片案例","https://www.youtube.com/watch?v=Y1KLFktW_ss"],
+ ["yt","影片案例","https://www.youtube.com/watch?v=u3aNcQMij24"],
+ ["yt","影片案例","https://www.youtube.com/watch?v=OpfxgD8tjOQ"],
+ ["x","Voyz (@voyzlab)","https://x.com/voyzlab/status/2079273717142851926?s=20"],
+ ["yt","影片案例","https://www.youtube.com/watch?v=mVN7mUDscxw"],
+ ["yt","影片案例","https://youtu.be/9dQ-NZwG800"],
+ ["x","Encodium (@ModelCollapse38)","https://x.com/ModelCollapse38/status/2081372551293366746?s=20"],
+ ["yt","影片案例","https://www.youtube.com/watch?v=pa7Bvzewta0"],
+ ["web","LED Screen Board｜LED Volume Wall","https://www.ledscreenboard.com/zh-TW/eagerled-led-volume-wall/"],
+ ["web","GETOP｜影集 1899 的虛擬製作","https://www.getop.com/post/影集-1899-採用創新的虛擬製作"],
+ ["yt","影片案例","https://www.youtube.com/watch?v=dQL6N5Xzz2w"],
+ ["x","Encodium (@ModelCollapse38)","https://x.com/ModelCollapse38/status/2083965504473948330"],
+ ["web","Foundry｜Nuke Keying Best Practices","https://learn.foundry.com/course/4691/view/practical-compositing-in-nuke-10-keying-best-practices"],
+ ["yt","影片案例","https://www.youtube.com/watch?v=3buiBEfmx18"],
+ ["x","Will Eastcott (@willeastcott)","https://x.com/willeastcott/status/2084337442157478191"],
+ ["web","Bilibili｜影片案例","https://www.bilibili.com/video/BV1sDuT69E2m?t=16.2"],
+ ["web","LibTV｜專業視頻創作工具","https://www.liblib.tv/"],
+ ["yt","影片案例","https://youtu.be/qrKhMgOlrF8"],
+ ["web","Notion｜MiniMax H3 多模態模型","https://app.notion.com/p/MiniMax-H3-The-Next-Gen-Open-Weight-Multimodal-Generation-Model-3acbb3a8c3ae81618844cb0a3904e247"],
+ ["web","Notion｜MiniMax H3（二）","https://app.notion.com/p/MiniMax-H3-The-Next-Gen-Open-Weight-Multimodal-Generation-Model-5cdd99c3d331822397f18130e7b480a8"],
+ ["web","Instagram Reels","https://www.instagram.com/reels/DbC1XMLxcw5/"],
+ ["yt","影片案例","https://youtu.be/mVN7mUDscxw"],
+ ["yt","YouTube Shorts","https://www.youtube.com/shorts/vzlatM0ybns"],
+ ["yt","影片案例","https://youtu.be/ocSTG1yqTmA"],
+ ["yt","影片案例","https://www.youtube.com/watch?v=-o0CIAxfkXE"],
+ ["yt","影片案例","https://www.youtube.com/watch?v=NshfJajOjJM"],
+ ["yt","影片案例","https://www.youtube.com/watch?v=sXusmdNdJhc"],
+ ["yt","影片案例","https://www.youtube.com/watch?v=KNwzWG2riFY"],
+ ["yt","影片案例","https://www.youtube.com/watch?v=WeQQy83K4rg"],
+ ["yt","影片案例","https://www.youtube.com/watch?v=k9YVBSs6_mQ"],
+ ["yt","影片案例","https://youtu.be/nd084X0n7t4"],
+ ["yt","影片案例","https://www.youtube.com/watch?v=uAoBQgakyi8"],
+ ["yt","影片案例","https://www.youtube.com/watch?v=Oiu896-yCUo"],
+ ["web","Bilibili｜影片案例","https://www.bilibili.com/video/BV1Ew8o6PEbV?t=355.9"],
+ ["web","Hyper3D｜Rodin 討論社群","https://hyper3d.ai/"],
+ ["yt","影片案例","https://youtu.be/FnwT-C5k5Gs"],
+ ["x","沐阳 (@yyyole)","https://x.com/yyyole/status/2095341330914533567?s=46"],
+ ["web","TCIMAGE/LAB — Streaming Portfolio","https://tcimage-lab.netlify.app/"],
+ ["yt","影片案例","https://www.youtube.com/watch?v=iIKc-HpVqks&t=301s"],
+ ["web","Threads｜@leofongai","https://www.threads.com/@leofongai/post/DdNkh-Dkcqp"]
+];
+const TYPE={
+ yt:{icon:"▶",label:"YouTube",desc:"影片案例：可搭配課堂講解作為案例觀摩。"},
+ web:{icon:"↗",label:"Web",desc:"外部參考連結：可作為延伸閱讀或工具入口。"},
+ fab:{icon:"◆",label:"Fab",desc:"素材資源頁：可作為場景、資產與風格參考。"},
+ gh:{icon:"⌥",label:"GitHub",desc:"程式／專案原始碼：適合延伸成實作、研究或工具測試。"},
+ x:{icon:"𝕏",label:"X",desc:"社群案例：最新技術展示、流程分享或產業觀察。"},
+ xr:{icon:"◎",label:"MAKAR",desc:"XR 教學連結：適合快速建立 AR / MR 專案原型。"},
+ app:{icon:"⬇",label:"App",desc:"工具下載頁：方便學生安裝與現場測試。"},
+ ai:{icon:"✦",label:"Gemini",desc:"延伸討論連結：可作為課堂筆記或 AI 整理內容。"},
+ vr:{icon:"◈",label:"WebXR",desc:"WebXR 參考頁：可直接做瀏覽器 VR / XR 示範與測試。"}
+};
+const vidOf=u=>{const m=u.match(/(?:v=|youtu\.be\/|shorts\/)([\w-]{11})/);return m?m[1]:null};
+const thumb=id=>`https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+
+/* ============ 渲染精選案例 ============ */
+function renderCases(el,data){
+ el.innerHTML=data.map(([vid,title,fit,why,url],i)=>`
+ <a class="case stagger" style="--i:${i+3};text-decoration:none;color:inherit" href="${url}" target="_blank">
+  <div class="thumb">
+   <img src="${thumb(vid)}" alt="${title}" loading="lazy">
+   <div class="play"><span>▶</span></div>
+   <div class="fit">適合：${fit}</div>
+  </div>
+  <div class="case-body">
+   <h4>${title}</h4>
+   <div class="why"><b>為什麼看：</b>${why}</div>
+   <span>${url}</span>
+  </div>
+ </a>`).join("");
+ bindTilt(el);
+}
+renderCases(document.getElementById("casesVR"),featuredVR);
+renderCases(document.getElementById("casesVP"),featuredVP);
+
+/* ============ 渲染來源庫 ============ */
+function renderSrcs(el,data){
+ el.innerHTML=data.map(([t,title,url],i)=>{
+  const T=TYPE[t],vid=t==="yt"?vidOf(url):null;
+  const visual=vid
+   ? `<div class="sthumb"><img src="${thumb(vid)}" loading="lazy" alt=""><span class="stype" style="color:#ff6b81;border-color:#ff6b81">${T.icon} ${T.label}</span><div class="play"><span style="width:40px;height:40px;font-size:14px">▶</span></div></div>`
+   : `<div class="sthumb"><div class="gh-ico">${T.icon}</div><span class="stype">${T.label}</span></div>`;
+  return `<a class="src stagger" style="--i:${Math.min(i,20)}" href="${url}" target="_blank">${visual}
+   <div class="sbody"><h5>${title}</h5><p>${T.desc}</p><span class="surl">${url.replace(/^https?:\/\//,"").slice(0,52)}…</span></div></a>`;
+ }).join("");
+ bindTilt(el);
+}
+renderSrcs(document.getElementById("srcVR"),srcVR);
+renderSrcs(document.getElementById("srcVP"),srcVP);
+
+/* ============ 3D Tilt ============ */
+function bindTilt(root){
+ root.querySelectorAll(".case,.src").forEach(card=>{
+  card.addEventListener("mousemove",e=>{
+   const r=card.getBoundingClientRect();
+   const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+   card.style.transform=`perspective(900px) rotateY(${x*9}deg) rotateX(${-y*9}deg) translateY(-5px) scale(1.02)`;
+  });
+  card.addEventListener("mouseleave",()=>card.style.transform="");
+ });
+}
+
+/* ============ Slide 導覽 ============ */
+const slides=[...document.querySelectorAll(".slide")];
+const dotsBox=document.getElementById("dots");
+slides.forEach((_,i)=>{const d=document.createElement("button");d.className="dot"+(i===0?" on":"");d.onclick=()=>go(i);dotsBox.appendChild(d)});
+const dots=[...dotsBox.children];
+let cur=0;
+function go(i){
+ if(i<0||i>=slides.length||i===cur)return;
+ slides[cur].classList.remove("active");slides[cur].scrollTop=0;
+ cur=i;
+ slides[cur].classList.add("active");
+ dots.forEach((d,k)=>d.classList.toggle("on",k===cur));
+ document.getElementById("pageInfo").textContent=`${cur+1} / ${slides.length}`;
+ document.getElementById("pbar").style.width=((cur+1)/slides.length*100)+"%";
+ runCounters(slides[cur]);
+}
+document.getElementById("prev").onclick=()=>go(cur-1);
+document.getElementById("next").onclick=()=>go(cur+1);
+addEventListener("keydown",e=>{
+ if(e.key==="ArrowRight"||e.key===" "||e.key==="PageDown")go(cur+1);
+ if(e.key==="ArrowLeft"||e.key==="PageUp")go(cur-1);
+ if(e.key==="Home")go(0);if(e.key==="End")go(slides.length-1);
+});
+/* 觸控滑動 */
+let tx=0,ty=0;
+addEventListener("touchstart",e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
+addEventListener("touchend",e=>{
+ const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;
+ if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.5){dx<0?go(cur+1):go(cur-1)}
+},{passive:true});
+document.getElementById("pbar").style.width=(1/slides.length*100)+"%";
+
+/* ============ Tabs ============ */
+document.querySelectorAll(".tabs").forEach(box=>{
+ box.querySelectorAll(".tab").forEach(tab=>{
+  tab.onclick=()=>{
+   box.querySelectorAll(".tab").forEach(t=>t.classList.remove("on"));
+   tab.classList.add("on");
+   const sec=box.closest(".slide");
+   sec.querySelectorAll(".panel").forEach(p=>p.classList.remove("on"));
+   const panel=sec.querySelector("#"+tab.dataset.panel);
+   panel.classList.add("on");
+   runCounters(panel);
+  };
+ });
+});
+
+/* ============ 計數器動畫 ============ */
+const counted=new WeakSet();
+function runCounters(scope){
+ scope.querySelectorAll("[data-count]").forEach(el=>{
+  if(counted.has(el))return;counted.add(el);
+  const target=+el.dataset.count;let n=0;const step=Math.max(1,Math.ceil(target/28));
+  const t=setInterval(()=>{n+=step;if(n>=target){n=target;clearInterval(t)}el.textContent=n},32);
+ });
+}
+runCounters(document.querySelector(".slide.active"));
+
+/* ============ 星點背景 ============ */
+const stars=document.getElementById("stars");
+for(let i=0;i<70;i++){
+ const s=document.createElement("div");s.className="star";
+ s.style.left=Math.random()*100+"%";s.style.top=Math.random()*100+"%";
+ s.style.animationDelay=(Math.random()*4)+"s";s.style.animationDuration=(2.5+Math.random()*3.5)+"s";
+ stars.appendChild(s);
 }
 </script>
 </body>
