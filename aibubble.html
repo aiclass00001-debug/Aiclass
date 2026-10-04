@@ -88,7 +88,7 @@ section{padding:96px 0 8px;scroll-margin-top:80px}
 @media(max-width:860px){.videos{grid-template-columns:1fr}}
 .player{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;transition:.3s}
 .player:hover{border-color:rgba(215,255,63,.4);transform:translateY(-3px)}
-.player-screen{position:relative;aspect-ratio:16/9;background:#000;cursor:pointer;overflow:hidden}
+.player-screen{position:relative;aspect-ratio:16/9;background:#000;cursor:pointer;overflow:hidden;min-width:0}
 .player-screen img.thumb{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s;opacity:.85}
 .player-screen:hover img.thumb{transform:scale(1.04);opacity:1}
 .player-screen::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(0,0,0,.75))}
@@ -289,6 +289,8 @@ td.asset{font-size:23px}
       <a href="#moat"><b>03</b>護城河</a>
       <a href="#power"><b>04</b>電力瓶頸</a>
       <a href="#invest"><b>05</b>投資指南</a>
+      <a href="#feifei"><b>06</b>李飛飛</a>
+      <a href="#finale"><b>07</b>總結</a>
     </div>
   </div>
 </nav>
@@ -301,7 +303,7 @@ td.asset{font-size:23px}
   <p class="hero-sub reveal">《大賣空》主角原型 <em>Steve Eisman</em> 的抓蟲筆記 ——<br>用看穿 2008 年房貸騙局的放大鏡，檢視今天的 AI 熱潮。</p>
   <div class="meta reveal">
     <span class="tag">ISSUE 001</span>
-    <span>整理自 <b>2 支訪談影片</b></span>
+    <span>整理自 <b>3 支影片</b></span>
     <span>閱讀約 <b>6 分鐘</b></span>
     <span>關鍵字 <b>循環融資 / 護城河 / 電力瓶頸</b></span>
   </div>
@@ -363,6 +365,38 @@ td.asset{font-size:23px}
             <li><button data-video="Zw0I7kb6zg4" data-start="1440"><b>24:00</b>電力問題</button></li>
             <li><button data-video="Zw0I7kb6zg4" data-start="1834"><b>30:34</b>如何投資 AI</button></li>
             <li><button data-video="Zw0I7kb6zg4" data-start="2075"><b>34:35</b>Eisman 的投資法</button></li>
+          </ul>
+        </div>
+      </div>
+    </article>
+    <article class="player wide reveal">
+      <style>
+      .player.wide{grid-column:1/-1;display:grid;grid-template-columns:1.15fr 1fr;align-items:center}
+      .player.wide .player-screen{min-width:0}
+      .player.wide .player-meta{min-width:0}
+      .player-screen.shorts img.thumb{object-fit:contain;background:#000}
+      @media(max-width:860px){.player.wide{grid-template-columns:1fr}}
+      </style>
+      <div class="player-screen shorts" data-video="rQ4PHFB302c" data-start="0" role="button" tabindex="0" aria-label="播放李飛飛訪談 Shorts">
+        <img class="thumb" src="https://i.ytimg.com/vi/rQ4PHFB302c/maxresdefault.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/rQ4PHFB302c/hqdefault.jpg'" alt="李飛飛訪談 Shorts 縮圖" loading="lazy">
+        <div class="play-btn"></div>
+      </div>
+      <div class="player-meta">
+        <div class="lang">📱 YOUTUBE SHORTS · 昌健胡說</div>
+        <h3>斯坦福 AI 教母李飛飛：一年 8 萬美元的私教，AI 只要 100 美元</h3>
+        <div class="actions">
+          <a class="yt-link" href="https://www.youtube.com/shorts/rQ4PHFB302c" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4L15.8 12l-6.2 3.6z"/></svg>
+            在 YouTube 開啟</a>
+        </div>
+        <div class="chapters">
+          <p>CHAPTERS — 點段落直接跳轉播放</p>
+          <ul>
+            <li><button data-video="rQ4PHFB302c" data-start="23"><b>0:23</b>兩種人的鴻溝</button></li>
+            <li><button data-video="rQ4PHFB302c" data-start="40"><b>0:40</b>私教平民化</button></li>
+            <li><button data-video="rQ4PHFB302c" data-start="73"><b>1:13</b>PM 工作流壓縮</button></li>
+            <li><button data-video="rQ4PHFB302c" data-start="99"><b>1:39</b>最值錢的兩類人才</button></li>
+            <li><button data-video="rQ4PHFB302c" data-start="146"><b>2:26</b>空間智能門檻</button></li>
           </ul>
         </div>
       </div>
@@ -597,6 +631,83 @@ td.asset{font-size:23px}
     <p>Eisman 的方法論很簡單：別聽故事，看金流。當投資的錢和營收的錢是同一批錢，財報就只是在照鏡子。看懂迴圈，你就看懂了這場 AI 熱潮的底牌。</p>
   </div>
 </section>
+<!-- ================= 06 李飛飛 ================= -->
+<section id="feifei">
+  <div class="sec-head reveal">
+    <div class="sec-num">06</div>
+    <h2><small>THE HUMAN GAP</small>李飛飛：AI 時代，人與人的差距</h2>
+  </div>
+  <p class="body reveal">Eisman 講的是<b>錢的流向</b>；史丹佛教授、「AI 教母」李飛飛講的是<b>人的流向</b>——當 AI 把能力成本打到地板價，人與人之間的差距，會從哪裡被拉開？</p>
+  <div class="cards">
+    <div class="card reveal">
+      <h4>🛠️ 洞察一：動手造物者 vs. 等待指令者</h4>
+      <ul>
+        <li><b>主動創造者</b>：拿起 AI 就去嘗試、驗證想法、產出成果，越用越有底氣。</li>
+        <li><b>被動等待者</b>：停在原地等標準答案、等指令，越等越焦慮、越邊緣。</li>
+        <li>兩者的能力與產出差距，會隨時間<span class="hl">指數級擴大</span>。</li>
+      </ul>
+    </div>
+    <div class="card reveal">
+      <h4>🎓 洞察二：教育成本平民化</h4>
+      <ul>
+        <li>過去 60 年最有效的學習模式是<b>一對一私教</b>，但小學每年約 <b>$12,000</b>、大學可達每年 <b>$80,000</b> 美元。</li>
+        <li>AI 家教每年約 <b>$100</b> 就能達到相近輔導效果，還省下約 <b>60%</b> 時間成本。</li>
+        <li>全面導入 AI 的學校 vs. 禁用 AI 的學校，<span class="hl">10 年後學生的競爭力差距將無法彌補</span>。</li>
+      </ul>
+    </div>
+    <div class="card reveal">
+      <h4>⚡ 洞察三：工作流壓縮</h4>
+      <ul>
+        <li>以前的 PM 靠指揮與溝通：做一個 Demo 要協調設計師、工程師，耗時<b>數月</b>。</li>
+        <li>現在的 PM 直接用 AI 做功能原型，驗證週期壓縮到<b>數週</b>。</li>
+        <li>企業招募偏好轉向：<span class="hl">能快速順應工具變化、親自解決問題的人</span>。</li>
+      </ul>
+    </div>
+    <div class="card reveal">
+      <h4>👑 洞察四：未來最值錢的兩類人才</h4>
+      <ul>
+        <li><b>頂尖領域專家（前 1%）</b>：平庸的文案、普通的程式碼會被 AI 追平，唯有扎根極深、具備獨到洞察的專家不可替代。</li>
+        <li><b>敢做決策的強大通才</b>：上手極強、判斷敏銳，借 AI 跨越專業壁壘，一人推動完整專案落地。</li>
+        <li><span class="hl">最強組合</span>：頂尖深度專家 × 具決策力的通才。</li>
+      </ul>
+    </div>
+  </div>
+  <div class="loop-note reveal">
+    <span class="spin" style="color:var(--cyan);border-color:rgba(94,231,255,.5)">NOTE</span>
+    <span><b>補充：人類智能的獨特性。</b>AI 不會讓人類價值歸零——正如工業革命沒有消滅體力勞動，而是重塑了生產力上限。人類還有<b>空間智能</b>：對實體世界的感知與操作（理解衣物形狀、摺好放進衣櫃），那是純語言模型觸及不到的領域。起步心態只有一個：<b>敢第一時間動手</b>——不知道怎麼開始？去看年輕人怎麼日常用 AI，比看教學手冊有用。</span>
+  </div>
+</section>
+
+<!-- ================= 07 總結 ================= -->
+<section id="finale">
+  <div class="sec-head reveal">
+    <div class="sec-num">07</div>
+    <h2><small>THE SYNTHESIS</small>三部影片，放在一起看</h2>
+  </div>
+  <div class="cards">
+    <div class="card reveal">
+      <h4>💸 Eisman 看的是「錢」</h4>
+      <ul>
+        <li>AI 產業的錢在<b>空轉</b>：投資 → 回購 → 財報 → 再投資，左手換右手。</li>
+        <li>泡沫會不會破？他說：盯著金流，別當最後接盤的人。</li>
+        <li>給你的啟示：<span class="hl">看懂錢的流向，保護你的錢包</span>。</li>
+      </ul>
+    </div>
+    <div class="card reveal">
+      <h4>🧠 李飛飛看的是「人」</h4>
+      <ul>
+        <li>AI 把能力成本打到地板價，人與人的差距從<b>動不動手</b>開始拉開。</li>
+        <li>等泡沫破了再行動？差距早就指數級擴大了。</li>
+        <li>給你的啟示：<span class="hl">別等，現在就動手成為造物者</span>。</li>
+      </ul>
+    </div>
+  </div>
+  <blockquote class="pull reveal">產業的泡沫會破，但個人的差距不會等你。<small>— 三部影片的共同結論</small></blockquote>
+  <div class="outro reveal">
+    <h3>看空產業，不等於看空自己。</h3>
+    <p>Eisman 教你別把錢丟進迴圈裡空轉；李飛飛教你把時間丟進實作裡複利。一個幫你避開陷阱，一個幫你拿到門票——這才是這三支影片放在一起時，真正想告訴你的事。</p>
+  </div>
+</section>
 </div>
 
 <footer>
@@ -617,6 +728,8 @@ td.asset{font-size:23px}
         <h5>MORE</h5>
         <a href="#power">04 電力瓶頸</a>
         <a href="#invest">05 投資指南</a>
+        <a href="#feifei">06 李飛飛的四個洞察</a>
+        <a href="#finale">07 三部影片的總結</a>
         <a href="#videos">回到頂部 ↑</a>
       </div>
     </div>
