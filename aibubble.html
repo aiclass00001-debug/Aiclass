@@ -167,6 +167,22 @@ p.body{color:#d8d8dc;line-height:2;max-width:860px;margin-bottom:18px;font-size:
 .card li::before{content:"→";position:absolute;left:0;color:var(--acid);font-family:var(--mono)}
 .card li b{color:var(--ink)}
 
+/* ---------- 反方小卡 ---------- */
+.rebuttal{margin:44px 0;border:1px solid rgba(94,231,255,.45);border-radius:20px;padding:36px 34px;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,rgba(94,231,255,.07),transparent 45%),var(--card);transition:.3s}
+.rebuttal:hover{border-color:var(--cyan)}
+.rebuttal::before{content:"COUNTERPOINT";position:absolute;top:16px;right:24px;font-family:var(--mono);font-size:11px;letter-spacing:.35em;color:var(--cyan);opacity:.7}
+.rebuttal h4{font-size:22px;font-weight:900;color:var(--cyan);margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.rebuttal .sub{font-size:14px;color:var(--dim);margin-bottom:22px}
+.rebuttal ul{list-style:none}
+.rebuttal li{position:relative;padding-left:28px;margin-bottom:20px;font-size:16px;color:#d8d8dc;line-height:1.9}
+.rebuttal li:last-child{margin-bottom:0}
+.rebuttal li::before{content:"◆";position:absolute;left:0;top:5px;color:var(--cyan);font-size:12px}
+.rebuttal li b{color:var(--ink)}
+.rebuttal .q{display:block;font-family:var(--serif);font-style:normal;color:var(--ink);font-weight:600;
+  border-left:3px solid var(--cyan);padding:4px 0 4px 18px;margin:10px 0;line-height:1.8}
+.rebuttal .src{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--dim)}
+
 /* ---------- 投資評等表 ---------- */
 .table-wrap{margin:40px 0;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:var(--card)}
 table{width:100%;border-collapse:collapse;font-size:16px}
@@ -274,6 +290,11 @@ td.asset{font-size:23px}
 .fb-title{font-size:26px}
 .fb-sub{font-size:18px}
 .fb-btn{font-size:20px}
+.rebuttal h4{font-size:28px}
+.rebuttal .sub{font-size:17px}
+.rebuttal li{font-size:20px}
+.rebuttal .q{font-size:21px}
+.rebuttal .src{font-size:13px}
 </style>
 </head>
 <body>
@@ -551,6 +572,17 @@ td.asset{font-size:23px}
   </div>
 
   <blockquote class="pull reveal">錢只是在巨頭和小弟之間「左手換右手」！如果沒有真正的外部消費者買單，這顆氣球遲早會破。<small>— STEVE EISMAN</small></blockquote>
+
+  <!-- ===== 新增：反方怎麼說（2026-10-04） ===== -->
+  <div class="rebuttal reveal">
+    <h4>🛡️ 反方怎麼說：黃仁勳的回應</h4>
+    <p class="sub">同一組數字，另一種解讀 —— 2026/9 最新動態</p>
+    <ul>
+      <li><b>黃仁勳親自回應（2026/9/10，Goldman Sachs 大會）</b><span class="q">"We put in one and 100 comes back in. Is that circular? If that is, let's do more of that."</span>財務長 Colette Kress 補上 <b>fungibility（資金可替代性）</b>辯護：投出去的錢和賺回來的錢，在會計上本來就可以互相替代，不算作弊。<br><span class="src">SOURCE: GOLDMAN SACHS COMMUNACOPIA 2026</span></li>
+      <li><b>但 10-Q 洩了另一種循環：$105B 擔保</b>——輝達最新財報揭露最高 <b>$108.5B</b> 保證敞口，其中 <b>$105B</b> 是俄亥俄州單一園區租給 OpenAI 關聯方的擔保。不是股權投資，是「我幫你租場地」——循環換了件衣服。<br><span class="src">SOURCE: NVIDIA 10-Q, 2026</span></li>
+      <li><b>下一輪正在發生：Anthropic IPO 的第二張支票</b>——Reuters 2026/9 報導，輝達考慮以最高 <b>$100 億</b>擔任 Anthropic IPO（傳聞估值 <b>$2 兆</b>、募資最高 $1000 億）的 anchor investor。金流圖上「下一輪」的箭頭，現在有了名字。<br><span class="src">SOURCE: REUTERS, 2026/9</span></li>
+    </ul>
+  </div>
 </section>
 
 <!-- ================= 03 護城河 ================= -->
