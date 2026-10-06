@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="dark" />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <title>AI CLASS 課程頁面導覽</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080b0f;
+      --panel: #10151b;
+      --panel-hover: #151c24;
+      --ink: #f4f7f9;
+      --muted: #9ba8b3;
+      --line: #27313a;
+      --ai: #43d3ff;
+      --ai-soft: rgba(67, 211, 255, .12);
+      --vr: #ffd45a;
+      --vr-soft: rgba(255, 212, 90, .12);
+      --pr: #ff6b62;
+      --pr-soft: rgba(255, 107, 98, .12);
+      --geo: #9be564;
+      --geo-soft: rgba(155, 229, 100, .12);
+      --focus: #fff;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: auto; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      background:
+        linear-gradient(var(--line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line) 1px, transparent 1px),
+        var(--bg);
+      background-size: 48px 48px;
+      color: var(--ink);
+      font-family: "Noto Sans TC", sans-serif;
+      line-height: 1.55;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(180deg, color-mix(in srgb, var(--bg) 65%, transparent), var(--bg) 80%);
+      z-index: -1;
+    }
+    a { color: inherit; }
+    .shell {
+      width: min(1180px, calc(100% - 48px));
+      margin: 0 auto;
+      padding: 72px 0 96px;
+    }
+    .masthead {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 40px;
+      align-items: end;
+      padding: 38px 38px 36px;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(100deg, rgba(67, 211, 255, .09), transparent 42%),
+        var(--panel);
+      overflow: hidden;
+    }
+    .masthead::before {
+      content: "115";
+      position: absolute;
+      right: 116px;
+      top: -46px;
+      font: 800 190px/.9 "IBM Plex Mono", monospace;
+      letter-spacing: -.12em;
+      color: rgba(255,255,255,.035);
+      pointer-events: none;
+    }
+    .masthead::after {
+      content: "MEDIA  •  AI  •  CULTURE";
+      position: absolute;
+      right: -58px;
+      top: 30px;
+      padding: 6px 68px;
+      background: var(--ai);
+      color: #041015;
+      font: 700 10px/1 "IBM Plex Mono", monospace;
+      letter-spacing: .16em;
+      transform: rotate(35deg);
+    }
+    .overline {
+      margin: 0 0 10px;
+      font: 600 13px/1.4 "IBM Plex Mono", monospace;
+      letter-spacing: .14em;
+      color: var(--ai);
+    }
+    h1 {
+      margin: 0;
+      max-width: 780px;
+      font-size: clamp(38px, 6vw, 78px);
+      line-height: .98;
+      letter-spacing: -.055em;
+      font-weight: 800;
+    }
+    .summary {
+      margin: 18px 0 0;
+      max-width: 620px;
+      color: var(--muted);
+      font-size: clamp(16px, 1.8vw, 20px);
+    }
+    .count {
+      width: 152px;
+      padding: 17px 18px 15px;
+      background: var(--ink);
+      color: var(--bg);
+    }
+    .count strong {
+      display: block;
+      font: 600 44px/.9 "IBM Plex Mono", monospace;
+      letter-spacing: -.08em;
+    }
+    .count span {
+      display: block;
+      margin-top: 10px;
+      font: 600 12px/1.3 "IBM Plex Mono", monospace;
+      letter-spacing: .1em;
+    }
+    .jump {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 24px 0 0;
+    }
+    .jump a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 8px 13px;
+      border: 1px solid var(--line);
+      text-decoration: none;
+      font: 500 13px/1.2 "IBM Plex Mono", monospace;
+      background: var(--bg);
+    }
+    .jump a::before { content: ""; width: 7px; height: 7px; background: currentColor; }
+    .jump .j-ai { color: var(--ai); }
+    .jump .j-vr { color: var(--vr); }
+    .jump .j-pr { color: var(--pr); }
+    .jump .j-geo { color: var(--geo); }
+    .jump a:hover { background: var(--panel); }
+    main { margin-top: 56px; }
+    .group { scroll-margin-top: 24px; }
+    .group + .group { margin-top: 68px; }
+    .section-head {
+      display: grid;
+      grid-template-columns: 72px 1fr auto;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+    .section-no {
+      font: 500 13px/1 "IBM Plex Mono", monospace;
+      color: var(--muted);
+    }
+    h2 {
+      margin: 0;
+      font-size: clamp(24px, 3vw, 35px);
+      line-height: 1.1;
+      letter-spacing: -.035em;
+    }
+    .section-count {
+      font: 500 12px/1 "IBM Plex Mono", monospace;
+      color: var(--muted);
+      letter-spacing: .08em;
+    }
+    .ai h2 { color: var(--ai); }
+    .vr h2 { color: var(--vr); }
+    .pr h2 { color: var(--pr); }
+    .geo h2 { color: var(--geo); }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .card {
+      position: relative;
+      min-height: 286px;
+      display: flex;
+      flex-direction: column;
+      padding: 26px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      text-decoration: none;
+      overflow: hidden;
+      isolation: isolate;
+      transition: background-color .18s ease, border-color .18s ease, transform .18s ease;
+    }
+    .card::after {
+      content: "↗";
+      position: absolute;
+      right: 22px;
+      bottom: 18px;
+      font: 500 25px/1 "IBM Plex Mono", monospace;
+      color: var(--muted);
+      transition: color .18s ease, transform .18s ease;
+    }
+    .visual {
+      position: relative;
+      height: 104px;
+      margin: 20px 0 26px;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      overflow: hidden;
+    }
+    .visual::before,
+    .visual::after { content: ""; position: absolute; }
+    .visual-label {
+      position: absolute;
+      z-index: 2;
+      left: 0;
+      bottom: 8px;
+      font: 600 11px/1 "IBM Plex Mono", monospace;
+      letter-spacing: .12em;
+    }
+    .visual-career::before {
+      inset: 20px 0;
+      background: repeating-linear-gradient(90deg, var(--ai) 0 2px, transparent 2px 16px);
+      transform: skewX(-23deg);
+      opacity: .72;
+    }
+    .visual-career::after {
+      width: 44px; height: 44px; right: 12px; top: 30px;
+      border: 10px solid var(--ink); border-radius: 50%;
+    }
+    .visual-play::before {
+      width: 0; height: 0; left: 50%; top: 19px;
+      border-top: 31px solid transparent; border-bottom: 31px solid transparent;
+      border-left: 50px solid var(--ai);
+      filter: drop-shadow(-28px 0 0 rgba(67,211,255,.2));
+    }
+    .visual-play::after {
+      inset: 12px 0;
+      background: repeating-linear-gradient(0deg, transparent 0 13px, rgba(255,255,255,.13) 13px 14px);
+    }
+    .visual-signal::before {
+      width: 120px; height: 120px; right: 9%; top: -10px;
+      border: 1px solid var(--ai); border-radius: 50%;
+      box-shadow: 0 0 0 18px rgba(67,211,255,.09), 0 0 0 36px rgba(67,211,255,.05);
+    }
+    .visual-signal::after {
+      left: 0; right: 45%; top: 48%; height: 2px; background: var(--ai);
+      box-shadow: 18px -16px 0 rgba(67,211,255,.42), 36px 16px 0 rgba(67,211,255,.2);
+    }
+    .visual-time::before {
+      left: 0; right: 0; top: 50%; height: 2px; background: var(--ai);
+    }
+    .visual-time::after {
+      left: 8%; top: 24px; width: 52px; height: 52px;
+      border: 2px solid var(--ink); border-radius: 50%;
+      box-shadow: 150px 0 0 -2px var(--panel), 150px 0 0 0 var(--ai), 300px 0 0 -2px var(--panel), 300px 0 0 0 var(--ink);
+    }
+    .visual-bubble::before {
+      width: 74px; height: 74px; left: 23%; top: 14px;
+      border: 2px solid var(--ai); border-radius: 50%;
+      box-shadow: 58px -16px 0 -14px var(--panel), 58px -16px 0 -12px var(--ink), 125px 12px 0 8px rgba(67,211,255,.12), 125px 12px 0 10px var(--ai);
+    }
+    .visual-bubble::after {
+      width: 18px; height: 18px; left: calc(23% + 52px); top: 69px;
+      border-right: 2px solid var(--ai); border-bottom: 2px solid var(--ai); transform: rotate(38deg);
+    }
+    .visual-vp::before {
+      inset: 13px 14%;
+      border: 2px solid var(--vr);
+      transform: perspective(180px) rotateX(-14deg) skewX(-12deg);
+      background: repeating-linear-gradient(90deg, rgba(255,212,90,.12) 0 1px, transparent 1px 32px);
+    }
+    .visual-vp::after {
+      left: 50%; top: 15px; bottom: 15px; width: 2px; background: var(--ink);
+      box-shadow: -70px 0 0 rgba(255,255,255,.2), 70px 0 0 rgba(255,255,255,.2);
+    }
+    .visual-portfolio::before {
+      inset: 16px 8%;
+      background:
+        linear-gradient(90deg, var(--vr) 0 28%, transparent 28% 36%, rgba(255,255,255,.18) 36% 64%, transparent 64% 72%, var(--ink) 72% 100%);
+      clip-path: polygon(0 15%, 28% 0, 28% 72%, 64% 42%, 64% 100%, 100% 70%, 100% 92%, 72% 100%, 36% 73%, 0 92%);
+      opacity: .9;
+    }
+    .visual-portfolio::after {
+      left: 8%; right: 8%; top: 15px; height: 1px; background: var(--vr);
+      box-shadow: 0 23px 0 rgba(255,212,90,.4), 0 46px 0 rgba(255,212,90,.22), 0 69px 0 rgba(255,212,90,.12);
+    }
+    .visual-crisis::before {
+      inset: 19px 0;
+      background: repeating-linear-gradient(-10deg, var(--pr) 0 8px, transparent 8px 24px);
+      opacity: .72;
+    }
+    .visual-crisis::after {
+      content: "!"; right: 8%; top: 5px;
+      font: 800 78px/1 "IBM Plex Mono", monospace; color: var(--ink);
+    }
+    .visual-projector::before {
+      width: 84px; height: 84px; left: calc(50% - 42px); top: 9px;
+      border: 1px solid var(--pr); border-radius: 50%;
+      box-shadow: inset 0 0 0 18px var(--panel), inset 0 0 0 19px var(--pr);
+    }
+    .visual-projector::after {
+      left: 0; right: 0; top: 50%; height: 1px; background: var(--pr);
+      box-shadow: 0 -25px 0 rgba(255,107,98,.35), 0 25px 0 rgba(255,107,98,.35);
+    }
+    .visual-custody::before {
+      width: 58px; height: 58px; left: calc(50% - 29px); top: 22px;
+      border: 2px solid var(--geo); border-radius: 50%;
+      box-shadow: -92px 0 0 -18px var(--panel), -92px 0 0 -16px var(--ink), 92px 0 0 -18px var(--panel), 92px 0 0 -16px var(--geo);
+    }
+    .visual-custody::after {
+      left: 14%; right: 14%; top: 51px; height: 2px;
+      background: linear-gradient(90deg, var(--ink), var(--geo));
+      transform: rotate(-7deg);
+    }
+    .visual-ladder::before {
+      inset: 16px 8%;
+      background: repeating-linear-gradient(90deg, transparent 0 12%, rgba(155,229,100,.24) 12% 13%), repeating-linear-gradient(0deg, var(--geo) 0 2px, transparent 2px 22px);
+      clip-path: polygon(0 82%, 18% 82%, 18% 64%, 36% 64%, 36% 46%, 54% 46%, 54% 28%, 72% 28%, 72% 10%, 100% 10%, 100% 100%, 0 100%);
+    }
+    .visual-ladder::after {
+      content: "2030"; right: 4%; top: 9px;
+      font: 600 16px/1 "IBM Plex Mono", monospace; color: var(--ink); letter-spacing: .08em;
+    }
+    .card:hover { background: var(--panel-hover); transform: translateY(-2px); }
+    .card:hover::after { color: var(--ink); transform: translate(2px, -2px); }
+    .card:focus-visible, .jump a:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+    .ai .card:hover { border-color: var(--ai); }
+    .vr .card:hover { border-color: var(--vr); }
+    .pr .card:hover { border-color: var(--pr); }
+    .geo .card:hover { border-color: var(--geo); }
+    .card-code {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      font: 500 12px/1.2 "IBM Plex Mono", monospace;
+      letter-spacing: .07em;
+      color: var(--muted);
+    }
+    .card-code i {
+      display: block;
+      width: 34px;
+      height: 4px;
+      background: currentColor;
+    }
+    .ai .card-code i { color: var(--ai); }
+    .vr .card-code i { color: var(--vr); }
+    .pr .card-code i { color: var(--pr); }
+    .geo .card-code i { color: var(--geo); }
+    h3 {
+      margin: auto 52px 17px 0;
+      font-size: clamp(21px, 2.2vw, 30px);
+      line-height: 1.22;
+      letter-spacing: -.03em;
+      font-weight: 700;
+    }
+    .card-description {
+      margin: -7px 52px 12px 0;
+      color: var(--ink);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    .path {
+      margin: 0 44px 0 0;
+      color: var(--muted);
+      font: 400 12px/1.5 "IBM Plex Mono", monospace;
+      overflow-wrap: anywhere;
+    }
+    .card.featured { grid-column: 1 / -1; min-height: 340px; }
+    .card.featured .visual { height: 126px; }
+    .card.featured h3 { max-width: 790px; font-size: clamp(28px, 4vw, 48px); }
+    .ai .card:nth-child(1) { background: linear-gradient(135deg, var(--ai-soft), var(--panel) 42%); }
+    .vr .card { background: linear-gradient(135deg, var(--vr-soft), var(--panel) 48%); }
+    .pr .card:nth-child(2) { background: linear-gradient(135deg, var(--pr-soft), var(--panel) 48%); }
+    .geo .card { background: linear-gradient(135deg, var(--geo-soft), var(--panel) 48%); }
+    .ai .visual-label { color: var(--ai); }
+    .vr .visual-label { color: var(--vr); }
+    .pr .visual-label { color: var(--pr); }
+    .geo .visual-label { color: var(--geo); }
+    .section-head::after {
+      content: "";
+      grid-column: 1 / -1;
+      height: 1px;
+      background: linear-gradient(90deg, currentColor, transparent 72%);
+      opacity: .42;
+    }
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      margin-top: 72px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font: 400 12px/1.6 "IBM Plex Mono", monospace;
+    }
+    footer span:last-child { text-align: right; }
+    @media (max-width: 720px) {
+      .shell { width: min(100% - 28px, 1180px); padding: 42px 0 64px; }
+      .masthead { grid-template-columns: 1fr; gap: 28px; padding: 28px 22px; }
+      .masthead::before { right: 6px; top: 2px; font-size: 110px; }
+      .masthead::after { display: none; }
+      .count { width: 128px; }
+      .count strong { font-size: 38px; }
+      main { margin-top: 44px; }
+      .group + .group { margin-top: 50px; }
+      .section-head { grid-template-columns: 44px 1fr; gap: 12px; }
+      .section-count { grid-column: 2; }
+      .cards { grid-template-columns: 1fr; }
+      .card, .card.featured { grid-column: auto; min-height: 292px; padding: 22px; }
+      .card.featured .visual, .visual { height: 92px; margin: 16px 0 22px; }
+      .card.featured h3, h3 { margin-top: auto; font-size: 24px; }
+      footer { flex-direction: column; }
+      footer span:last-child { text-align: left; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="masthead">
+      <div>
+        <p class="overline">AICLASS1151 / COURSE INDEX</p>
+        <h1>AI CLASS<br />課程頁面導覽</h1>
+        <p class="summary">把 AI 課程、虛擬製作與校務案例收進同一個入口。選擇主題後，頁面會在新分頁開啟。</p>
+        <nav class="jump" aria-label="快速前往分類">
+          <a class="j-ai" href="#ai">AI 課程</a>
+          <a class="j-vr" href="#vr">VR 虛擬製作</a>
+          <a class="j-pr" href="#pr">世新校務危機</a>
+          <a class="j-geo" href="#geo">AI × 地緣戰略</a>
+        </nav>
+      </div>
+      <div class="count" aria-label="共 11 個頁面">
+        <strong>11</strong>
+        <span>COURSE PAGES</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="group ai" id="ai" aria-labelledby="ai-title">
+        <div class="section-head">
+          <span class="section-no">01 /</span>
+          <h2 id="ai-title">AI 課程</h2>
+          <span class="section-count">5 PAGES</span>
+        </div>
+        <div class="cards">
+          <a class="card featured" href="https://aiclass1151.netlify.app/" target="_blank" rel="noopener noreferrer">
+            <div class="card-code"><span>AI · 001</span><i></i></div>
+            <div class="visual visual-career" aria-hidden="true"><span class="visual-label">CAREER × CREATIVE INDUSTRY</span></div>
+            <h3>AI 時代職涯視覺報告｜首頁</h3>
+            <p class="path">aiclass1151.netlify.app/</p>
+          </a>
+          <a class="card" href="https://aiclass1151.netlify.app/ai_youtube" target="_blank" rel="noopener noreferrer">
+            <div class="card-code"><span>AI · 002</span><i></i></div>
+            <div class="visual visual-play" aria-hidden="true"><span class="visual-label">CREATOR ECONOMY</span></div>
+            <h3>AI 2026｜操作歸零・經驗複利</h3>
+            <p class="path">/ai_youtube</p>
+          </a>
+          <a class="card" href="https://aiclass1151.netlify.app/ai_youtube_qwen" target="_blank" rel="noopener noreferrer">
+            <div class="card-code"><span>AI · 003</span><i></i></div>
+            <div class="visual visual-signal" aria-hidden="true"><span class="visual-label">COMMUNICATION SIGNAL</span></div>
+            <h3>AI 2026｜操作歸零・經驗複利<br />（2026 秋季傳播學院版）</h3>
+            <p class="path">/ai_youtube_qwen</p>
+          </a>
+          <a class="card" href="https://aiclass1151.netlify.app/ai_two_years_first_year_talk" target="_blank" rel="noopener noreferrer">
+            <div class="card-code"><span>AI · 004</span><i></i></div>
+            <div class="visual visual-time" aria-hidden="true"><span class="visual-label">2024 — 2026 / TIMELINE</span></div>
+            <h3>2024→2026｜AI 兩年到底改變了什麼？</h3>
+            <p class="path">/ai_two_years_first_year_talk</p>
+          </a>
+          <a class="card" href="https://aiclass1151.netlify.app/aibubble" target="_blank" rel="noopener noreferrer">
+            <div class="card-code"><span>AI · 005</span><i></i></div>
+            <div class="visual visual-bubble" aria-hidden="true"><span class="visual-label">MEDIA LITERACY</span></div>
+            <h3>AI 泡沫要破了嗎？<br />— Steve Eisman 的抓蟲筆記</h3>
+            <p class="path">/aibubble</p>
+          </a>
+        </div>
+      </section>
+
+      <section class="group vr" id="vr" aria-labelledby="vr-title">
+        <div class="section-head">
+          <span class="section-no">02 /</span>
+          <h2 id="vr-title">VR 虛擬製作</h2>
+          <span class="section-count">2 PAGES</span>
+        </div>
+        <div class="cards">
+          <a class="card" href="https://aiclass1151.netlify.app/vrclass_vp_youtube" target="_blank" rel="noopener noreferrer">
+            <div class="card-code"><span>VR · 001</span><i></i></div>
+            <div class="visual visual-vp" aria-hidden="true"><span class="visual-label">VIRTUAL PRODUCTION STAGE</span></div>
+            <h3>VR / XR × Virtual Production｜TCIMAGE LAB</h3>
+            <p class="path">/vrclass_vp_youtube</p>
+          </a>
+          <a class="card" href="https://tcimage-lab.netlify.app/" target="_blank" rel="noopener noreferrer">
+            <div class="card-code"><span>VR · 002</span><i></i></div>
+            <div class="visual visual-portfolio" aria-hidden="true"><span class="visual-label">STREAMING PORTFOLIO</span></div>
+            <h3>TCIMAGE/LAB — Streaming Portfolio</h3>
+            <p class="card-description">作品集實驗室精選作品</p>
+            <p class="path">tcimage-lab.netlify.app/</p>
+          </a>
+        </div>
+      </section>
+
+      <section class="group pr" id="pr" aria-labelledby="pr-title">
+        <div class="section-head">
+          <span class="section-no">03 /</span>
+          <h2 id="pr-title">世新校務危機</h2>
+          <span class="section-count">2 PAGES</span>
+        </div>
+        <div class="cards">
+          <a class="card" href="https://aiclass1151.netlify.app/shu_pr_case_2026_v9" target="_blank" rel="noopener noreferrer">
+            <div class="card-code"><span>CASE · V9</span><i></i></div>
+            <div class="visual visual-crisis" aria-hidden="true"><span class="visual-label">CRISIS COMMUNICATION</span></div>
+            <h3>KTV不是重點｜世新校務危機案例 V9</h3>
+            <p class="path">/shu_pr_case_2026_v9</p>
+          </a>
+          <a class="card" href="https://aiclass1151.netlify.app/shu_pr_case_2026_v11_projector" target="_blank" rel="noopener noreferrer">
+            <div class="card-code"><span>CASE · V11</span><i></i></div>
+            <div class="visual visual-projector" aria-hidden="true"><span class="visual-label">PROJECTOR EDITION</span></div>
+            <h3>世新校務危機案例 V11（投影版）</h3>
+            <p class="path">/shu_pr_case_2026_v11_projector</p>
+          </a>
+        </div>
+      </section>
+
+      <section class="group geo" id="geo" aria-labelledby="geo-title">
+        <div class="section-head">
+          <span class="section-no">04 /</span>
+          <h2 id="geo-title">AI × 地緣戰略</h2>
+          <span class="section-count">2 PAGES</span>
+        </div>
+        <div class="cards">
+          <a class="card" href="https://aiclass1151.netlify.app/ai_custody_opener" target="_blank" rel="noopener noreferrer">
+            <div class="card-code"><span>GEO · 001</span><i></i></div>
+            <div class="visual visual-custody" aria-hidden="true"><span class="visual-label">AI CUSTODY × TAIWAN</span></div>
+            <h3>AI 冷戰：下一個物種的監護權</h3>
+            <p class="card-description">課堂開場簡報：美中爭奪數位物種監護權、台灣的關鍵產房技術</p>
+            <p class="path">/ai_custody_opener</p>
+          </a>
+          <a class="card" href="https://aiclass1151.netlify.app/strait_ladder" target="_blank" rel="noopener noreferrer">
+            <div class="card-code"><span>GEO · 002</span><i></i></div>
+            <div class="visual visual-ladder" aria-hidden="true"><span class="visual-label">ESCALATION LADDER</span></div>
+            <h3>台海升級階梯分析</h3>
+            <p class="card-description">2026–2030 灰色地帶升級情境、雙階梯對照與市場監看訊號</p>
+            <p class="path">/strait_ladder</p>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>AI CLASS 115-1</span>
+      <span>11 PAGES / 4 TOPICS</span>
+    </footer>
+  </div>
+</body>
+</html>
