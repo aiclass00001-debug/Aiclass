@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="dark" />
+  <link rel="icon" href="data:," />
+  <title>台海升級階梯分析</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;900&family=Noto+Serif+TC:wght@700;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      color-scheme:dark;
+      --paper:#090d10;
+      --paper-2:#172027;
+      --ink:#f5f2ea;
+      --muted:#aeb8bf;
+      --hair:#35434d;
+      --navy:#58a8df;
+      --navy-soft:#163044;
+      --red:#ff6154;
+      --red-soft:#3c211f;
+      --white:#11181d;
+      --shadow:0 20px 60px rgba(0,0,0,.34);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      background:var(--paper);
+      color:var(--ink);
+      font-family:"Noto Sans TC",sans-serif;
+      line-height:1.65;
+      letter-spacing:.01em;
+    }
+    button,a{font:inherit}
+    a{color:inherit}
+    .page{width:min(1180px,calc(100% - 40px));margin:0 auto;padding:42px 0 88px}
+    .topline{display:flex;align-items:center;justify-content:space-between;gap:18px;border-bottom:1px solid var(--ink);padding-bottom:14px;font-size:.82rem;font-weight:700}
+    .topline .scope{display:flex;gap:16px;align-items:center}
+    .red-dot{width:9px;height:9px;background:var(--red);border-radius:50%;display:inline-block}
+    .hero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(250px,.7fr);gap:50px;align-items:end;padding:72px 0 86px}
+    .hero h1{font-family:"Noto Serif TC",serif;font-size:clamp(2.9rem,7vw,6.8rem);line-height:1.03;letter-spacing:-.06em;margin:0;max-width:900px}
+    .hero h1 em{color:var(--red);font-style:normal}
+    .hero-side{border-top:6px solid var(--red);padding-top:18px}
+    .hero-side .big{font-size:clamp(2.4rem,5vw,4.4rem);font-weight:900;line-height:1;color:var(--navy);letter-spacing:-.05em}
+    .hero-side p{font-size:1.05rem;margin:14px 0 0;color:var(--muted)}
+    .hero-side strong{color:var(--ink)}
+    .takeaway{display:grid;grid-template-columns:86px 1fr;gap:24px;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);padding:24px 0;margin-bottom:80px}
+    .takeaway .index{font-size:3rem;font-weight:900;color:var(--red);line-height:1}
+    .takeaway p{margin:0;font-family:"Noto Serif TC",serif;font-size:clamp(1.25rem,2.4vw,2rem);line-height:1.5}
+    section{margin:100px 0}
+    .section-head{display:grid;grid-template-columns:90px minmax(0,1fr);gap:24px;margin-bottom:36px;align-items:start}
+    .section-no{font-weight:900;color:var(--red);font-size:.88rem;padding-top:10px}
+    .section-head h2{font-family:"Noto Serif TC",serif;font-size:clamp(2rem,4vw,4rem);line-height:1.15;letter-spacing:-.04em;margin:0 0 10px}
+    .section-head p{margin:0;color:var(--muted);max-width:720px;font-size:1.02rem}
+    .viz{background:var(--white);box-shadow:var(--shadow)}
+    .ladder{padding:38px 42px 30px;position:relative;overflow:hidden}
+    .axis{display:flex;justify-content:space-between;margin-left:210px;color:var(--muted);font-size:.72rem;border-bottom:1px solid var(--hair);padding-bottom:8px}
+    .ladder-row{display:grid;grid-template-columns:190px minmax(0,1fr);gap:20px;align-items:center;min-height:78px;border-bottom:1px solid var(--paper-2)}
+    .ladder-row:last-child{border-bottom:0}
+    .label strong{display:block;font-size:1rem}.label small{color:var(--muted)}
+    .track{height:32px;background:var(--paper-2);position:relative}
+    .range{position:absolute;height:100%;top:0;background:var(--navy);display:flex;align-items:center;justify-content:flex-end;padding-right:10px;color:#fff;font-weight:900;font-size:.78rem;min-width:54px}
+    .ladder-row:nth-of-type(4) .range,.ladder-row:nth-of-type(5) .range,.ladder-row:nth-of-type(6) .range{background:var(--red)}
+    .caption{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-top:22px;padding-top:18px;border-top:1px solid var(--hair);font-size:.86rem;color:var(--muted)}
+    .caption strong{color:var(--ink)}
+    .note{border:1px solid var(--hair);padding:14px 16px;font-size:.8rem;color:var(--muted);margin-top:18px}
+    .duel{display:grid;grid-template-columns:1fr 94px 1fr;min-height:520px}
+    .duel-side{padding:34px}
+    .duel-side.us{background:var(--navy);color:#fff}
+    .duel-side.cn{background:var(--red);color:#fff}
+    .country{font-family:"Noto Serif TC",serif;font-size:2rem;margin-bottom:28px}
+    .country span{display:block;font-family:"Noto Sans TC",sans-serif;font-size:.75rem;opacity:.75;letter-spacing:.1em}
+    .steps{display:grid;gap:10px}
+    .step{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:center;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.25)}
+    .step .n{font-size:1.4rem;font-weight:900;opacity:.55}.step strong{display:block}.step small{opacity:.72}
+    .duel-mid{display:flex;align-items:center;justify-content:center;background:var(--ink);color:var(--paper);writing-mode:vertical-rl;letter-spacing:.16em;font-weight:900;font-size:.8rem;text-align:center;padding:24px}
+    .risk-band{grid-column:1/-1;background:var(--paper-2);display:grid;grid-template-columns:1fr 1fr;gap:1px;border-top:8px solid var(--ink)}
+    .risk-band div{padding:16px 24px;text-align:center;font-weight:800;color:var(--red)}
+    .compare{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--ink)}
+    .compare-card{background:var(--white);padding:38px;min-height:380px;position:relative}
+    .compare-card:first-child{border-top:10px solid var(--navy)}
+    .compare-card:last-child{border-top:10px solid var(--red)}
+    .term{font-family:"Noto Serif TC",serif;font-size:clamp(2.2rem,5vw,4.3rem);line-height:1;margin-bottom:12px;letter-spacing:-.05em}
+    .zh{font-weight:900;color:var(--muted);margin-bottom:30px}
+    .compare-card ul{list-style:none;padding:0;margin:0;display:grid;gap:14px}
+    .compare-card li{display:flex;gap:12px;align-items:flex-start}
+    .compare-card li::before{content:"";width:8px;height:8px;background:var(--navy);margin-top:.55em;flex:0 0 auto}
+    .compare-card:last-child li::before{background:var(--red)}
+    .verdict{margin-top:32px;font-family:"Noto Serif TC",serif;font-size:1.3rem;line-height:1.5}
+    .chain{padding:44px 34px}
+    .chain-row{display:grid;grid-template-columns:repeat(4,1fr);gap:0;align-items:stretch}
+    .chain-item{padding:0 22px;position:relative;border-right:1px solid var(--hair)}
+    .chain-item:last-child{border:0}
+    .chain-item:not(:last-child)::after{content:"→";position:absolute;right:-13px;top:45%;z-index:2;background:var(--white);color:var(--red);font-size:1.4rem;font-weight:900;padding:0 4px}
+    .day{font-size:.75rem;font-weight:900;color:var(--red);margin-bottom:22px}
+    .pictogram{height:86px;display:flex;align-items:center;margin-bottom:18px;color:var(--navy)}
+    .pictogram svg{width:86px;height:86px;overflow:visible}
+    .chain-item h3{margin:0 0 8px;font-size:1.12rem}.chain-item p{margin:0;color:var(--muted);font-size:.88rem}
+    .transition{padding:42px}
+    .transition-track{display:grid;grid-template-columns:repeat(5,1fr);align-items:center;position:relative;margin:32px 0 18px}
+    .transition-track::before{content:"";position:absolute;left:8%;right:8%;height:3px;background:linear-gradient(90deg,var(--navy),var(--red));top:25px}
+    .node{position:relative;text-align:center;z-index:1}
+    .node i{display:flex;width:52px;height:52px;border-radius:50%;background:var(--white);border:3px solid var(--navy);align-items:center;justify-content:center;margin:0 auto 15px;font-style:normal;font-weight:900}
+    .node:nth-child(n+4) i{border-color:var(--red)}
+    .node strong{display:block;font-size:.92rem}.node small{display:block;color:var(--muted);margin-top:4px}
+    .transition-zone{width:44%;margin:24px auto 0;padding:14px;text-align:center;background:var(--red-soft);color:var(--red);font-weight:900;font-size:.82rem}
+    .signal-board{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--hair)}
+    .signal{background:var(--white);padding:28px;min-height:220px}
+    .signal b{display:block;color:var(--red);font-size:.75rem;margin-bottom:14px}.signal h3{font-family:"Noto Serif TC",serif;font-size:1.5rem;margin:0 0 14px}.signal p{color:var(--muted);margin:0;font-size:.9rem}
+    .signal .watch{display:inline-block;margin-top:22px;border-bottom:2px solid var(--ink);font-weight:800;font-size:.82rem}
+    .close{margin-top:110px;border-top:10px solid var(--red);padding-top:40px;display:grid;grid-template-columns:1.2fr .8fr;gap:50px}
+    .close blockquote{font-family:"Noto Serif TC",serif;font-size:clamp(1.8rem,4vw,3.3rem);line-height:1.32;margin:0;letter-spacing:-.035em}
+    .close .meta{color:var(--muted);font-size:.86rem}.close .meta strong{color:var(--ink)}
+    .disclaimer{font-size:.74rem;color:var(--muted);border-top:1px solid var(--hair);padding-top:16px;margin-top:70px}
+    @media(max-width:760px){
+      .page{width:min(100% - 28px,1180px);padding-top:20px}
+      .topline{align-items:flex-start}.topline .scope{gap:8px;flex-direction:column;align-items:flex-start}
+      .hero{grid-template-columns:1fr;gap:34px;padding:56px 0 62px}.hero h1{font-size:clamp(3rem,17vw,5rem)}
+      .takeaway,.section-head{grid-template-columns:48px 1fr;gap:12px}.takeaway .index{font-size:2rem}
+      section{margin:78px 0}
+      .ladder{padding:24px 18px}.axis{margin-left:0}.ladder-row{grid-template-columns:1fr;gap:8px;padding:16px 0}.caption{align-items:flex-start;flex-direction:column}
+      .duel{grid-template-columns:1fr}.duel-mid{writing-mode:horizontal-tb;padding:16px}.duel-side{padding:28px 22px}.risk-band{grid-template-columns:1fr}
+      .compare{grid-template-columns:1fr}.compare-card{min-height:auto;padding:30px 22px}
+      .chain{padding:28px 22px}.chain-row{grid-template-columns:1fr}.chain-item{border-right:0;border-bottom:1px solid var(--hair);padding:20px 0 30px;display:grid;grid-template-columns:76px 1fr;gap:16px}.chain-item:not(:last-child)::after{content:"↓";right:auto;left:28px;top:auto;bottom:-16px}.pictogram{grid-row:1/4;margin:0}.day{grid-column:2;margin:0}.chain-item h3,.chain-item p{grid-column:2}
+      .transition{padding:28px 18px}.transition-track{grid-template-columns:1fr;gap:18px}.transition-track::before{left:25px;right:auto;top:26px;bottom:26px;width:3px;height:auto;background:linear-gradient(var(--navy),var(--red))}.node{display:grid;grid-template-columns:52px 1fr;text-align:left;gap:14px;align-items:center}.node i{margin:0}.node small{grid-column:2}.transition-zone{width:100%}
+      .signal-board{grid-template-columns:1fr}.signal{min-height:0}
+      .close{grid-template-columns:1fr;gap:28px}
+    }
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="topline">
+      <div class="scope"><span><i class="red-dot"></i> 2026–2030 情境框架</span><span>台海 × 科技制裁 × 市場風險</span></div>
+      <span>讀圖時間：5 分鐘</span>
+    </div>
+
+    <header class="hero">
+      <div>
+        <h1>不是明天開戰，<br>而是<em>逐階逼近</em>。</h1>
+      </div>
+      <div class="hero-side">
+        <div class="big">35–60%</div>
+        <p>未來五年出現一次<strong>足以影響航運、航空或保險市場</strong>的 Quarantine Crisis：合理討論區間。</p>
+      </div>
+    </header>
+
+    <div class="takeaway">
+      <div class="index">01</div>
+      <p>基準情境不是「2027 必然開戰」，而是灰色地帶持續升級；真正危險的是大家都認為「這還不算戰爭」的中間地帶。</p>
+    </div>
+
+    <section id="ladder">
+      <div class="section-head">
+        <div class="section-no">01 / 升級</div>
+        <div><h2>戰爭不是開關，<br>是一座長階梯。</h2><p>從常態化施壓到大規模登陸，中間隔著演習、執法、準封鎖與軍事封鎖。以下為主觀情境權重，不是精算預測。</p></div>
+      </div>
+      <div class="viz ladder" aria-label="2026至2030台海升級情境機率區間圖">
+        <div class="axis"><span>0%</span><span>50%</span><span>100%</span></div>
+        <div class="ladder-row">
+          <div class="label"><strong>一般灰色地帶延續</strong><small>已是常態</small></div>
+          <div class="track"><div class="range" style="left:90%;width:10%">90%+</div></div>
+        </div>
+        <div class="ladder-row">
+          <div class="label"><strong>顯著升級危機</strong><small>大型軍演／航線短調</small></div>
+          <div class="track"><div class="range" style="left:60%;width:15%">60–75%</div></div>
+        </div>
+        <div class="ladder-row">
+          <div class="label"><strong>Quarantine Crisis</strong><small>登檢／限制／數日擾動</small></div>
+          <div class="track"><div class="range" style="left:35%;width:25%">35–60%</div></div>
+        </div>
+        <div class="ladder-row">
+          <div class="label"><strong>持續局部封鎖</strong><small>數週實質受限</small></div>
+          <div class="track"><div class="range" style="left:15%;width:10%">15–25%</div></div>
+        </div>
+        <div class="ladder-row">
+          <div class="label"><strong>大規模登陸戰</strong><small>低機率高衝擊</small></div>
+          <div class="track"><div class="range" style="left:10%;width:5%">10–15%</div></div>
+        </div>
+        <div class="caption"><span><strong>讀法：</strong>50–60% 灰色地帶升級，不等於 50–60% 要打仗。</span><span>區間愈往下，衝擊愈大、機率愈低。</span></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div class="section-no">02 / 對照</div>
+        <div><h2>美中都在爬階梯，<br>不會一開始就掀桌。</h2><p>出口管制與海上執法都能逐層加碼。相似之處不在武器本身，而在「每一步都看似還能控制」。</p></div>
+      </div>
+      <div class="viz duel" aria-label="美國科技管制與中國海上執法雙階梯對照">
+        <div class="duel-side us">
+          <div class="country"><span>UNITED STATES</span>科技管制階梯</div>
+          <div class="steps">
+            <div class="step"><div class="n">1</div><div><strong>GPU License</strong><small>個別晶片、用途與客戶許可</small></div></div>
+            <div class="step"><div class="n">2</div><div><strong>Cloud Restriction</strong><small>限制跨境取得雲端算力</small></div></div>
+            <div class="step"><div class="n">3</div><div><strong>全面科技制裁</strong><small>設備、軟體、盟友同步加壓</small></div></div>
+            <div class="step"><div class="n">4</div><div><strong>極端制裁</strong><small>全棧斷供，代價外溢全球</small></div></div>
+          </div>
+        </div>
+        <div class="duel-mid">STABILITY–INSTABILITY PARADOX</div>
+        <div class="duel-side cn">
+          <div class="country"><span>CHINA</span>海上執法階梯</div>
+          <div class="steps">
+            <div class="step"><div class="n">1</div><div><strong>選擇性登檢</strong><small>先測試單一船隻與反應</small></div></div>
+            <div class="step"><div class="n">2</div><div><strong>Quarantine</strong><small>以執法語言建立檢查權</small></div></div>
+            <div class="step"><div class="n">3</div><div><strong>部分航運受限</strong><small>企業避險，市場先自我約束</small></div></div>
+            <div class="step"><div class="n">4</div><div><strong>Military Blockade</strong><small>海軍直接阻斷，接近戰爭</small></div></div>
+          </div>
+        </div>
+        <div class="risk-band"><div>第 3 階：市場已受衝擊，政治上仍稱「未開戰」</div><div>第 4 階：擦槍走火與誤判風險陡升</div></div>
+      </div>
+      <div class="note"><strong>穩定—不穩定悖論：</strong>頂層誰都不敢全面開戰，反而讓底層更敢反覆試探；每次成功的試探又形成難以倒退的「棘輪」。</div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div class="section-no">03 / 定義</div>
+        <div><h2>中文都叫「封鎖」，<br>但其實差很多。</h2><p>辨認是執法型準封鎖，還是軍事封鎖，決定了危機是否已經跨過戰爭門檻。</p></div>
+      </div>
+      <div class="viz compare">
+        <article class="compare-card">
+          <div class="term">Quarantine</div>
+          <div class="zh">準封鎖／隔離式執法</div>
+          <ul>
+            <li>主角可由海警與執法體系擔任</li>
+            <li>要求商船接受檢查或遵守新規則</li>
+            <li>只挑少數船執法，也能製造寒蟬效應</li>
+            <li>政治敘事仍可強調「這不是軍事行動」</li>
+          </ul>
+          <div class="verdict">真正的武器，是讓船公司與保險業先替你做決定。</div>
+        </article>
+        <article class="compare-card">
+          <div class="term">Blockade</div>
+          <div class="zh">軍事封鎖</div>
+          <ul>
+            <li>主角轉為軍隊與軍事指揮系統</li>
+            <li>直接阻止船隻或航空器進出台灣</li>
+            <li>持續性、範圍與武力威脅更明確</li>
+            <li>極容易被視為戰爭行為</li>
+          </ul>
+          <div class="verdict">目的不只是管理流量，而是以武力切斷通行。</div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div class="section-no">04 / 傳導</div>
+        <div><h2>不用封鎖全島，<br>市場就會先動。</h2><p>示意路徑：一個小規模執法事件，可以經由企業風控與保險定價放大成全球市場事件。</p></div>
+      </div>
+      <div class="viz chain">
+        <div class="chain-row">
+          <article class="chain-item">
+            <div class="day">DAY 1</div>
+            <div class="pictogram"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M14 65h66l-12 18H28z" fill="none" stroke="currentColor" stroke-width="5"/><path d="M34 65V39h27v26M42 39V25h12v14" fill="none" stroke="currentColor" stroke-width="5"/><path d="M18 88c9-6 17 6 26 0s17 6 26 0" fill="none" stroke="currentColor" stroke-width="4"/></svg></div>
+            <h3>選擇性登檢</h3><p>先挑一艘，測試拒檢、護航與國際回應。</p>
+          </article>
+          <article class="chain-item">
+            <div class="day">DAY 3</div>
+            <div class="pictogram"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M10 74h80M18 64l16-30h40l10 30" fill="none" stroke="currentColor" stroke-width="5"/><path d="M28 49h46M46 34V17M39 23h14" fill="none" stroke="currentColor" stroke-width="5"/><circle cx="25" cy="80" r="4" fill="currentColor"/><circle cx="75" cy="80" r="4" fill="currentColor"/></svg></div>
+            <h3>船公司改道</h3><p>不等正式禁令，營運部門先降低暴露。</p>
+          </article>
+          <article class="chain-item">
+            <div class="day">DAY 5</div>
+            <div class="pictogram"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M19 79V26h62v53zM30 63l14-16 11 10 18-24" fill="none" stroke="currentColor" stroke-width="5"/><path d="M61 33h12v12" fill="none" stroke="currentColor" stroke-width="5"/></svg></div>
+            <h3>保費重定價</h3><p>風險預期先變貴，成本開始傳給貨主與市場。</p>
+          </article>
+          <article class="chain-item">
+            <div class="day">DAY 7</div>
+            <div class="pictogram"><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="31" fill="none" stroke="currentColor" stroke-width="5"/><path d="M50 31v22l15 10M50 13v9M50 78v9M13 50h9M78 50h9" fill="none" stroke="currentColor" stroke-width="5"/></svg></div>
+            <h3>市場先行反應</h3><p>航運、半導體、台股與風險資產先交易不確定性。</p>
+          </article>
+        </div>
+        <div class="caption"><span><strong>關鍵：</strong>保費與航線不必等到真正封鎖，預期本身就足以改變價格。</span><span>小規模行動 ≠ 小規模衝擊</span></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div class="section-no">05 / 過渡</div>
+        <div><h2>最危險的，<br>是中間那一段。</h2><p>危機不必從和平直接跳到戰爭；執法與軍事力量混合出現，才是最容易誤判的 transition zone。</p></div>
+      </div>
+      <div class="viz transition">
+        <div class="transition-track">
+          <div class="node"><i>01</i><strong>Peace</strong><small>日常通行</small></div>
+          <div class="node"><i>02</i><strong>Coast Guard</strong><small>海警執法</small></div>
+          <div class="node"><i>03</i><strong>Coast Guard + Navy</strong><small>混合掩護</small></div>
+          <div class="node"><i>04</i><strong>Navy</strong><small>軍事主導</small></div>
+          <div class="node"><i>05</i><strong>War</strong><small>武裝衝突</small></div>
+        </div>
+        <div class="transition-zone">誤判高風險區：雙方都可能認為自己只是在「維持秩序」</div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div class="section-no">06 / 監看</div>
+        <div><h2>別猜日期，<br>看可觀測訊號。</h2><p>判斷「現在在哪一階」比追問「哪一天開戰」更有用。</p></div>
+      </div>
+      <div class="signal-board">
+        <article class="signal"><b>SIGNAL 01</b><h3>執法頻率</h3><p>登檢是否從單次示威，變成制度化、擴區域、擴船種。</p><span class="watch">看：次數 × 範圍 × 持續時間</span></article>
+        <article class="signal"><b>SIGNAL 02</b><h3>商業反應</h3><p>大型船公司、航空與港口是否主動調整路線或暫停靠港。</p><span class="watch">看：企業行動早於政治表態</span></article>
+        <article class="signal"><b>SIGNAL 03</b><h3>保險定價</h3><p>戰爭風險條款、附加保費與承保範圍是否同步收緊。</p><span class="watch">看：價格是否持續而非單日跳升</span></article>
+        <article class="signal"><b>SIGNAL 04</b><h3>軍力混合</h3><p>海警行動背後是否出現海軍護航、空中支援與聯合作戰。</p><span class="watch">看：Coast Guard → Navy</span></article>
+        <article class="signal"><b>SIGNAL 05</b><h3>規則棘輪</h3><p>臨時措施是否被寫成常態規章，形成新的「檢查權」事實。</p><span class="watch">看：一次事件是否變永久規則</span></article>
+        <article class="signal"><b>SIGNAL 06</b><h3>反制節奏</h3><p>台灣、美國與盟友的護航、制裁或兵力部署是否逐級回應。</p><span class="watch">看：雙方節拍是否開始失控</span></article>
+      </div>
+    </section>
+
+    <div class="close">
+      <blockquote>Base Case：灰色地帶逐步升級，期間有相當機率出現一次 Quarantine Crisis；真正熱戰仍是低機率、高衝擊的尾部風險。</blockquote>
+      <div class="meta"><strong>這張圖要留下的判斷：</strong><br><br>「沒有開槍」不代表市場沒有受傷；「小規模衝突」也不等於「小規模衝擊」。<br><br>面對台海風險，最有用的問題不是「打不打」，而是：<strong>現在在哪一階？下一階會先出現什麼訊號？</strong></div>
+    </div>
+
+    <footer class="disclaimer">本頁為 2026–2030 情境分析與視覺化整理。所有機率皆為主觀區間，用於比較相對風險與升級路徑，不是可精算的戰爭模型，也不構成投資建議。Quarantine 與 Blockade 在不同法律與政策語境中可能有更細緻定義；此處採分析框架的簡化用法。</footer>
+  </main>
+</body>
+</html>
