@@ -328,6 +328,20 @@
     .comic-figure img { display: block; width: 100%; height: auto; }
     .comic-figure figcaption { padding: 12px 4px 2px; color: var(--muted); font-size: clamp(15px,1vw,17px); line-height: 1.5; font-weight: 600; text-align: center; }
     .comic-figure figcaption strong { color: var(--gold); }
+
+    .ref-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; position: relative; z-index: 1; }
+    .ref-list li { display: grid; grid-template-columns: 92px minmax(0,1fr) auto; gap: 16px; align-items: baseline; padding: 13px 0; border-top: 1px solid var(--line); }
+    .ref-list time { color: var(--mint); font-family: "IBM Plex Sans", sans-serif; font-weight: 700; font-size: 16px; }
+    .ref-list b { font-size: clamp(17px,1.15vw,20px); }
+    .ref-list span { display: block; color: var(--muted); font-size: clamp(15px,1vw,17px); font-weight: 600; margin-top: 3px; line-height: 1.45; }
+    .ref-list a { color: var(--gold); text-decoration: none; font-weight: 800; font-size: 16px; white-space: nowrap; }
+    .ref-list a:hover { color: var(--ink); }
+    .ref-main { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: space-between; background: var(--gold-soft); border: 1px solid color-mix(in srgb, var(--gold) 54%, var(--line)); padding: 18px 20px; }
+    .ref-main b { font-size: clamp(19px,1.4vw,24px); }
+    .ref-main span { display: block; color: var(--muted); font-weight: 600; margin-top: 4px; font-size: clamp(15px,1vw,17px); }
+    .ref-main a { color: var(--gold); font-weight: 900; text-decoration: none; font-size: clamp(16px,1.1vw,19px); word-break: break-all; }
+    .ref-main a:hover { color: var(--ink); }
+    @media (max-width: 620px) { .ref-list li { grid-template-columns: 1fr; gap: 5px; } .ref-list a { white-space: normal; } }
   </style>
 </head>
 <body data-focus="all">
@@ -481,7 +495,7 @@
     </div>
 
     <footer class="conflict-source">
-      <div class="source-links"><strong>資料來源</strong>　<a href="https://www.youtube.com/watch?v=qdSa0aaL3u4&t=1243s" target="_blank" rel="noopener">邦妮區塊鏈 Hoskinson 專訪（2026-10-20 上架 · 28:25）· 20:43 Roasts the White House</a>／25:45 Local AI</div>
+      <div class="source-links"><strong>資料來源</strong>　邦妮區塊鏈 Hoskinson 專訪（2026-10-20 上架 · 28:25）· 20:43 Roasts the White House／主來源 t=647s｜<a href="#references" style="color:var(--gold);font-weight:800;text-decoration:none">全部參考連結見頁尾 ↓</a></div>
       <div class="thesis">監護權不是喊出來的，<br>是長期戰略養出來的。</div>
     </footer>
   </section>
@@ -531,7 +545,7 @@
     </div>
 
     <footer class="conflict-source">
-      <div class="source-links"><strong>資料來源</strong>　<a href="https://www.youtube.com/watch?v=qdSa0aaL3u4&t=1419s" target="_blank" rel="noopener">同場專訪 · 23:39 Agent 法律責任</a>／17:33 Midnight</div>
+      <div class="source-links"><strong>資料來源</strong>　同場專訪 · 23:39 Agent 法律責任／17:33 Midnight｜<a href="#references" style="color:var(--gold);font-weight:800;text-decoration:none">全部參考連結見頁尾 ↓</a></div>
       <div class="thesis">先定責任，<br>才敢放 Agent 出去做生意。</div>
     </footer>
   </section>
@@ -552,8 +566,42 @@
     </div>
 
     <footer class="conflict-source">
-      <div class="source-links"><strong>資料來源</strong>　<a href="https://www.youtube.com/watch?v=qdSa0aaL3u4&t=647s" target="_blank" rel="noopener">同場專訪 · 10:47 長壽醫療</a>／13:17 Healthspan over Lifespan</div>
+      <div class="source-links"><strong>資料來源</strong>　同場專訪 · 10:47 長壽醫療／13:17 Healthspan over Lifespan｜<a href="#references" style="color:var(--gold);font-weight:800;text-decoration:none">全部參考連結見頁尾 ↓</a></div>
       <div class="thesis">AI 的監護權之爭，<br>最後會爭到人的身體。</div>
+    </footer>
+  </section>
+
+
+  <section class="conflict-slide witness-slide" id="references" aria-labelledby="ref-title">
+    <header class="conflict-head">
+      <div>
+        <p class="conflict-index">REFERENCES · 參考資料</p>
+        <h2 id="ref-title">每個主張，<br><span>都連回原片那一秒。</span></h2>
+      </div>
+      <p class="conflict-deck">本頁 Hoskinson 段落全部出自同一支專訪。點時間碼直接跳到原片對應段落，自行驗證，不必只信整理。</p>
+    </header>
+
+    <div class="ref-main">
+      <div><b>主來源｜邦妮區塊鏈 — Charles Hoskinson 專訪</b><span>ADA 創辦人：幣圈暴漲時代徹底結束！為何 AI 時代看對趨勢還是會破產？（2026-10-20 上架 · 片長 28:25）· chou 標記時間點 10:47</span></div>
+      <a href="https://www.youtube.com/watch?v=qdSa0aaL3u4&t=647s" target="_blank" rel="noopener">youtube.com/watch?v=qdSa0aaL3u4&amp;t=647s</a>
+    </div>
+
+    <ol class="ref-list">
+      <li><time>01:24</time><div><b>幣圈投機時代結束，Crypto × AI 結合</b><span>迷因幣／NFT 炒作退場，Crypto 成為 AI 的支付層與確定性層</span></div><a href="https://www.youtube.com/watch?v=qdSa0aaL3u4&t=84s" target="_blank" rel="noopener">看原片 ↗</a></li>
+      <li><time>03:08</time><div><b>AI Agent 交易如何改變市場</b><span>統計套利被抹平、市場趨向效率、回歸基本面（巴菲特／Graham）</span></div><a href="https://www.youtube.com/watch?v=qdSa0aaL3u4&t=188s" target="_blank" rel="noopener">看原片 ↗</a></li>
+      <li><time>05:31</time><div><b>泡沫還是下一個 Amazon？</b><span>方向看對、時機看錯仍會破產；Amazon 花 11 年才回到泡沫高點</span></div><a href="https://www.youtube.com/watch?v=qdSa0aaL3u4&t=331s" target="_blank" rel="noopener">看原片 ↗</a></li>
+      <li><time>09:28</time><div><b>逆轉老化是未來趨勢？</b><span>衰老是可解的生物學拼圖：燈塔水母、懷孕重置、Sinclair 衰老資訊理論</span></div><a href="https://www.youtube.com/watch?v=qdSa0aaL3u4&t=568s" target="_blank" rel="noopener">看原片 ↗</a></li>
+      <li><time>10:47</time><div><b>幹細胞＋外泌體實驗（本頁標記點）</b><span>Hoskinson 自述自體脂肪幹細胞共培養後表現大幅改善——受訪者說法，非獨立醫學驗證</span></div><a href="https://www.youtube.com/watch?v=qdSa0aaL3u4&t=647s" target="_blank" rel="noopener">看原片 ↗</a></li>
+      <li><time>13:17</time><div><b>Healthspan over Lifespan／Stemular 貼片</b><span>健康壽命優先；幹細胞採集貼片約 100 美元、Wyoming 生產線、預計明年臨床試驗（訪談中說法）</span></div><a href="https://www.youtube.com/watch?v=qdSa0aaL3u4&t=797s" target="_blank" rel="noopener">看原片 ↗</a></li>
+      <li><time>17:33</time><div><b>Midnight：DeFi 的 VPN</b><span>ZK／MPC 隱私中繼、跨鏈調度、Agent 透過 X42 標準載入交易策略</span></div><a href="https://www.youtube.com/watch?v=qdSa0aaL3u4&t=1053s" target="_blank" rel="noopener">看原片 ↗</a></li>
+      <li><time>20:43</time><div><b>砲轟白宮 AI 政策（本頁戰略屏主來源）</b><span>川普不懂 AI、美國無長期戰略、David Sacks 任命失誤、中國全棧舉國戰略、開源對齊聯盟／PPP／X-Prize 主張</span></div><a href="https://www.youtube.com/watch?v=qdSa0aaL3u4&t=1243s" target="_blank" rel="noopener">看原片 ↗</a></li>
+      <li><time>23:39</time><div><b>AI Agent 法律責任缺口</b><span>5,000 個 Agent 與無限責任問題、Agent 法人格、責任切分、專屬保險</span></div><a href="https://www.youtube.com/watch?v=qdSa0aaL3u4&t=1419s" target="_blank" rel="noopener">看原片 ↗</a></li>
+      <li><time>25:45</time><div><b>被忽視的 Local AI</b><span>Qwen 等本地開源模型、消費級顯卡運行、2030 前沿級本地模型預言——白宮零討論</span></div><a href="https://www.youtube.com/watch?v=qdSa0aaL3u4&t=1545s" target="_blank" rel="noopener">看原片 ↗</a></li>
+    </ol>
+
+    <footer class="conflict-source">
+      <div><strong>其他出處</strong>　受訪者 X：<span class="source-links"><a href="https://x.com/IOHK_Charles" target="_blank" rel="noopener">@IOHK_Charles</a></span>｜CASE 01／02 來源（原頁）：星島頭條、經濟日報、工商時報（2026/09/30，引彭博社）</div>
+      <div class="thesis">整理可以轉述，<br>判斷要自己回到原片。</div>
     </footer>
   </section>
 
