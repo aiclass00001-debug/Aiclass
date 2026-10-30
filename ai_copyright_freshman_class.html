@@ -36,6 +36,9 @@ h1 .hl{color:var(--acid)}
 .video-wrap iframe{display:none;position:absolute;inset:0;width:100%;height:100%;border:0}
 .video-wrap.playing iframe{display:block}
 .video-wrap.playing .video-poster{display:none}
+.reel-wrap{position:relative;width:min(100%,520px);aspect-ratio:1080/1904;margin:12px auto 0;border-radius:10px;overflow:hidden;background:#000}
+.reel-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.reel-note{font-size:15px!important;color:var(--amber)!important;font-weight:700;margin:10px 0 0!important;text-align:center}
 .flow{display:flex;align-items:stretch;gap:0;margin:0 0 8px}
 .fbox{flex:1;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;text-align:center}
 .fbox .t{font-size:20px;font-weight:900;line-height:1.4}
@@ -64,6 +67,21 @@ h1 .hl{color:var(--acid)}
 .ask p span{color:var(--acid)}
 .foot{font-size:13.5px;color:#6d6d76;line-height:1.75;border-top:1px solid var(--line);padding-top:10px}
 .foot a{color:var(--cyan)}
+.meme-strip{display:grid;grid-template-columns:.8fr 1.2fr;gap:16px;align-items:center;border:2px solid var(--acid);border-radius:14px;padding:15px 20px;margin:0 0 18px;background:linear-gradient(110deg,rgba(215,255,63,.1),rgba(94,231,255,.06))}
+.meme-strip .sticker{display:inline-block;background:var(--acid);color:#0a0a0c;font-weight:900;font-size:14px;padding:3px 10px;border-radius:99px;margin-bottom:6px;letter-spacing:.08em}
+.meme-strip h2{font-size:22px;line-height:1.4}
+.meme-strip p{font-size:17px;line-height:1.65;font-weight:700}
+.meme-strip p b{color:var(--acid)}
+.shorts{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:0 0 18px}
+.shorts-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:11px}
+.shorts h2{font-size:22px;line-height:1.4}
+.shorts-head span{font-size:14px;color:var(--cyan);font-weight:800;white-space:nowrap}
+.shorts-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.shorts-card{border:1px solid var(--line);border-radius:11px;padding:11px 12px;background:rgba(10,10,12,.5)}
+.shorts-card:nth-child(1){border-top:3px solid var(--red)} .shorts-card:nth-child(2){border-top:3px solid var(--amber)} .shorts-card:nth-child(3){border-top:3px solid var(--cyan)} .shorts-card:nth-child(4){border-top:3px solid var(--acid)}
+.shorts-card .time{font-size:12px;font-weight:900;letter-spacing:.12em;color:var(--muted);margin-bottom:4px}
+.shorts-card p{font-size:15px;line-height:1.55;font-weight:700}
+.shorts-note{font-size:13px;color:var(--muted);margin-top:9px;line-height:1.5}
 .schematic{background:linear-gradient(135deg,rgba(94,231,255,.08),rgba(215,255,63,.035));border:1px solid rgba(94,231,255,.3);border-radius:16px;padding:18px 20px;margin:0 0 18px;overflow:hidden}
 .schem-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
 .schem-head h2{font-size:24px;font-weight:900;line-height:1.35}
@@ -98,6 +116,8 @@ h1 .hl{color:var(--acid)}
 .visual-card figcaption b{display:block;color:var(--ink);font-size:19px;line-height:1.45;margin-bottom:5px}
 @media(max-width:760px){body{padding:16px}.cols{grid-template-columns:1fr}.flow{flex-direction:column;gap:7px}.arrow{padding:3px;transform:rotate(90deg);min-height:32px}.arrow .lab{transform:rotate(-90deg);position:absolute;margin-left:82px;white-space:nowrap}.evidence-map,.court-grid,.ab-visual{grid-template-columns:1fr}.e-connector{min-height:22px;transform:rotate(90deg)}.ab-arrow{min-height:20px;transform:rotate(90deg)}.schem-head{display:block}.schem-head p{text-align:left;margin-top:4px}h1{font-size:34px}}
 @media(max-width:760px){.hook,.visual-card{grid-template-columns:1fr}.hook{padding:16px}.visual-card{gap:12px}}
+@media(max-width:760px){.meme-strip{grid-template-columns:1fr;gap:8px;padding:14px}.shorts-grid{grid-template-columns:1fr 1fr}.shorts-head{display:block}.shorts-head span{display:block;margin-top:3px;white-space:normal}}
+@media(max-width:420px){.shorts-grid{grid-template-columns:1fr}}
 @media print{body{padding:14px}.cols,.flow,.schematic{break-inside:avoid}}
 </style>
 </head>
@@ -119,6 +139,15 @@ h1 .hl{color:var(--acid)}
   </div>
 
   <div class="video">
+    <h2>創作者案例｜蔡阿嘎談「AI 對決似顏繪」</h2>
+    <p>台灣 YouTuber 蔡阿嘎在日本街頭請畫家為孩子畫似顏繪後，又用 AI 生成版本並讓粉絲投票，引起「拿 AI 版本和真人作品公開比較，是否尊重創作者」的討論。本片是他本人回應事件，不是法律解說，也不是侵權判決。建議先看開頭 20–30 秒，請同學想：買下畫作，是否代表取得所有使用方式的權利？哪些是著作權／授權問題，哪些是創作者倫理？若播放器不能播放，<a href="https://www.instagram.com/reel/DZ5JNg7IyEf/" target="_blank" rel="noopener noreferrer">在 Instagram 看蔡阿嘎原片</a>；也可先讀<a href="https://tw.news.yahoo.com/%E9%99%90%E5%8B%95%E9%96%8B%E6%8A%95%E7%A5%A8-ai%E5%B0%8D%E6%B1%BA%E4%BC%BC%E9%A1%8F%E7%B9%AA%E7%95%AB%E5%AE%B6-%E6%8C%A8%E6%89%B9%E4%B8%8D%E5%B0%8A%E9%87%8D-%E8%94%A1%E9%98%BF%E5%98%8E%E9%81%93%E6%AD%89%E4%BA%86-032114839.html" target="_blank" rel="noopener noreferrer">事件背景報導</a>。</p>
+    <div class="reel-wrap">
+      <iframe src="https://www.instagram.com/reel/DZ5JNg7IyEf/embed/" title="蔡阿嘎 Instagram Reel：有關似顏繪限動之說明" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+    <p class="reel-note">暖場提醒：先聽創作者本人怎麼說，再分清可核對的事實、個人觀點與法律判斷；本片不代表法院已認定侵權。</p>
+  </div>
+
+  <div class="video">
     <h2>原始影片｜「台灣的書賣到國外，拿來訓練 AI，然後再跟國外買 AI 服務」</h2>
     <p>先看原影片縮圖與主張，再往下分辨法院文件、貨運報導和仍待證實的連結。縮圖是原影片封面，不代表本頁已證實其標題說法。點縮圖即可在此播放；若無法播放，<a href="https://youtu.be/mi3jDWjJYpA" target="_blank" rel="noopener noreferrer">直接開啟 YouTube</a>。</p>
     <div class="video-wrap">
@@ -134,6 +163,22 @@ h1 .hl{color:var(--acid)}
     <div class="tag">查證結論</div>
     <p>美國法院在這宗案件認定，特定書籍用於模型訓練，以及合法買來的紙本書掃描後以數位本取代，屬合理使用；盜版副本留在通用圖書庫則不是。台灣出貨資料與 Anthropic 的供書洽談紀錄各自存在，但目前沒有公開資料能逐批證明這 563 噸書全被買下、掃描並用於 Claude 訓練。</p>
   </div>
+
+  <section class="meme-strip" aria-label="迷因式查證重點">
+    <div><span class="sticker">留言區翻譯器</span><h2>先別急著炎上，<br>這裡少的是「證據連結」</h2></div>
+    <p>網路標題：「563 噸＝Claude 全部吃掉？」<br>查證字幕：<b>貨運紀錄 ≠ 逐批買下 ≠ 已證明拿去訓練。</b><br>不是不信，是把「目前證明到哪裡」講清楚。</p>
+  </section>
+
+  <section class="shorts" aria-label="八秒短影音口播範例">
+    <div class="shorts-head"><h2>8 秒短影音口播｜Reels／TikTok／Shorts 都能用</h2><span>梗可以快，證據不能跳剪</span></div>
+    <div class="shorts-grid">
+      <div class="shorts-card"><div class="time">0–2 秒｜鉤子</div><p>「563 噸書從台灣出去＝全部拿去訓練 AI？」</p></div>
+      <div class="shorts-card"><div class="time">2–4 秒｜反轉</div><p>「先等等，這個等號接太快了。」</p></div>
+      <div class="shorts-card"><div class="time">4–6 秒｜證據</div><p>「有貨運報導，也有供書洽談紀錄；但還沒逐批對上。」</p></div>
+      <div class="shorts-card"><div class="time">6–8 秒｜收尾</div><p>「先別腦補補完：目前只能證明到這裡。」</p></div>
+    </div>
+    <p class="shorts-note">這是把本頁已列出的查證結論改寫成短影音口吻，不是新增證據或暗示每批書都進了模型。</p>
+  </section>
 
   <figure class="visual-card">
     <figcaption><b>線索要一段一段接上</b>貨運資料、供書洽談與訓練用途是不同證據；這張概念插畫不是案件證據，也不表示三者已逐批連結。</figcaption>
@@ -224,7 +269,7 @@ h1 .hl{color:var(--acid)}
       <div class="ab-stage b"><h3>B｜簡短提示</h3><p>只輸入一句短提示，再比較</p></div>
     </div>
     <p>題目：做一張「社團 IG 招生貼文圖」。先寫三行：①想讓新生感到什麼　②主角放哪裡、哪裡留白放標題　③背景要交代社團在做什麼。先畫構圖，再照三行提示生成 A；接著只輸入一句簡短提示，生成 B。</p>
-    <p>最後比一比：哪張更像你想發在 IG 的圖？哪一版少改幾次？哪些設計決定還是得由你自己做？不用交出或公開自己的帳號或舊作品。</p>
+    <p>最後比一比：哪張更像你想發在 IG 的圖？哪一版少改幾次？哪些設計決定還是得由你自己做？不用交出或公開自己的帳號或舊作品。加碼 30 秒：把查證結論改成一段短影音字幕或迷因文案；可以玩「先別急著炎上」，但不能把「尚未證實」剪成「已經證實」。</p>
   </div>
 
   <div class="foot">
