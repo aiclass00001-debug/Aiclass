@@ -1,7 +1,7 @@
 # 圖片來源（Sources.md）
 
-教材：`ai_copyright_freshman_class_v4.html`（投影版 v4：吉卜力段改用新聞實例，實作改成問同學）
-底稿：2026-10-31 收到的 20,433 bytes 版本，以及同日交付的 v2、v3
+教材：`ai_copyright_freshman_class_v5.html`（投影版 v5：v4 加上第 12 頁全班投票，電視系／電影系兩組題）
+底稿：2026-10-31 收到的 20,433 bytes 版本，以及同日交付的 v2、v3、v4
 選圖日期：2026-10-31（Asia/Taipei）
 選圖方式：Hark 用 Wikimedia Commons 公開 API 搜尋既有照片，逐張讀取 Commons 檔案頁上的作者、授權與來源欄位。
 **Hark 沒有生成或製作任何圖片。**唯一的 AI 圖是白宮自己發布、新聞報導過的既有圖像（#6），作為新聞實例使用。舊版的 `student-creator.jpg`、`evidence-clues.jpg`、`book-digitization.jpg` 來源不明，已全部移除。
