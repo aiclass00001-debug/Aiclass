@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>你的作品會變成 AI 的練習題嗎？｜大一課堂投影版 v4</title>
+<title>你的作品會變成 AI 的練習題嗎？｜大一課堂投影版 v5</title>
 <style>
 :root{--bg:#0a0a0c;--card:#141419;--ink:#f4f4f1;--muted:#b9b9c2;--acid:#d7ff3f;--cyan:#5ee7ff;--red:#ff7357;--amber:#ffc15b;--line:rgba(244,244,241,.17)}
 *{box-sizing:border-box}
@@ -57,6 +57,21 @@ details h3{margin:14px 0 4px;color:var(--amber)}
 .vote button{font:inherit;font-size:.8em;font-weight:900;border:0;border-radius:10px;padding:6px 14px;background:var(--acid);color:#101200;cursor:pointer;white-space:nowrap}
 .vote button.n{background:var(--red);color:#160803}
 
+.red{color:var(--red)}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin:.2em 0 .5em}
+.tabs button{font:inherit;font-size:.55em;font-weight:900;padding:8px 20px;border-radius:999px;border:3px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.tabs .tab.on{background:var(--cyan);border-color:var(--cyan);color:#001318}
+.tabs .reset{margin-left:auto;color:var(--muted)}
+.pset{display:flex;flex-direction:column;gap:clamp(6px,.8vw,12px)}
+.pq{display:flex;flex-wrap:wrap;align-items:center;gap:6px clamp(10px,1.2vw,20px);background:var(--card);border:3px solid var(--line);border-radius:14px;padding:clamp(6px,.8vw,12px) clamp(12px,1.4vw,22px);font-size:.62em}
+.pq p{flex:1 1 14em;margin:0}
+.tally{display:flex;align-items:center;gap:6px;flex:0 0 auto}
+.tally button{font:inherit;font-weight:900;border:0;border-radius:10px;padding:4px 14px;cursor:pointer}
+.tally .y{background:var(--acid);color:#101200}.tally .n{background:var(--red);color:#160803}
+.tally input{width:3.2em;font:inherit;font-weight:900;text-align:center;background:#000;color:var(--ink);border:2px solid var(--line);border-radius:8px;padding:2px}
+.bar{position:relative;flex:1 1 100%;display:flex;height:.75em;border-radius:999px;overflow:hidden;background:#000}
+.bar .by{background:var(--acid);width:0}.bar .bn{background:var(--red);width:0}
+.bar .pct{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:.6em;font-weight:900;color:#fff;text-shadow:0 0 4px #000}
 @media print{.slide{min-height:auto;page-break-after:always}}
 </style>
 </head>
@@ -238,6 +253,54 @@ details h3{margin:14px 0 4px;color:var(--amber)}
   </ol>
 </section>
 
+<!-- 12 全班投票 -->
+<section class="slide">
+  <div class="num">12 · 全班投票</div>
+  <h2>換你投票：<span class="acid">是</span>還是<span class="red">否</span>？</h2>
+  <p class="muted" style="font-size:.55em">全班舉手，老師按「是／否」加一票，也可以直接改數字。</p>
+  <div class="tabs" role="tablist">
+    <button type="button" class="tab on" data-set="tv">電視系</button>
+    <button type="button" class="tab" data-set="film">電影系</button>
+    <button type="button" class="reset">歸零</button>
+  </div>
+  <div class="pset" data-set="tv">
+      <div class="pq" data-id="tv1"><span class="qn">1</span><p>電視台的新聞畫面被拿去訓練 AI，<span class="acid">應該付錢</span>？</p>
+        <div class="tally"><button class="y" type="button">是</button><input class="cy" type="number" min="0" value="0" aria-label="第1題是的票數"><button class="n" type="button">否</button><input class="cn" type="number" min="0" value="0" aria-label="第1題否的票數"></div>
+        <div class="bar"><i class="by"></i><i class="bn"></i><span class="pct">—</span></div></div>
+      <div class="pq" data-id="tv2"><span class="qn">2</span><p>用主播的聲音做 AI 播報，<span class="acid">要先問過他</span>？</p>
+        <div class="tally"><button class="y" type="button">是</button><input class="cy" type="number" min="0" value="0" aria-label="第2題是的票數"><button class="n" type="button">否</button><input class="cn" type="number" min="0" value="0" aria-label="第2題否的票數"></div>
+        <div class="bar"><i class="by"></i><i class="bn"></i><span class="pct">—</span></div></div>
+      <div class="pq" data-id="tv3"><span class="qn">3</span><p>用吉卜力風畫新聞人物，<span class="acid">電視台可以播</span>？</p>
+        <div class="tally"><button class="y" type="button">是</button><input class="cy" type="number" min="0" value="0" aria-label="第3題是的票數"><button class="n" type="button">否</button><input class="cn" type="number" min="0" value="0" aria-label="第3題否的票數"></div>
+        <div class="bar"><i class="by"></i><i class="bn"></i><span class="pct">—</span></div></div>
+      <div class="pq" data-id="tv4"><span class="qn">4</span><p>AI 自動剪節目精華上傳 YouTube，<span class="acid">OK</span>？</p>
+        <div class="tally"><button class="y" type="button">是</button><input class="cy" type="number" min="0" value="0" aria-label="第4題是的票數"><button class="n" type="button">否</button><input class="cn" type="number" min="0" value="0" aria-label="第4題否的票數"></div>
+        <div class="bar"><i class="by"></i><i class="bn"></i><span class="pct">—</span></div></div>
+      <div class="pq" data-id="tv5"><span class="qn">5</span><p>新聞用了 AI 畫面，<span class="acid">一定要標示</span>？</p>
+        <div class="tally"><button class="y" type="button">是</button><input class="cy" type="number" min="0" value="0" aria-label="第5題是的票數"><button class="n" type="button">否</button><input class="cn" type="number" min="0" value="0" aria-label="第5題否的票數"></div>
+        <div class="bar"><i class="by"></i><i class="bn"></i><span class="pct">—</span></div></div>
+  </div>
+  <div class="pset" data-set="film" hidden>
+      <div class="pq" data-id="fm1"><span class="qn">1</span><p>用 AI 生成「很像迪士尼角色」的圖放進畢製，<span class="acid">OK</span>？</p>
+        <div class="tally"><button class="y" type="button">是</button><input class="cy" type="number" min="0" value="0" aria-label="第1題是的票數"><button class="n" type="button">否</button><input class="cn" type="number" min="0" value="0" aria-label="第1題否的票數"></div>
+        <div class="bar"><i class="by"></i><i class="bn"></i><span class="pct">—</span></div></div>
+      <div class="pq" data-id="fm2"><span class="qn">2</span><p>演員的臉和聲音做成 AI 分身，<span class="acid">每次都要本人同意</span>？</p>
+        <div class="tally"><button class="y" type="button">是</button><input class="cy" type="number" min="0" value="0" aria-label="第2題是的票數"><button class="n" type="button">否</button><input class="cn" type="number" min="0" value="0" aria-label="第2題否的票數"></div>
+        <div class="bar"><i class="by"></i><i class="bn"></i><span class="pct">—</span></div></div>
+      <div class="pq" data-id="fm3"><span class="qn">3</span><p>用 AI 寫劇本初稿，<span class="acid">片尾要標示</span>？</p>
+        <div class="tally"><button class="y" type="button">是</button><input class="cy" type="number" min="0" value="0" aria-label="第3題是的票數"><button class="n" type="button">否</button><input class="cn" type="number" min="0" value="0" aria-label="第3題否的票數"></div>
+        <div class="bar"><i class="by"></i><i class="bn"></i><span class="pct">—</span></div></div>
+      <div class="pq" data-id="fm4"><span class="qn">4</span><p>用 AI 影片工具生成的片段，<span class="acid">算你的作品</span>？</p>
+        <div class="tally"><button class="y" type="button">是</button><input class="cy" type="number" min="0" value="0" aria-label="第4題是的票數"><button class="n" type="button">否</button><input class="cn" type="number" min="0" value="0" aria-label="第4題否的票數"></div>
+        <div class="bar"><i class="by"></i><i class="bn"></i><span class="pct">—</span></div></div>
+      <div class="pq" data-id="fm5"><span class="qn">5</span><p>影展應該<span class="acid">接受 AI 生成短片</span>參賽？</p>
+        <div class="tally"><button class="y" type="button">是</button><input class="cy" type="number" min="0" value="0" aria-label="第5題是的票數"><button class="n" type="button">否</button><input class="cn" type="number" min="0" value="0" aria-label="第5題否的票數"></div>
+        <div class="bar"><i class="by"></i><i class="bn"></i><span class="pct">—</span></div></div>
+  </div>
+</section>
+
+
+
 <!-- 教師備註與來源 -->
 <section class="slide" style="min-height:auto">
   <details>
@@ -252,6 +315,8 @@ details h3{margin:14px 0 4px;color:var(--amber)}
     <p>1.6% 只代表該資料庫當時的筆數比例。受訪者稱主流 LLM 繁中語料不到 1%，是估計，報導未交代統計方法。</p>
     <h3>第 10 頁記票</h3>
     <p>第 10 頁：左鍵點「是／否」加一票，右鍵減一票；重新整理頁面會歸零。</p>
+    <h3>第 12 頁全班投票</h3>
+    <p>上方切換「電視系／電影系」題組。全班舉手後，老師按「是／否」加一票（右鍵減一票），也可以直接改數字；比例條會自動更新。「歸零」只清目前這組。重新整理頁面會全部歸零。</p>
     <h3>白宮圖的使用提醒</h3>
     <p>圖中是真實被捕的女性（Virginia Basora-Gonzalez）。課堂討論請聚焦「畫風、同意、用途」，避免評論她本人。</p>
     <h3>影片播放</h3>
@@ -265,6 +330,23 @@ details h3{margin:14px 0 4px;color:var(--amber)}
 
 <script>
 document.querySelectorAll('.vote button').forEach(function(b){b.addEventListener('click',function(){var n=b.querySelector('b');n.textContent=+n.textContent+1;});b.addEventListener('contextmenu',function(e){e.preventDefault();var n=b.querySelector('b');n.textContent=Math.max(0,+n.textContent-1);});});
+</script>
+<script>
+(function(){
+function upd(q){var y=+q.querySelector('.cy').value||0,n=+q.querySelector('.cn').value||0,t=y+n;
+q.querySelector('.by').style.width=t?(y/t*100)+'%':'0';q.querySelector('.bn').style.width=t?(n/t*100)+'%':'0';
+q.querySelector('.pct').textContent=t?('是 '+Math.round(y/t*100)+'%｜否 '+Math.round(n/t*100)+'%'):'—';}
+document.querySelectorAll('.pq').forEach(function(q){
+ [['.y','.cy'],['.n','.cn']].forEach(function(p){var b=q.querySelector(p[0]),c=q.querySelector(p[1]);
+  b.addEventListener('click',function(){c.value=(+c.value||0)+1;upd(q);});
+  b.addEventListener('contextmenu',function(e){e.preventDefault();c.value=Math.max(0,(+c.value||0)-1);upd(q);});
+  c.addEventListener('input',function(){upd(q);});});upd(q);});
+document.querySelectorAll('.tabs .tab').forEach(function(t){t.addEventListener('click',function(){
+ document.querySelectorAll('.tabs .tab').forEach(function(x){x.classList.toggle('on',x===t);});
+ document.querySelectorAll('.pset').forEach(function(p){p.hidden=p.dataset.set!==t.dataset.set;});});});
+document.querySelector('.tabs .reset').addEventListener('click',function(){
+ document.querySelectorAll('.pset:not([hidden]) .pq').forEach(function(q){q.querySelector('.cy').value=0;q.querySelector('.cn').value=0;upd(q);});});
+})();
 </script>
 </body>
 </html>
