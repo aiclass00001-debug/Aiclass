@@ -329,6 +329,35 @@
       content: "2030"; right: 4%; top: 9px;
       font: 600 16px/1 "IBM Plex Mono", monospace; color: var(--ink); letter-spacing: .08em;
     }
+    .shot {
+      position: relative;
+      aspect-ratio: 16 / 10;
+      margin: 20px 0 24px;
+      border: 1px solid var(--line);
+      background: #000;
+      overflow: hidden;
+    }
+    .shot img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      transition: transform .35s ease, filter .35s ease;
+      filter: saturate(.92);
+    }
+    .card:hover .shot img { transform: scale(1.035); filter: none; }
+    .shot .visual-label {
+      left: 10px;
+      bottom: 10px;
+      padding: 6px 8px;
+      background: rgba(8, 11, 15, .86);
+      border: 1px solid var(--line);
+    }
+    .card.featured .shot { aspect-ratio: 21 / 8; }
+    @media (max-width: 720px) {
+      .shot, .card.featured .shot { aspect-ratio: 16 / 10; margin: 16px 0 20px; }
+    }
     .card:hover { background: var(--panel-hover); transform: translateY(-2px); }
     .card:hover::after { color: var(--ink); transform: translate(2px, -2px); }
     .card:focus-visible, .jump a:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
@@ -377,7 +406,7 @@
     .card.featured { grid-column: 1 / -1; min-height: 340px; }
     .card.featured .visual { height: 126px; }
     .card.featured h3 { max-width: 790px; font-size: clamp(28px, 4vw, 48px); }
-    .ai .card:nth-child(1) { background: linear-gradient(135deg, var(--ai-soft), var(--panel) 42%); }
+    .ai .card.featured { background: linear-gradient(135deg, var(--ai-soft), var(--panel) 42%); }
     .vr .card { background: linear-gradient(135deg, var(--vr-soft), var(--panel) 48%); }
     .pr .card:nth-child(2) { background: linear-gradient(135deg, var(--pr-soft), var(--panel) 48%); }
     .geo .card { background: linear-gradient(135deg, var(--geo-soft), var(--panel) 48%); }
@@ -441,8 +470,8 @@
           <a class="j-geo" href="#geo">AI × 地緣戰略</a>
         </nav>
       </div>
-      <div class="count" aria-label="共 11 個頁面">
-        <strong>11</strong>
+      <div class="count" aria-label="共 12 個頁面">
+        <strong>12</strong>
         <span>COURSE PAGES</span>
       </div>
     </header>
@@ -452,36 +481,43 @@
         <div class="section-head">
           <span class="section-no">01 /</span>
           <h2 id="ai-title">AI 課程</h2>
-          <span class="section-count">5 PAGES</span>
+          <span class="section-count">6 PAGES</span>
         </div>
         <div class="cards">
           <a class="card featured" href="https://aiclass1151.netlify.app/" target="_blank" rel="noopener noreferrer">
             <div class="card-code"><span>AI · 001</span><i></i></div>
-            <div class="visual visual-career" aria-hidden="true"><span class="visual-label">CAREER × CREATIVE INDUSTRY</span></div>
+            <figure class="shot"><img src="hub_shots/home.webp" alt="AI 時代職涯視覺報告｜首頁 頁面首屏截圖" loading="lazy" width="1200" height="750" /><span class="visual-label">CAREER × CREATIVE INDUSTRY</span></figure>
             <h3>AI 時代職涯視覺報告｜首頁</h3>
             <p class="path">aiclass1151.netlify.app/</p>
           </a>
+          <a class="card featured" href="https://aiclass1151.netlify.app/ai_copyright_freshman_class" target="_blank" rel="noopener noreferrer">
+            <div class="card-code"><span>AI · 006 · NEW</span><i></i></div>
+            <figure class="shot"><img src="hub_shots/ai_copyright_freshman_class.webp" alt="你的作品會變成 AI 的練習題嗎？ AI 著作權｜大一投影版 頁面首屏截圖" loading="lazy" width="1200" height="750" /><span class="visual-label">COPYRIGHT × CREATORS</span></figure>
+            <h3>你的作品會變成 AI 的練習題嗎？<br />AI 著作權｜大一投影版</h3>
+            <p class="card-description">563 噸書、Bartz v. Anthropic、吉卜力風、蔡阿嘎似顏繪；課堂 5 題是非問答</p>
+            <p class="path">/ai_copyright_freshman_class</p>
+          </a>
           <a class="card" href="https://aiclass1151.netlify.app/ai_youtube" target="_blank" rel="noopener noreferrer">
             <div class="card-code"><span>AI · 002</span><i></i></div>
-            <div class="visual visual-play" aria-hidden="true"><span class="visual-label">CREATOR ECONOMY</span></div>
+            <figure class="shot"><img src="hub_shots/ai_youtube.webp" alt="AI 2026｜操作歸零・經驗複利 頁面首屏截圖" loading="lazy" width="1200" height="750" /><span class="visual-label">CREATOR ECONOMY</span></figure>
             <h3>AI 2026｜操作歸零・經驗複利</h3>
             <p class="path">/ai_youtube</p>
           </a>
           <a class="card" href="https://aiclass1151.netlify.app/ai_youtube_qwen" target="_blank" rel="noopener noreferrer">
             <div class="card-code"><span>AI · 003</span><i></i></div>
-            <div class="visual visual-signal" aria-hidden="true"><span class="visual-label">COMMUNICATION SIGNAL</span></div>
+            <figure class="shot"><img src="hub_shots/ai_youtube_qwen.webp" alt="AI 2026｜操作歸零・經驗複利 （2026 秋季傳播學院版） 頁面首屏截圖" loading="lazy" width="1200" height="750" /><span class="visual-label">COMMUNICATION SIGNAL</span></figure>
             <h3>AI 2026｜操作歸零・經驗複利<br />（2026 秋季傳播學院版）</h3>
             <p class="path">/ai_youtube_qwen</p>
           </a>
           <a class="card" href="https://aiclass1151.netlify.app/ai_two_years_first_year_talk" target="_blank" rel="noopener noreferrer">
             <div class="card-code"><span>AI · 004</span><i></i></div>
-            <div class="visual visual-time" aria-hidden="true"><span class="visual-label">2024 — 2026 / TIMELINE</span></div>
+            <figure class="shot"><img src="hub_shots/ai_two_years_first_year_talk.webp" alt="2024→2026｜AI 兩年到底改變了什麼？ 頁面首屏截圖" loading="lazy" width="1200" height="750" /><span class="visual-label">2024 — 2026 / TIMELINE</span></figure>
             <h3>2024→2026｜AI 兩年到底改變了什麼？</h3>
             <p class="path">/ai_two_years_first_year_talk</p>
           </a>
           <a class="card" href="https://aiclass1151.netlify.app/aibubble" target="_blank" rel="noopener noreferrer">
             <div class="card-code"><span>AI · 005</span><i></i></div>
-            <div class="visual visual-bubble" aria-hidden="true"><span class="visual-label">MEDIA LITERACY</span></div>
+            <figure class="shot"><img src="hub_shots/aibubble.webp" alt="AI 泡沫要破了嗎？ — Steve Eisman 的抓蟲筆記 頁面首屏截圖" loading="lazy" width="1200" height="750" /><span class="visual-label">MEDIA LITERACY</span></figure>
             <h3>AI 泡沫要破了嗎？<br />— Steve Eisman 的抓蟲筆記</h3>
             <p class="path">/aibubble</p>
           </a>
@@ -497,13 +533,13 @@
         <div class="cards">
           <a class="card" href="https://aiclass1151.netlify.app/vrclass_vp_youtube" target="_blank" rel="noopener noreferrer">
             <div class="card-code"><span>VR · 001</span><i></i></div>
-            <div class="visual visual-vp" aria-hidden="true"><span class="visual-label">VIRTUAL PRODUCTION STAGE</span></div>
+            <figure class="shot"><img src="hub_shots/vrclass_vp_youtube.webp" alt="VR / XR × Virtual Production｜TCIMAGE LAB 頁面首屏截圖" loading="lazy" width="1200" height="750" /><span class="visual-label">VIRTUAL PRODUCTION STAGE</span></figure>
             <h3>VR / XR × Virtual Production｜TCIMAGE LAB</h3>
             <p class="path">/vrclass_vp_youtube</p>
           </a>
           <a class="card" href="https://tcimage-lab.netlify.app/" target="_blank" rel="noopener noreferrer">
             <div class="card-code"><span>VR · 002</span><i></i></div>
-            <div class="visual visual-portfolio" aria-hidden="true"><span class="visual-label">STREAMING PORTFOLIO</span></div>
+            <figure class="shot"><img src="hub_shots/tcimage_lab.webp" alt="TCIMAGE/LAB — Streaming Portfolio 頁面首屏截圖" loading="lazy" width="1200" height="750" /><span class="visual-label">STREAMING PORTFOLIO</span></figure>
             <h3>TCIMAGE/LAB — Streaming Portfolio</h3>
             <p class="card-description">作品集實驗室精選作品</p>
             <p class="path">tcimage-lab.netlify.app/</p>
@@ -520,13 +556,13 @@
         <div class="cards">
           <a class="card" href="https://aiclass1151.netlify.app/shu_pr_case_2026_v9" target="_blank" rel="noopener noreferrer">
             <div class="card-code"><span>CASE · V9</span><i></i></div>
-            <div class="visual visual-crisis" aria-hidden="true"><span class="visual-label">CRISIS COMMUNICATION</span></div>
+            <figure class="shot"><img src="hub_shots/shu_pr_case_2026_v9.webp" alt="KTV不是重點｜世新校務危機案例 V9 頁面首屏截圖" loading="lazy" width="1200" height="750" /><span class="visual-label">CRISIS COMMUNICATION</span></figure>
             <h3>KTV不是重點｜世新校務危機案例 V9</h3>
             <p class="path">/shu_pr_case_2026_v9</p>
           </a>
           <a class="card" href="https://aiclass1151.netlify.app/shu_pr_case_2026_v11_projector" target="_blank" rel="noopener noreferrer">
             <div class="card-code"><span>CASE · V11</span><i></i></div>
-            <div class="visual visual-projector" aria-hidden="true"><span class="visual-label">PROJECTOR EDITION</span></div>
+            <figure class="shot"><img src="hub_shots/shu_pr_case_2026_v11_projector.webp" alt="世新校務危機案例 V11（投影版） 頁面首屏截圖" loading="lazy" width="1200" height="750" /><span class="visual-label">PROJECTOR EDITION</span></figure>
             <h3>世新校務危機案例 V11（投影版）</h3>
             <p class="path">/shu_pr_case_2026_v11_projector</p>
           </a>
@@ -542,14 +578,14 @@
         <div class="cards">
           <a class="card" href="https://aiclass1151.netlify.app/ai_custody_opener" target="_blank" rel="noopener noreferrer">
             <div class="card-code"><span>GEO · 001</span><i></i></div>
-            <div class="visual visual-custody" aria-hidden="true"><span class="visual-label">AI CUSTODY × TAIWAN</span></div>
+            <figure class="shot"><img src="hub_shots/ai_custody_opener.webp" alt="AI 冷戰：下一個物種的監護權 頁面首屏截圖" loading="lazy" width="1200" height="750" /><span class="visual-label">AI CUSTODY × TAIWAN</span></figure>
             <h3>AI 冷戰：下一個物種的監護權</h3>
             <p class="card-description">課堂開場簡報：美中爭奪數位物種監護權、台灣的關鍵產房技術</p>
             <p class="path">/ai_custody_opener</p>
           </a>
           <a class="card" href="https://aiclass1151.netlify.app/strait_ladder" target="_blank" rel="noopener noreferrer">
             <div class="card-code"><span>GEO · 002</span><i></i></div>
-            <div class="visual visual-ladder" aria-hidden="true"><span class="visual-label">ESCALATION LADDER</span></div>
+            <figure class="shot"><img src="hub_shots/strait_ladder.webp" alt="台海升級階梯分析 頁面首屏截圖" loading="lazy" width="1200" height="750" /><span class="visual-label">ESCALATION LADDER</span></figure>
             <h3>台海升級階梯分析</h3>
             <p class="card-description">2026–2030 灰色地帶升級情境、雙階梯對照與市場監看訊號</p>
             <p class="path">/strait_ladder</p>
@@ -560,7 +596,7 @@
 
     <footer>
       <span>AI CLASS 115-1</span>
-      <span>11 PAGES / 4 TOPICS</span>
+      <span>12 PAGES / 4 TOPICS</span>
     </footer>
   </div>
 </body>
