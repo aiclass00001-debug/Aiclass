@@ -358,6 +358,41 @@
     @media (max-width: 720px) {
       .shot, .card.featured .shot { aspect-ratio: 16 / 10; margin: 16px 0 20px; }
     }
+    /* ---- 影片卡（X 嵌入） ---- */
+    .card.video { cursor: default; }
+    .card.video::after { content: "▶"; font-size: 18px; }
+    .card.video:hover { transform: none; }
+    .video-wrap {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 28px;
+      align-items: center;
+      margin: 20px 0 8px;
+    }
+    .video-embed {
+      min-height: 220px;
+      border: 1px solid var(--line);
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    .video-embed .twitter-tweet { margin: 0 auto !important; }
+    .video-fallback { display: block; position: relative; width: 100%; text-decoration: none; }
+    .video-fallback img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+    .video-fallback span {
+      position: absolute; left: 10px; bottom: 10px; padding: 6px 8px;
+      background: rgba(8, 11, 15, .86); border: 1px solid var(--line);
+      font: 600 11px/1 "IBM Plex Mono", monospace; letter-spacing: .12em; color: var(--ai);
+    }
+    .video-text h3 { margin: 0 0 14px; }
+    .video-text .card-description { margin: 0 0 12px; }
+    .video-text ul { margin: 0 0 14px; padding-left: 18px; color: var(--muted); font-size: 14px; }
+    .video-text a.src { color: var(--ai); }
+    @media (max-width: 720px) {
+      .video-wrap { grid-template-columns: 1fr; gap: 18px; margin-top: 16px; }
+    }
     .card:hover { background: var(--panel-hover); transform: translateY(-2px); }
     .card:hover::after { color: var(--ink); transform: translate(2px, -2px); }
     .card:focus-visible, .jump a:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
@@ -481,7 +516,7 @@
         <div class="section-head">
           <span class="section-no">01 /</span>
           <h2 id="ai-title">AI 課程</h2>
-          <span class="section-count">6 PAGES</span>
+          <span class="section-count">6 PAGES · 1 VIDEO</span>
         </div>
         <div class="cards">
           <a class="card featured" href="https://aiclass1151.netlify.app/" target="_blank" rel="noopener noreferrer">
@@ -497,6 +532,29 @@
             <p class="card-description">563 噸書、Bartz v. Anthropic、吉卜力風、蔡阿嘎似顏繪；課堂 5 題是非問答</p>
             <p class="path">/ai_copyright_freshman_class</p>
           </a>
+          <article class="card featured video" aria-labelledby="vid-jensen-title">
+            <div class="card-code"><span>AI · VIDEO · NEW</span><i></i></div>
+            <div class="video-wrap">
+              <div class="video-embed">
+                <blockquote class="twitter-tweet" data-theme="dark" data-dnt="true" data-conversation="none" data-align="center">
+                  <a class="video-fallback" href="https://x.com/AYi_AInotes/status/2116454731363106916" target="_blank" rel="noopener noreferrer">
+                    <img src="https://pbs.twimg.com/amplify_video_thumb/2116454568217214976/img/6pb2fP6IiTmAS6DN?format=webp&amp;name=large" alt="黃仁勳 CNN 專訪片段影片縮圖" loading="lazy" />
+                    <span>▶ 在 X 上觀看</span>
+                  </a>
+                </blockquote>
+              </div>
+              <div class="video-text">
+                <h3 id="vid-jensen-title">黃仁勳：別讓 AI 替你思考<br />讓它當你的私教</h3>
+                <p class="card-description">CNN 專訪片段（Fareed Zakaria）：每天大量用 AI，腦袋卻越用越靈光。</p>
+                <ul>
+                  <li>不拿 AI 做本來就會的事，用它啃完全不懂的新領域</li>
+                  <li>CEO 每天 90% 的指令其實是「提出好問題」</li>
+                  <li>外包執行，不外包思考：工具是槓桿，不是輪椅</li>
+                </ul>
+                <p class="path">來源：<a class="src" href="https://x.com/AYi_AInotes/status/2116454731363106916" target="_blank" rel="noopener noreferrer">x.com/AYi_AInotes</a> · 2026-10-31</p>
+              </div>
+            </div>
+          </article>
           <a class="card" href="https://aiclass1151.netlify.app/ai_youtube" target="_blank" rel="noopener noreferrer">
             <div class="card-code"><span>AI · 002</span><i></i></div>
             <figure class="shot"><img src="hub_shots/ai_youtube.webp" alt="AI 2026｜操作歸零・經驗複利 頁面首屏截圖" loading="lazy" width="1200" height="750" /><span class="visual-label">CREATOR ECONOMY</span></figure>
@@ -599,5 +657,6 @@
       <span>12 PAGES / 4 TOPICS</span>
     </footer>
   </div>
+  <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 </body>
 </html>
