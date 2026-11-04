@@ -390,6 +390,17 @@
     .video-text .card-description { margin: 0 0 12px; }
     .video-text ul { margin: 0 0 14px; padding-left: 18px; color: var(--muted); font-size: 14px; }
     .video-text a.src { color: var(--ai); }
+    .yt-frame { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #000; }
+    .yt-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+    .geo .video-embed { border-color: var(--line); }
+    .chapters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
+    .chapters button {
+      min-height: 36px; padding: 6px 11px; border: 1px solid var(--line); background: var(--bg);
+      color: var(--geo); font: 500 12px/1.2 "IBM Plex Mono", monospace; cursor: pointer;
+    }
+    .chapters button:hover, .chapters button:focus-visible { background: var(--panel); outline: 2px solid var(--geo); outline-offset: 2px; }
+    .geo .video-text a.src { color: var(--geo); }
+    .discuss { margin: 0 0 12px; padding: 10px 12px; border-left: 3px solid var(--geo); background: rgba(155,229,100,.06); font-size: 14px; color: var(--ink); }
     @media (max-width: 720px) {
       .video-wrap { grid-template-columns: 1fr; gap: 18px; margin-top: 16px; }
     }
@@ -631,9 +642,30 @@
         <div class="section-head">
           <span class="section-no">04 /</span>
           <h2 id="geo-title">AI × 地緣戰略</h2>
-          <span class="section-count">2 PAGES</span>
+          <span class="section-count">2 PAGES · 1 VIDEO</span>
         </div>
         <div class="cards">
+          <article class="card featured video" aria-labelledby="vid-europe-title">
+            <div class="card-code"><span>GEO · VIDEO · NEW</span><i></i></div>
+            <div class="video-wrap">
+              <div class="video-embed">
+                <div class="yt-frame">
+                  <iframe id="yt-europe" src="https://www.youtube-nocookie.com/embed/ktrTjKu7W1M?rel=0" title="法国怎么了，欧洲怎么了？｜王局拍案20261103" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+              </div>
+              <div class="video-text">
+                <h3 id="vid-europe-title">法國怎麼了，歐洲怎麼了？<br />財政危機 × AI 監管</h3>
+                <p class="card-description">王志安｜王局拍案 2026-11-03（約 32 分）：索邦學運、10/17 大遊行、法國債務 120% GDP，以及黃仁勳對話德國總理默茨。</p>
+                <div class="chapters" role="group" aria-label="影片段落">
+                  <button type="button" data-t="0">00:00 全片</button>
+                  <button type="button" data-t="1278">21:18 黃仁勳 × 默茨</button>
+                </div>
+                <p class="discuss">課堂提問：教育預算被排擠、AI 被過度監管，歐洲面臨「不轉型就空心化」。身為世新大一，四年內你要用虛擬棚、Unreal Engine 和生成式 AI 累積什麼樣的作品實力？</p>
+                <p class="path"><a class="src" href="https://aiclass1151.netlify.app/europe_freshman_class" target="_blank" rel="noopener noreferrer">→ 課堂互動頁（投票＋是非題）</a></p>
+                <p class="path">來源：<a class="src" href="https://www.youtube.com/watch?v=ktrTjKu7W1M" target="_blank" rel="noopener noreferrer">youtube.com/@wangzhian</a></p>
+              </div>
+            </div>
+          </article>
           <a class="card" href="https://aiclass1151.netlify.app/ai_custody_opener" target="_blank" rel="noopener noreferrer">
             <div class="card-code"><span>GEO · 001</span><i></i></div>
             <figure class="shot"><img src="hub_shots/ai_custody_opener.webp" alt="AI 冷戰：下一個物種的監護權 頁面首屏截圖" loading="lazy" width="1200" height="750" /><span class="visual-label">AI CUSTODY × TAIWAN</span></figure>
@@ -654,9 +686,17 @@
 
     <footer>
       <span>AI CLASS 115-1</span>
-      <span>12 PAGES / 4 TOPICS</span>
+      <span>12 PAGES · 2 VIDEOS / 4 TOPICS</span>
     </footer>
   </div>
   <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  <script>
+    document.querySelectorAll('.chapters button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var f = document.getElementById('yt-europe');
+        f.src = 'https://www.youtube-nocookie.com/embed/ktrTjKu7W1M?rel=0&autoplay=1&start=' + b.dataset.t;
+      });
+    });
+  </script>
 </body>
 </html>
