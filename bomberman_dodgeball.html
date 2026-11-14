@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>3D 炸彈躲避球大亂鬥 (多人連線版)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #111820;
+            font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif;
+            color: #fff;
+            touch-action: none;
+        }
+        #hud {
+            position: absolute;
+            top: 12px;
+            left: 14px;
+            right: 14px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .panel {
+            background: rgba(15, 22, 30, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 14px;
+            padding: 10px 14px;
+            pointer-events: auto;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+        }
+        .title-box h1 {
+            margin: 0 0 3px 0;
+            font-size: 17px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .title-box p {
+            margin: 0;
+            font-size: 12px;
+            color: #a4b0be;
+        }
+        .controls-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+            align-items: center;
+        }
+        .net-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            align-items: center;
+            font-size: 12px;
+        }
+        .room-badge {
+            background: rgba(46, 204, 113, 0.15);
+            border: 1px solid rgba(46, 204, 113, 0.45);
+            color: #2ecc71;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .room-badge.connecting {
+            background: rgba(241, 196, 15, 0.15);
+            border-color: rgba(241, 196, 15, 0.45);
+            color: #f1c40f;
+        }
+        .room-badge.client {
+            background: rgba(52, 152, 219, 0.18);
+            border-color: rgba(52, 152, 219, 0.5);
+            color: #70a1ff;
+        }
+        input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 8px;
+            color: #fff;
+            padding: 5px 8px;
+            width: 82px;
+            font-size: 13px;
+            text-align: center;
+            outline: none;
+            user-select: text;
+            -webkit-user-select: text;
+        }
+        input:focus { border-color: #70a1ff; }
+        input::placeholder { color: #747d8c; font-size: 12px; }
+
+        button {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            border-radius: 9px;
+            padding: 5px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+        }
+        button:hover { background: rgba(255, 255, 255, 0.2); }
+        button:active { transform: scale(0.95); }
+        button:disabled { opacity: 0.45; cursor: not-allowed; }
+        button.diff-easy { border-color: #2ecc71; color: #2ecc71; }
+        button.diff-normal { border-color: #f1c40f; color: #f1c40f; }
+        button.diff-hard { border-color: #ff4757; color: #ff4757; }
+        button.btn-join { background: #1e90ff; border-color: #1e90ff; font-weight: 700; }
+        button.btn-leave { background: #ff4757; border-color: #ff4757; font-weight: 700; }
+
+        .scoreboard {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+        .score-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(15, 22, 30, 0.85);
+            border: 1.5px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 7px 11px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .score-pill.me {
+            border-color: #ffffff;
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.28);
+        }
+        .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+        .ko-num { font-size: 17px; font-weight: 800; margin-left: 2px; }
+        .ko-label { font-size: 10px; color: #a4b0be; }
+
+        #toast {
+            position: absolute;
+            top: 122px;
+            left: 50%;
+            transform: translateX(-50%) scale(0.9);
+            background: linear-gradient(135deg, #ff6b6b, #ffa502);
+            color: #fff;
+            font-weight: 800;
+            font-size: 15px;
+            padding: 8px 20px;
+            border-radius: 999px;
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.45);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s, transform 0.2s;
+            z-index: 15;
+            white-space: nowrap;
+        }
+        #toast.show { opacity: 1; transform: translateX(-50%) scale(1); }
+
+        #gameover {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.68);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 30;
+        }
+        #gameover.show { display: flex; }
+        .modal {
+            background: #1b2430;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 28px 36px;
+            text-align: center;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+            max-width: 90vw;
+        }
+        .modal h2 { margin: 0 0 8px 0; font-size: 26px; }
+        .modal p { margin: 0 0 20px 0; color: #ced6e0; font-size: 15px; }
+        .btn-primary {
+            background: linear-gradient(135deg, #1e90ff, #00cec9);
+            border: none;
+            padding: 11px 26px;
+            font-size: 15px;
+            font-weight: 700;
+            border-radius: 12px;
+        }
+
+        #dpad {
+            position: absolute;
+            bottom: 22px;
+            left: 22px;
+            width: 144px;
+            height: 144px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 4px;
+            z-index: 20;
+            opacity: 0.78;
+        }
+        .d-btn {
+            background: rgba(15, 22, 30, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #fff;
+            cursor: pointer;
+        }
+        .d-btn:active, .d-btn.active { background: rgba(52, 152, 219, 0.75); }
+
+        #kick-btn {
+            position: absolute;
+            bottom: 28px;
+            right: 26px;
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #ff7675, #d63031);
+            border: 3px solid rgba(255, 255, 255, 0.45);
+            box-shadow: 0 8px 24px rgba(214, 48, 49, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 13px;
+            z-index: 20;
+            cursor: pointer;
+            text-align: center;
+        }
+        #kick-btn:active { transform: scale(0.92); }
+        #kick-btn span { font-size: 24px; margin-bottom: 2px; }
+
+        #hint {
+            position: absolute;
+            bottom: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.62);
+            padding: 7px 16px;
+            border-radius: 999px;
+            font-size: 12px;
+            color: #dfe4ea;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        @media (max-width: 760px) {
+            #hint { display: none; }
+            #hud { top: 8px; left: 8px; right: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="hud">
+        <div class="panel title-box">
+            <h1>⚽ 3D 炸彈躲避球（連線版）</h1>
+            <p id="status-line">連線大廳準備中 · 先搶 5 次 KO 獲勝 · 00:00</p>
+            <div class="controls-row">
+                <button id="diff-btn" class="diff-easy">難度：輕鬆</button>
+                <button id="sound-btn">音效：開</button>
+                <button id="restart-btn">重新開始</button>
+            </div>
+            <div class="net-row">
+                <span id="room-status" class="room-badge connecting">⏳ 取得房號中...</span>
+                <button id="copy-room-btn" style="display:none;">📋 複製房號</button>
+                <input id="join-input" type="text" maxlength="6" placeholder="輸入房號" />
+                <button id="join-btn" class="btn-join">加入房間</button>
+                <button id="leave-btn" class="btn-leave" style="display:none;">離開房間</button>
+            </div>
+        </div>
+        <div class="scoreboard" id="scoreboard"></div>
+    </div>
+
+    <div id="toast"></div>
+
+    <div id="gameover">
+        <div class="modal">
+            <h2 id="winner-title">🏆 獲勝！</h2>
+            <p id="winner-desc">你成功稱霸了炸彈躲避球場！</p>
+            <button class="btn-primary" id="play-again-btn">再玩一局</button>
+        </div>
+    </div>
+
+    <div id="dpad">
+        <div></div><div class="d-btn" data-dir="up">▲</div><div></div>
+        <div class="d-btn" data-dir="left">◀</div><div></div><div class="d-btn" data-dir="right">▶</div>
+        <div></div><div class="d-btn" data-dir="down">▼</div><div></div>
+    </div>
+    <div id="kick-btn"><span>⚽</span>踢 / 衝刺</div>
+    <div id="hint">WASD/方向鍵 移動 · <b>空白鍵</b>：有球踢球(可反踢來球!) ／ 沒球衝刺閃避 · 分享房號即可連線！</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.5/dist/peerjs.min.js"></script>
+    <script>
+        // ================= 1. 難度與音效合成器 =================
+        const DIFFICULTIES = [
+            { key: 'easy', label: '難度：輕鬆', cls: 'diff-easy', cpuSpeed: 3.1, cpuKickSpeed: 10.5, cpuCooldown: 1.9, cpuAimJitter: 0.75 },
+            { key: 'normal', label: '難度：普通', cls: 'diff-normal', cpuSpeed: 4.0, cpuKickSpeed: 12.5, cpuCooldown: 1.35, cpuAimJitter: 0.45 },
+            { key: 'hard', label: '難度：地獄', cls: 'diff-hard', cpuSpeed: 5.0, cpuKickSpeed: 15.0, cpuCooldown: 0.85, cpuAimJitter: 0.2 }
+        ];
+        let diffIndex = 0;
+
+        let soundEnabled = true;
+        let audioCtx = null;
+        function initAudio() {
+            if (!audioCtx) {
+                const AC = window.AudioContext || window.webkitAudioContext;
+                if (AC) audioCtx = new AC();
+            }
+            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+        }
+        function playSound(type) {
+            if (!soundEnabled) return;
+            initAudio();
+            if (!audioCtx) return;
+            const now = audioCtx.currentTime;
+
+            if (type === 'kick' || type === 'counter') {
+                const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+                osc.type = type === 'counter' ? 'sawtooth' : 'triangle';
+                osc.frequency.setValueAtTime(type === 'counter' ? 380 : 220, now);
+                osc.frequency.exponentialRampToValueAtTime(65, now + 0.14);
+                gain.gain.setValueAtTime(0.32, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.14);
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start(now); osc.stop(now + 0.15);
+            } else if (type === 'dash') {
+                const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(180, now);
+                osc.frequency.exponentialRampToValueAtTime(480, now + 0.12);
+                gain.gain.setValueAtTime(0.18, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.13);
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start(now); osc.stop(now + 0.14);
+            } else if (type === 'bounce') {
+                const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(340, now);
+                osc.frequency.exponentialRampToValueAtTime(560, now + 0.08);
+                gain.gain.setValueAtTime(0.16, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.09);
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start(now); osc.stop(now + 0.1);
+            } else if (type === 'explode') {
+                const bufferSize = audioCtx.sampleRate * 0.35;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (audioCtx.sampleRate * 0.09));
+                const noise = audioCtx.createBufferSource(); noise.buffer = buffer;
+                const filter = audioCtx.createBiquadFilter(); filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(750, now); filter.frequency.exponentialRampToValueAtTime(80, now + 0.35);
+                const gain = audioCtx.createGain();
+                gain.gain.setValueAtTime(0.5, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+                noise.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
+                noise.start(now);
+            } else if (type === 'win') {
+                [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
+                    const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, now + i * 0.1);
+                    gain.gain.setValueAtTime(0.2, now + i * 0.1);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.1 + 0.25);
+                    osc.connect(gain); gain.connect(audioCtx.destination);
+                    osc.start(now + i * 0.1); osc.stop(now + i * 0.1 + 0.26);
+                });
+            }
+        }
+
+        // ================= 2. 3D 場景與貼圖 =================
+        const ARENA_W = 16, ARENA_H = 12, HALF_W = 8, HALF_H = 6, WIN_KO = 5;
+
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x141b24);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+        const baseCamPos = new THREE.Vector3(0, 15.5, 11.5);
+        camera.position.copy(baseCamPos);
+        camera.lookAt(0, 0, 0.3);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        document.body.appendChild(renderer.domElement);
+
+        scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.85);
+        dirLight.position.set(7, 22, 10);
+        dirLight.castShadow = true;
+        dirLight.shadow.mapSize.width = 2048;
+        dirLight.shadow.mapSize.height = 2048;
+        dirLight.shadow.camera.near = 1;
+        dirLight.shadow.camera.far = 45;
+        dirLight.shadow.camera.left = -12; dirLight.shadow.camera.right = 12;
+        dirLight.shadow.camera.top = 12; dirLight.shadow.camera.bottom = -12;
+        scene.add(dirLight);
+
+        function createCourtTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 1024; canvas.height = 768;
+            const ctx = canvas.getContext('2d');
+            const cw = canvas.width / 16, ch = canvas.height / 12;
+            for (let r = 0; r < 12; r++) {
+                for (let c = 0; c < 16; c++) {
+                    ctx.fillStyle = (r + c) % 2 === 0 ? '#27ae60' : '#2ecc71';
+                    ctx.fillRect(c * cw, r * ch, cw + 1, ch + 1);
+                }
+            }
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.72)';
+            ctx.lineWidth = 8;
+            ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
+            ctx.beginPath(); ctx.moveTo(canvas.width / 2, 20); ctx.lineTo(canvas.width / 2, canvas.height - 20); ctx.stroke();
+            ctx.beginPath(); ctx.arc(canvas.width / 2, canvas.height / 2, 105, 0, Math.PI * 2); ctx.stroke();
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.72)';
+            ctx.beginPath(); ctx.arc(canvas.width / 2, canvas.height / 2, 10, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(20, canvas.height / 2, 130, -Math.PI / 2, Math.PI / 2); ctx.stroke();
+            ctx.beginPath(); ctx.arc(canvas.width - 20, canvas.height / 2, 130, Math.PI / 2, Math.PI * 1.5); ctx.stroke();
+            const tex = new THREE.CanvasTexture(canvas);
+            tex.anisotropy = 4;
+            return tex;
+        }
+
+        function createWallTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 128; canvas.height = 128;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#3d4854'; ctx.fillRect(0, 0, 128, 128);
+            ctx.strokeStyle = '#252d36'; ctx.lineWidth = 4; ctx.strokeRect(2, 2, 124, 124);
+            ctx.beginPath();
+            ctx.moveTo(0, 64); ctx.lineTo(128, 64);
+            ctx.moveTo(64, 0); ctx.lineTo(64, 64);
+            ctx.moveTo(32, 64); ctx.lineTo(32, 128);
+            ctx.moveTo(96, 64); ctx.lineTo(96, 128);
+            ctx.stroke();
+            return new THREE.CanvasTexture(canvas);
+        }
+
+        const floor = new THREE.Mesh(
+            new THREE.PlaneGeometry(ARENA_W, ARENA_H),
+            new THREE.MeshStandardMaterial({ map: createCourtTexture(), roughness: 0.85 })
+        );
+        floor.rotation.x = -Math.PI / 2;
+        floor.receiveShadow = true;
+        scene.add(floor);
+
+        const wallGeo = new THREE.BoxGeometry(1, 1.15, 1);
+        const wallMat = new THREE.MeshStandardMaterial({ map: createWallTexture(), roughness: 0.55 });
+        for (let x = -HALF_W - 0.5; x <= HALF_W + 0.5; x += 1) {
+            [-HALF_H - 0.5, HALF_H + 0.5].forEach(z => {
+                const w = new THREE.Mesh(wallGeo, wallMat);
+                w.position.set(x, 0.575, z); w.castShadow = true; w.receiveShadow = true; scene.add(w);
+            });
+        }
+        for (let z = -HALF_H + 0.5; z <= HALF_H - 0.5; z += 1) {
+            [-HALF_W - 0.5, HALF_W + 0.5].forEach(x => {
+                const w = new THREE.Mesh(wallGeo, wallMat);
+                w.position.set(x, 0.575, z); w.castShadow = true; w.receiveShadow = true; scene.add(w);
+            });
+        }
+
+        // ================= 3. 角色與物件模型 =================
+        const PLAYER_CONFIGS = [
+            { slot: 0, defaultName: '藍 CPU', colorName: '藍', color: '#2e86de', spawn: [-5.5, -3.5] },
+            { slot: 1, defaultName: '紅 CPU', colorName: '紅', color: '#ee5253', spawn: [5.5, 3.5] },
+            { slot: 2, defaultName: '綠 CPU', colorName: '綠', color: '#10ac84', spawn: [5.5, -3.5] },
+            { slot: 3, defaultName: '黃 CPU', colorName: '黃', color: '#ff9f43', spawn: [-5.5, 3.5] }
+        ];
+
+        let players = [];
+        let bombs = [];
+        let nextBombId = 1;
+        let clientBombs = new Map();
+        let effects = [];
+        let gameStartTime = 0;
+        let clientElapsed = 0;
+        let spawnTimer = 0;
+        let spawnQuadrant = 0;
+        let gameOver = false;
+        let screenShake = 0;
+
+        // 連線狀態
+        let isHost = true;
+        let mySlot = 0;
+        let peer = null;
+        let myRoomCode = '';
+        let hostConn = null;        // Client 用來連房主
+        let clientConns = new Map(); // Host 儲存: slot -> DataConnection
+
+        const playersGroup = new THREE.Group();
+        const bombsGroup = new THREE.Group();
+        const fxGroup = new THREE.Group();
+        scene.add(playersGroup);
+        scene.add(bombsGroup);
+        scene.add(fxGroup);
+
+        const cylGeo = new THREE.CylinderGeometry(0.36, 0.36, 0.65, 24);
+        const domeGeo = new THREE.SphereGeometry(0.36, 24, 16);
+        const eyeGeo = new THREE.SphereGeometry(0.065, 12, 12);
+        const eyeMat = new THREE.MeshBasicMaterial({ color: 0x111111 });
+        const shieldGeo = new THREE.SphereGeometry(0.68, 20, 16);
+        const shieldMat = new THREE.MeshBasicMaterial({ color: 0x70a1ff, transparent: true, opacity: 0.28 });
+
+        // 自己專屬的白圈與方向箭頭 (可動態切換掛在哪個角色身上)
+        const selfMarkerGroup = new THREE.Group();
+        const selfRing = new THREE.Mesh(
+            new THREE.RingGeometry(0.45, 0.56, 32),
+            new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide })
+        );
+        selfRing.rotation.x = -Math.PI / 2;
+        selfRing.position.y = 0.03;
+        selfMarkerGroup.add(selfRing);
+
+        const selfArrow = new THREE.Mesh(
+            new THREE.ConeGeometry(0.16, 0.32, 3),
+            new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.85 })
+        );
+        selfArrow.rotation.x = Math.PI / 2;
+        selfArrow.position.set(0, 0.06, 0.76);
+        selfMarkerGroup.add(selfArrow);
+
+        const bombSphereGeo = new THREE.SphereGeometry(0.42, 24, 24);
+        const fuseGeo = new THREE.CylinderGeometry(0.05, 0.05, 0.22, 8);
+        const fuseMat = new THREE.MeshStandardMaterial({ color: 0xdddddd });
+        const sparkGeo = new THREE.SphereGeometry(0.08, 12, 12);
+        const sparkMat = new THREE.MeshBasicMaterial({ color: 0xffd32a });
+        const targetRingGeo = new THREE.RingGeometry(0.5, 0.68, 24);
+        const targetRingMat = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent: true, opacity: 0.95 });
+
+        function createPlayerMesh(cfg) {
+            const g = new THREE.Group();
+            const mat = new THREE.MeshStandardMaterial({ color: cfg.color, roughness: 0.35 });
+            const body = new THREE.Mesh(cylGeo, mat); body.position.y = 0.42; body.castShadow = true; g.add(body);
+            const head = new THREE.Mesh(domeGeo, mat); head.position.y = 0.76; head.castShadow = true; g.add(head);
+
+            const eyeL = new THREE.Mesh(eyeGeo, eyeMat); eyeL.position.set(-0.13, 0.8, 0.32);
+            const eyeR = new THREE.Mesh(eyeGeo, eyeMat); eyeR.position.set(0.13, 0.8, 0.32);
+            g.add(eyeL); g.add(eyeR);
+
+            const shield = new THREE.Mesh(shieldGeo, shieldMat);
+            shield.position.y = 0.55; shield.visible = false; g.add(shield);
+            return { group: g, shield };
+        }
+
+        function createBombMesh() {
+            const g = new THREE.Group();
+            const mat = new THREE.MeshStandardMaterial({ color: 0x1b1e23, roughness: 0.25, metalness: 0.75 });
+            const sphere = new THREE.Mesh(bombSphereGeo, mat); sphere.castShadow = true; g.add(sphere);
+            const fuse = new THREE.Mesh(fuseGeo, fuseMat); fuse.position.set(0, 0.44, 0); fuse.rotation.z = -0.25; g.add(fuse);
+            const spark = new THREE.Mesh(sparkGeo, sparkMat); spark.position.set(0.05, 0.55, 0); g.add(spark);
+            const ring = new THREE.Mesh(targetRingGeo, targetRingMat);
+            ring.rotation.x = -Math.PI / 2; ring.position.y = -0.39; ring.visible = false; g.add(ring);
+            return { group: g, mat, spark, ring };
+        }
+
+        function attachSelfMarker(slotIdx) {
+            if (players[slotIdx] && players[slotIdx].mesh) {
+                players[slotIdx].mesh.add(selfMarkerGroup);
+            }
+        }
+
+        // ================= 4. UI 與初始化 =================
+        const toastEl = document.getElementById('toast');
+        let toastTimer = null;
+        function showToast(msg) {
+            toastEl.textContent = msg;
+            toastEl.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2100);
+        }
+
+        function updateScoreboard() {
+            const sb = document.getElementById('scoreboard');
+            sb.innerHTML = players.map((p, idx) => {
+                const isMe = (idx === mySlot);
+                const label = isMe ? `你 (${p.colorName})` : p.name;
+                return `
+                    <div class="score-pill ${isMe ? 'me' : ''}">
+                        <span class="dot" style="background:${p.color}"></span>
+                        <span>${label}</span>
+                        <span class="ko-num">${p.ko}</span>
+                        <span class="ko-label">KO</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function initPlayersStructure() {
+            while (playersGroup.children.length) playersGroup.remove(playersGroup.children[0]);
+            players = PLAYER_CONFIGS.map((cfg, idx) => {
+                const { group, shield } = createPlayerMesh(cfg);
+                group.position.set(cfg.spawn[0], 0, cfg.spawn[1]);
+                const angle = Math.atan2(-cfg.spawn[0], -cfg.spawn[1]);
+                group.rotation.y = angle;
+                playersGroup.add(group);
+
+                const hasClient = isHost && clientConns.has(idx);
+                const isHumanSlot = (idx === 0) || hasClient;
+                return {
+                    ...cfg,
+                    name: idx === 0 ? '房主 (藍)' : (hasClient ? `玩家 ${idx + 1}` : cfg.defaultName),
+                    isHuman: isHumanSlot,
+                    remoteInput: { dx: 0, dz: 0 },
+                    pendingAction: false,
+                    x: cfg.spawn[0],
+                    z: cfg.spawn[1],
+                    targetX: cfg.spawn[0],
+                    targetZ: cfg.spawn[1],
+                    targetRot: angle,
+                    dirX: Math.sin(angle),
+                    dirZ: Math.cos(angle),
+                    alive: true,
+                    respawnTimer: 0,
+                    invulnTimer: 1.5,
+                    kickCooldown: 0,
+                    dashTimer: 0,
+                    dashCooldown: 0,
+                    dashDirX: 0,
+                    dashDirZ: 0,
+                    ko: 0,
+                    mesh: group,
+                    shield
+                };
+            });
+            attachSelfMarker(mySlot);
+        }
+
+        function resetGame() {
+            while (bombsGroup.children.length) bombsGroup.remove(bombsGroup.children[0]);
+            while (fxGroup.children.length) fxGroup.remove(fxGroup.children[0]);
+            clientBombs.clear();
+            bombs = [];
+            effects = [];
+            gameOver = false;
+            gameStartTime = performance.now();
+            spawnTimer = 0.5;
+            document.getElementById('gameover').classList.remove('show');
+
+            if (isHost) {
+                initPlayersStructure();
+                updateScoreboard();
+                spawnBomb(-3.2, -1.8);
+                spawnBomb(3.2, 1.8);
+                spawnBomb(0, 0);
+                broadcastEvent({ t: 'reset' });
+            } else {
+                initPlayersStructure();
+                updateScoreboard();
+            }
+        }
+
+        function spawnBomb(customX, customZ) {
+            if (!isHost || bombs.length >= 9) return;
+            let bx, bz;
+            if (customX !== undefined) {
+                bx = customX; bz = customZ;
+            } else {
+                const q = spawnQuadrant % 4;
+                spawnQuadrant++;
+                const sx = (q === 0 || q === 2) ? -1 : 1;
+                const sz = (q < 2) ? -1 : 1;
+                bx = sx * (1.2 + Math.random() * 4.8);
+                bz = sz * (0.8 + Math.random() * 3.2);
+            }
+            const { group, mat, spark, ring } = createBombMesh();
+            group.position.set(bx, 5.2, bz);
+            bombsGroup.add(group);
+            bombs.push({
+                id: nextBombId++,
+                x: bx, y: 5.2, vy: 0, z: bz, vx: 0, vz: 0,
+                fuse: 7.0, bounces: 0, lastKicker: null, graceTimer: 0, trailTimer: 0,
+                mesh: group, mat, spark, ring, exploded: false
+            });
+        }
+
+        // ================= 5. 多人連線 (PeerJS P2P) =================
+        const roomStatusEl = document.getElementById('room-status');
+        const copyRoomBtn = document.getElementById('copy-room-btn');
+        const joinInput = document.getElementById('join-input');
+        const joinBtn = document.getElementById('join-btn');
+        const leaveBtn = document.getElementById('leave-btn');
+        const diffBtn = document.getElementById('diff-btn');
+        const restartBtn = document.getElementById('restart-btn');
+
+        function broadcastEvent(obj) {
+            if (!isHost) return;
+            for (const conn of clientConns.values()) {
+                if (conn.open) conn.send(obj);
+            }
+        }
+
+        function startHostPeer() {
+            if (peer) { try { peer.destroy(); } catch (e) {} }
+            isHost = true;
+            mySlot = 0;
+            clientConns.clear();
+            diffBtn.disabled = false;
+            restartBtn.disabled = false;
+            joinInput.style.display = '';
+            joinBtn.style.display = '';
+            leaveBtn.style.display = 'none';
+
+            roomStatusEl.className = 'room-badge connecting';
+            roomStatusEl.textContent = '⏳ 取得房號中...';
+            copyRoomBtn.style.display = 'none';
+
+            const code = String(Math.floor(1000 + Math.random() * 9000));
+            myRoomCode = code;
+
+            peer = new Peer('bdodge-' + code, {
+                config: { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun1.l.google.com:19302' }] }
+            });
+
+            peer.on('open', () => {
+                roomStatusEl.className = 'room-badge';
+                roomStatusEl.textContent = `🟢 房號：${code}`;
+                copyRoomBtn.style.display = '';
+            });
+
+            peer.on('connection', (conn) => {
+                // 尋找空位 (1, 2, 3)
+                let freeSlot = -1;
+                for (let s = 1; s < 4; s++) {
+                    if (!clientConns.has(s)) { freeSlot = s; break; }
+                }
+                if (freeSlot === -1) {
+                    conn.on('open', () => {
+                        conn.send({ t: 'full' });
+                        setTimeout(() => conn.close(), 300);
+                    });
+                    return;
+                }
+
+                conn.on('open', () => {
+                    clientConns.set(freeSlot, conn);
+                    const p = players[freeSlot];
+                    p.isHuman = true;
+                    p.name = `玩家 ${freeSlot + 1}`;
+                    p.remoteInput = { dx: 0, dz: 0 };
+                    p.pendingAction = false;
+                    conn.send({ t: 'welcome', slot: freeSlot, diffIndex });
+                    updateScoreboard();
+                    showToast(`🎉 玩家 ${freeSlot + 1} (${p.colorName}) 加入房間！`);
+                    broadcastEvent({ t: 'toast', msg: `🎉 玩家 ${freeSlot + 1} (${p.colorName}) 加入房間！` });
+                });
+
+                conn.on('data', (data) => {
+                    const p = players[freeSlot];
+                    if (!p) return;
+                    if (data.t === 'in') {
+                        p.remoteInput.dx = Number(data.dx) || 0;
+                        p.remoteInput.dz = Number(data.dz) || 0;
+                    } else if (data.t === 'act') {
+                        p.pendingAction = true;
+                    }
+                });
+
+                conn.on('close', () => {
+                    if (clientConns.get(freeSlot) === conn) {
+                        clientConns.delete(freeSlot);
+                        const p = players[freeSlot];
+                        if (p) {
+                            p.isHuman = false;
+                            p.name = PLAYER_CONFIGS[freeSlot].defaultName;
+                            p.remoteInput = { dx: 0, dz: 0 };
+                        }
+                        updateScoreboard();
+                        showToast(`👋 玩家 ${freeSlot + 1} 已離開（由 CPU 接手）`);
+                    }
+                });
+            });
+
+            peer.on('error', (err) => {
+                if (err.type === 'unavailable-id') {
+                    startHostPeer();
+                } else {
+                    roomStatusEl.className = 'room-badge connecting';
+                    roomStatusEl.textContent = '⚠️ 離線模式';
+                }
+            });
+        }
+
+        function joinRoom(rawCode) {
+            const code = rawCode.trim();
+            if (!code) { showToast('請先輸入 4 碼房號！'); return; }
+            if (code === myRoomCode && isHost) { showToast('這就是你自己的房間喔！'); return; }
+
+            joinBtn.disabled = true;
+            joinBtn.textContent = '連線中...';
+            roomStatusEl.className = 'room-badge connecting';
+            roomStatusEl.textContent = `⏳ 正在連入 ${code}...`;
+
+            if (peer) { try { peer.destroy(); } catch (e) {} }
+            clientConns.clear();
+            isHost = false;
+
+            peer = new Peer(undefined, {
+                config: { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun1.l.google.com:19302' }] }
+            });
+
+            let timeoutHandle = setTimeout(() => {
+                if (!hostConn || !hostConn.open) {
+                    showToast('❌ 連線逾時，請確認房號是否正確');
+                    leaveRoomToHost();
+                }
+            }, 8500);
+
+            peer.on('open', () => {
+                const conn = peer.connect('bdodge-' + code, { reliable: true });
+                hostConn = conn;
+
+                conn.on('open', () => {
+                    clearTimeout(timeoutHandle);
+                    joinBtn.disabled = false;
+                    joinBtn.textContent = '加入房間';
+                    joinInput.style.display = 'none';
+                    joinBtn.style.display = 'none';
+                    copyRoomBtn.style.display = 'none';
+                    leaveBtn.style.display = '';
+                    diffBtn.disabled = true;
+                    restartBtn.disabled = true;
+
+                    roomStatusEl.className = 'room-badge client';
+                    roomStatusEl.textContent = `🔵 已連線房間：${code}`;
+                });
+
+                conn.on('data', (data) => handleServerPacket(data));
+
+                conn.on('close', () => {
+                    clearTimeout(timeoutHandle);
+                    if (!isHost) {
+                        showToast('⚠️ 與房主斷開連線，已返回自己的房間');
+                        leaveRoomToHost();
+                    }
+                });
+            });
+
+            peer.on('error', (err) => {
+                clearTimeout(timeoutHandle);
+                showToast(err.type === 'peer-not-found' ? '❌ 找不到該房號！' : `❌ 連線失敗 (${err.type})`);
+                leaveRoomToHost();
+            });
+        }
+
+        function leaveRoomToHost() {
+            if (hostConn) { try { hostConn.close(); } catch (e) {} hostConn = null; }
+            joinBtn.disabled = false;
+            joinBtn.textContent = '加入房間';
+            startHostPeer();
+            resetGame();
+        }
+
+        // Client 處理房主傳來的封包
+        function handleServerPacket(d) {
+            if (d.t === 'full') {
+                showToast('⚠️ 房間已滿 (最多 4 名真人)！');
+                leaveRoomToHost();
+                return;
+            }
+            if (d.t === 'welcome') {
+                mySlot = d.slot;
+                diffIndex = d.diffIndex || 0;
+                const df = DIFFICULTIES[diffIndex];
+                diffBtn.textContent = df.label;
+                diffBtn.className = df.cls;
+                resetGame();
+                showToast(`✅ 成功加入！你操作的是【${PLAYER_CONFIGS[mySlot].colorName}色】角色`);
+                return;
+            }
+            if (d.t === 'reset') {
+                while (bombsGroup.children.length) bombsGroup.remove(bombsGroup.children[0]);
+                while (fxGroup.children.length) fxGroup.remove(fxGroup.children[0]);
+                clientBombs.clear();
+                gameOver = false;
+                document.getElementById('gameover').classList.remove('show');
+                return;
+            }
+            if (d.t === 'toast') {
+                showToast(d.msg);
+                return;
+            }
+            if (d.t === 'ev') {
+                if (d.s) playSound(d.s);
+                if (d.ring) spawnRingFX(d.ring[0], d.ring[1], d.ring[2], d.ring[3], d.ring[4]);
+                if (d.part) spawnParticles(d.part[0], d.part[1], d.part[2], d.part[3], d.part[4]);
+                if (d.shake) screenShake = Math.max(screenShake, d.shake);
+                if (d.msg) showToast(d.msg);
+                return;
+            }
+            if (d.t === 'diff') {
+                diffIndex = d.i;
+                const df = DIFFICULTIES[diffIndex];
+                diffBtn.textContent = df.label;
+                diffBtn.className = df.cls;
+                showToast(`房主切換為【${df.label}】`);
+                return;
+            }
+            if (d.t === 'win') {
+                showWinnerModal(d.w);
+                return;
+            }
+            if (d.t === 'st') {
+                clientElapsed = d.tm;
+                let scoreChanged = false;
+                d.p.forEach((pd, i) => {
+                    const p = players[i];
+                    if (!p) return;
+                    p.targetX = pd[0];
+                    p.targetZ = pd[1];
+                    p.targetRot = pd[2];
+                    p.alive = !!pd[3];
+                    p.invulnTimer = pd[4] ? 1 : 0;
+                    if (p.ko !== pd[5] || p.name !== pd[6]) {
+                        p.ko = pd[5];
+                        p.name = pd[6];
+                        scoreChanged = true;
+                    }
+                    p.mesh.visible = p.alive;
+                    p.shield.visible = p.alive && p.invulnTimer > 0;
+                });
+                if (scoreChanged) updateScoreboard();
+
+                // 同步炸彈
+                const seen = new Set();
+                d.b.forEach(bd => {
+                    const [id, x, y, z, fuse] = bd;
+                    seen.add(id);
+                    let cb = clientBombs.get(id);
+                    if (!cb) {
+                        const m = createBombMesh();
+                        m.group.position.set(x, y, z);
+                        bombsGroup.add(m.group);
+                        cb = { id, x, y, z, tx: x, ty: y, tz: z, fuse, ...m };
+                        clientBombs.set(id, cb);
+                    } else {
+                        cb.tx = x; cb.ty = y; cb.tz = z; cb.fuse = fuse;
+                    }
+                });
+                for (const [id, cb] of clientBombs.entries()) {
+                    if (!seen.has(id)) {
+                        bombsGroup.remove(cb.group);
+                        clientBombs.delete(id);
+                    }
+                }
+            }
+        }
+
+        // ================= 6. 動作、踢球與爆炸 =================
+        function doPlayerAction(player) {
+            if (!player || !player.alive || gameOver) return;
+            if (tryKick(player, true)) return;
+
+            if (player.dashCooldown <= 0) {
+                player.dashTimer = 0.18;
+                player.dashCooldown = 1.0;
+                player.dashDirX = player.dirX;
+                player.dashDirZ = player.dirZ;
+                player.invulnTimer = Math.max(player.invulnTimer, 0.28);
+                spawnRingFX(player.x, player.z, 0x70a1ff, 1.4, 0.25);
+                playSound('dash');
+                broadcastEvent({ t: 'ev', s: 'dash', ring: [player.x, player.z, 0x70a1ff, 1.4, 0.25] });
+            }
+        }
+
+        function tryKick(player, isHumanPlayer = false) {
+            if (!player.alive || player.kickCooldown > 0 || gameOver) return false;
+            const maxRange = isHumanPlayer ? 2.25 : 1.45;
+            let best = null, bestDist = maxRange;
+
+            for (const b of bombs) {
+                if (b.exploded || b.y > 1.35) continue;
+                const d = Math.hypot(b.x - player.x, b.z - player.z);
+                if (d < bestDist) { bestDist = d; best = b; }
+            }
+            if (!best) return false;
+
+            const prevSpeed = Math.hypot(best.vx, best.vz);
+            const isCounter = isHumanPlayer && prevSpeed > 4.5 && best.lastKicker && best.lastKicker !== player;
+            const diff = DIFFICULTIES[diffIndex];
+            const kickSpeed = isHumanPlayer ? (isCounter ? 17.5 : 15.8) : diff.cpuKickSpeed;
+
+            best.vx = player.dirX * kickSpeed;
+            best.vz = player.dirZ * kickSpeed;
+            best.lastKicker = player;
+            best.graceTimer = 0.35;
+            best.bounces = 0;
+            player.kickCooldown = isHumanPlayer ? 0.22 : diff.cpuCooldown;
+
+            if (isCounter) {
+                best.fuse = Math.max(best.fuse, 2.2);
+                spawnRingFX(best.x, best.z, 0xffd32a, 1.5, 0.28);
+                playSound('counter');
+                const msg = `⚡ ${player.slot === mySlot ? '你' : player.name} 空手反踢了炸彈！`;
+                showToast(msg);
+                broadcastEvent({ t: 'ev', s: 'counter', ring: [best.x, best.z, 0xffd32a, 1.5, 0.28], msg });
+            } else {
+                spawnRingFX(best.x, best.z, 0xffffff, 0.9, 0.22);
+                playSound('kick');
+                broadcastEvent({ t: 'ev', s: 'kick', ring: [best.x, best.z, 0xffffff, 0.9, 0.22] });
+            }
+            return true;
+        }
+
+        function spawnRingFX(x, z, color, maxScale, duration) {
+            const mesh = new THREE.Mesh(
+                new THREE.RingGeometry(0.3, 0.5, 24),
+                new THREE.MeshBasicMaterial({ color, side: THREE.DoubleSide, transparent: true, opacity: 0.9 })
+            );
+            mesh.rotation.x = -Math.PI / 2;
+            mesh.position.set(x, 0.08, z);
+            fxGroup.add(mesh);
+            effects.push({ type: 'ring', mesh, age: 0, duration, maxScale });
+        }
+
+        function spawnParticles(x, z, color, count, speedScale = 1) {
+            const pGeo = new THREE.BoxGeometry(0.24, 0.24, 0.24);
+            for (let i = 0; i < count; i++) {
+                const mat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 1 });
+                const mesh = new THREE.Mesh(pGeo, mat);
+                mesh.position.set(x, 0.45, z);
+                fxGroup.add(mesh);
+                const ang = Math.random() * Math.PI * 2;
+                const spd = (2.5 + Math.random() * 5.5) * speedScale;
+                effects.push({
+                    type: 'particle', mesh, mat,
+                    vx: Math.cos(ang) * spd, vy: 3 + Math.random() * 4.5, vz: Math.sin(ang) * spd,
+                    age: 0, duration: 0.4 + Math.random() * 0.25
+                });
+            }
+        }
+
+        function detonateBomb(bomb) {
+            if (bomb.exploded) return;
+            bomb.exploded = true;
+            bombsGroup.remove(bomb.mesh);
+
+            playSound('explode');
+            screenShake = Math.max(screenShake, 0.32);
+            spawnRingFX(bomb.x, bomb.z, 0xff9f43, 4.6, 0.32);
+            spawnParticles(bomb.x, bomb.z, 0xff6b6b, 14, 1.2);
+            spawnParticles(bomb.x, bomb.z, 0xffd32a, 10, 0.9);
+            broadcastEvent({ t: 'ev', s: 'explode', shake: 0.32, ring: [bomb.x, bomb.z, 0xff9f43, 4.6, 0.32], part: [bomb.x, bomb.z, 0xff6b6b, 14, 1.2] });
+
+            const EXP_RADIUS = 2.05;
+            for (const other of bombs) {
+                if (!other.exploded && Math.hypot(other.x - bomb.x, other.z - bomb.z) < EXP_RADIUS) {
+                    other.fuse = Math.min(other.fuse, 0.12);
+                    if (!other.lastKicker && bomb.lastKicker) other.lastKicker = bomb.lastKicker;
+                }
+            }
+
+            for (const p of players) {
+                if (!p.alive || p.invulnTimer > 0) continue;
+                if (Math.hypot(p.x - bomb.x, p.z - bomb.z) <= EXP_RADIUS) {
+                    p.alive = false;
+                    p.respawnTimer = 2.0;
+                    p.mesh.visible = false;
+                    spawnParticles(p.x, p.z, p.color, 16, 1.1);
+                    broadcastEvent({ t: 'ev', part: [p.x, p.z, p.color, 16, 1.1] });
+
+                    if (bomb.lastKicker && bomb.lastKicker !== p) {
+                        bomb.lastKicker.ko++;
+                        const kName = bomb.lastKicker.slot === 0 ? '房主(藍)' : bomb.lastKicker.name;
+                        const vName = p.slot === 0 ? '房主(藍)' : p.name;
+                        const msg = bomb.bounces > 0 ? `🎯 ${kName} 精彩反彈擊殺 ${vName}！` : `💥 ${kName} 炸飛了 ${vName}！`;
+                        showToast(msg);
+                        broadcastEvent({ t: 'toast', msg });
+                        updateScoreboard();
+                        if (bomb.lastKicker.ko >= WIN_KO) {
+                            gameOver = true;
+                            showWinnerModal(bomb.lastKicker.slot);
+                            broadcastEvent({ t: 'win', w: bomb.lastKicker.slot });
+                        }
+                    }
+                }
+            }
+        }
+
+        function showWinnerModal(winnerSlot) {
+            gameOver = true;
+            playSound('win');
+            const w = players[winnerSlot];
+            const isMe = (winnerSlot === mySlot);
+            document.getElementById('winner-title').textContent = isMe ? '🏆 你贏得了冠軍！' : `👑 ${w.name} (${w.colorName}) 獲勝！`;
+            document.getElementById('winner-desc').textContent = isMe
+                ? '神級走位加上反彈神射，你是炸彈躲避球之王！'
+                : (isHost ? '再來一局復仇吧！' : '等待房主按下「再玩一局」...');
+            document.getElementById('play-again-btn').style.display = isHost ? '' : 'none';
+            document.getElementById('gameover').classList.add('show');
+        }
+
+        // ================= 7. 輸入控制 =================
+        const keys = {};
+        const touchDir = { up: false, down: false, left: false, right: false };
+        let lastSentInput = { dx: 0, dz: 0 };
+
+        function getLocalInputDir() {
+            let dx = 0, dz = 0;
+            if (keys['ArrowUp'] || keys['KeyW'] || touchDir.up) dz -= 1;
+            if (keys['ArrowDown'] || keys['KeyS'] || touchDir.down) dz += 1;
+            if (keys['ArrowLeft'] || keys['KeyA'] || touchDir.left) dx -= 1;
+            if (keys['ArrowRight'] || keys['KeyD'] || touchDir.right) dx += 1;
+            const l = Math.hypot(dx, dz);
+            if (l > 0) { dx /= l; dz /= l; }
+            return { dx, dz };
+        }
+
+        function triggerLocalAction() {
+            if (isHost) {
+                doPlayerAction(players[0]);
+            } else if (hostConn && hostConn.open) {
+                hostConn.send({ t: 'act' });
+            }
+        }
+
+        window.addEventListener('keydown', e => {
+            if (document.activeElement && document.activeElement.tagName === 'INPUT') {
+                if (e.key === 'Enter') joinRoom(joinInput.value);
+                return;
+            }
+            if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) e.preventDefault();
+            initAudio();
+            keys[e.code] = true;
+            if (e.code === 'Space' && !e.repeat) triggerLocalAction();
+        });
+        window.addEventListener('keyup', e => { keys[e.code] = false; });
+
+        document.querySelectorAll('.d-btn').forEach(btn => {
+            const d = btn.dataset.dir;
+            const on = e => { e.preventDefault(); initAudio(); touchDir[d] = true; btn.classList.add('active'); };
+            const off = e => { e.preventDefault(); touchDir[d] = false; btn.classList.remove('active'); };
+            btn.addEventListener('touchstart', on, { passive: false });
+            btn.addEventListener('touchend', off);
+            btn.addEventListener('touchcancel', off);
+            btn.addEventListener('mousedown', on);
+            window.addEventListener('mouseup', off);
+        });
+
+        const kickBtn = document.getElementById('kick-btn');
+        const onKickBtn = e => { e.preventDefault(); initAudio(); triggerLocalAction(); };
+        kickBtn.addEventListener('touchstart', onKickBtn, { passive: false });
+        kickBtn.addEventListener('mousedown', onKickBtn);
+
+        copyRoomBtn.addEventListener('click', function () {
+            this.blur();
+            if (navigator.clipboard && myRoomCode) {
+                navigator.clipboard.writeText(myRoomCode);
+                showToast(`📋 已複製房號：${myRoomCode}，快傳給朋友吧！`);
+            }
+        });
+        joinBtn.addEventListener('click', function () { this.blur(); initAudio(); joinRoom(joinInput.value); });
+        leaveBtn.addEventListener('click', function () { this.blur(); leaveRoomToHost(); });
+
+        diffBtn.addEventListener('click', function () {
+            this.blur();
+            if (!isHost) return;
+            diffIndex = (diffIndex + 1) % DIFFICULTIES.length;
+            const d = DIFFICULTIES[diffIndex];
+            this.textContent = d.label;
+            this.className = d.cls;
+            showToast(`已切換為【${d.label}】`);
+            broadcastEvent({ t: 'diff', i: diffIndex });
+        });
+        document.getElementById('sound-btn').addEventListener('click', function () {
+            this.blur();
+            soundEnabled = !soundEnabled;
+            this.textContent = soundEnabled ? '音效：開' : '音效：關';
+        });
+        restartBtn.addEventListener('click', function () {
+            this.blur(); initAudio();
+            if (isHost) resetGame();
+        });
+        document.getElementById('play-again-btn').addEventListener('click', function () {
+            this.blur();
+            if (isHost) resetGame();
+        });
+
+        // ================= 8. CPU AI =================
+        function updateCPU(cpu) {
+            const diff = DIFFICULTIES[diffIndex];
+            let moveX = 0, moveZ = 0, dangerBomb = null, minThreat = 3.8;
+
+            for (const b of bombs) {
+                if (b.exploded) continue;
+                const spd = Math.hypot(b.vx, b.vz);
+                const dist = Math.hypot(b.x - cpu.x, b.z - cpu.z);
+                if (spd > 3.5 && dist < minThreat && !(b.lastKicker === cpu && b.graceTimer > 0)) {
+                    const dot = (cpu.x - b.x) * b.vx + (cpu.z - b.z) * b.vz;
+                    if (dot > 0) { minThreat = dist; dangerBomb = b; }
+                } else if (b.fuse < 1.3 && dist < 2.2) {
+                    moveX += (cpu.x - b.x); moveZ += (cpu.z - b.z);
+                }
+            }
+
+            if (dangerBomb) {
+                const perpX = -dangerBomb.vz, perpZ = dangerBomb.vx;
+                const side = ((cpu.x - dangerBomb.x) * perpX + (cpu.z - dangerBomb.z) * perpZ) >= 0 ? 1 : -1;
+                moveX = perpX * side; moveZ = perpZ * side;
+            } else {
+                let targetBomb = null, bestDist = Infinity;
+                for (const b of bombs) {
+                    if (b.exploded || b.y > 1.2) continue;
+                    const spd = Math.hypot(b.vx, b.vz);
+                    if (spd > 6 && b.lastKicker === cpu) continue;
+                    const d = Math.hypot(b.x - cpu.x, b.z - cpu.z);
+                    if (d < bestDist) { bestDist = d; targetBomb = b; }
+                }
+
+                if (targetBomb) {
+                    if (bestDist < 1.4 && cpu.kickCooldown <= 0) {
+                        let targetEnemy = null, enemyDist = Infinity;
+                        for (const other of players) {
+                            if (other !== cpu && other.alive) {
+                                const ed = Math.hypot(other.x - cpu.x, other.z - cpu.z);
+                                if (ed < enemyDist) { enemyDist = ed; targetEnemy = other; }
+                            }
+                        }
+                        if (targetEnemy) {
+                            const aimAngle = Math.atan2(targetEnemy.x - targetBomb.x, targetEnemy.z - targetBomb.z) + (Math.random() - 0.5) * diff.cpuAimJitter;
+                            cpu.dirX = Math.sin(aimAngle); cpu.dirZ = Math.cos(aimAngle);
+                            cpu.mesh.rotation.y = aimAngle;
+                            tryKick(cpu, false);
+                        }
+                    } else {
+                        moveX += targetBomb.x - cpu.x; moveZ += targetBomb.z - cpu.z;
+                    }
+                } else {
+                    moveX += -cpu.x * 0.4; moveZ += -cpu.z * 0.4;
+                }
+            }
+            const len = Math.hypot(moveX, moveZ);
+            if (len > 0.05) return { dx: moveX / len, dz: moveZ / len };
+            return { dx: 0, dz: 0 };
+        }
+
+        // ================= 9. 主迴圈 =================
+        let lastTime = performance.now();
+        let netSyncTimer = 0;
+
+        function animate(now) {
+            requestAnimationFrame(animate);
+            const dt = Math.min((now - lastTime) / 1000, 0.05);
+            lastTime = now;
+
+            if (isHost) {
+                // ===== 房主模擬物理與 AI =====
+                if (!gameOver) {
+                    const elapsed = Math.floor((now - gameStartTime) / 1000);
+                    const mm = String(Math.floor(elapsed / 60)).padStart(2, '0');
+                    const ss = String(elapsed % 60).padStart(2, '0');
+                    const humanCount = 1 + clientConns.size;
+                    document.getElementById('status-line').textContent = `房主模式：${humanCount} 真人 + ${4 - humanCount} CPU · 先搶 ${WIN_KO} KO · ${mm}:${ss}`;
+
+                    spawnTimer -= dt;
+                    if (spawnTimer <= 0) { spawnBomb(); spawnTimer = 1.05; }
+
+                    const PLAYER_SPEED = 6.3, CPU_SPEED = DIFFICULTIES[diffIndex].cpuSpeed, P_RADIUS = 0.42;
+
+                    for (const p of players) {
+                        if (p.kickCooldown > 0) p.kickCooldown -= dt;
+                        if (p.dashCooldown > 0) p.dashCooldown -= dt;
+
+                        if (!p.alive) {
+                            p.respawnTimer -= dt;
+                            if (p.respawnTimer <= 0) {
+                                p.alive = true; p.x = p.spawn[0]; p.z = p.spawn[1];
+                                p.invulnTimer = 2.0; p.dashTimer = 0; p.mesh.visible = true;
+                            }
+                            continue;
+                        }
+
+                        if (p.invulnTimer > 0) {
+                            p.invulnTimer -= dt;
+                            p.shield.visible = true;
+                            p.shield.scale.setScalar(1 + Math.sin(now * 0.02) * 0.06);
+                        } else {
+                            p.shield.visible = false;
+                        }
+
+                        // 處理遠端玩家的瞬發動作
+                        if (p.pendingAction) {
+                            p.pendingAction = false;
+                            doPlayerAction(p);
+                        }
+
+                        if (p.dashTimer > 0) {
+                            p.dashTimer -= dt;
+                            p.x = Math.max(-HALF_W + P_RADIUS, Math.min(HALF_W - P_RADIUS, p.x + p.dashDirX * 15.0 * dt));
+                            p.z = Math.max(-HALF_H + P_RADIUS, Math.min(HALF_H - P_RADIUS, p.z + p.dashDirZ * 15.0 * dt));
+                        } else {
+                            let dx = 0, dz = 0;
+                            if (p.slot === 0) {
+                                const inp = getLocalInputDir();
+                                dx = inp.dx; dz = inp.dz;
+                            } else if (p.isHuman) {
+                                dx = p.remoteInput.dx; dz = p.remoteInput.dz;
+                            } else {
+                                const ai = updateCPU(p);
+                                dx = ai.dx; dz = ai.dz;
+                            }
+
+                            if (dx !== 0 || dz !== 0) {
+                                const spd = p.isHuman ? PLAYER_SPEED : CPU_SPEED;
+                                p.x = Math.max(-HALF_W + P_RADIUS, Math.min(HALF_W - P_RADIUS, p.x + dx * spd * dt));
+                                p.z = Math.max(-HALF_H + P_RADIUS, Math.min(HALF_H - P_RADIUS, p.z + dz * spd * dt));
+                                p.dirX = dx; p.dirZ = dz;
+                                p.mesh.rotation.y = Math.atan2(dx, dz);
+                            }
+                        }
+                        p.mesh.position.set(p.x, 0, p.z);
+                    }
+
+                    const B_RADIUS = 0.42;
+                    const me = players[0];
+                    let nearestMeBomb = null, nearestMeDist = 2.25;
+                    if (me && me.alive) {
+                        for (const b of bombs) {
+                            if (b.exploded || b.y > 1.35) continue;
+                            const d = Math.hypot(b.x - me.x, b.z - me.z);
+                            if (d < nearestMeDist) { nearestMeDist = d; nearestMeBomb = b; }
+                        }
+                    }
+
+                    for (let i = bombs.length - 1; i >= 0; i--) {
+                        const b = bombs[i];
+                        if (b.exploded) { bombs.splice(i, 1); continue; }
+
+                        if (b.y > 0.42 || b.vy !== 0) {
+                            b.vy -= 26 * dt; b.y += b.vy * dt;
+                            if (b.y <= 0.42) { b.y = 0.42; b.vy = Math.abs(b.vy) > 3.5 ? -b.vy * 0.35 : 0; }
+                        }
+                        if (b.graceTimer > 0) b.graceTimer -= dt;
+
+                        b.x += b.vx * dt; b.z += b.vz * dt;
+                        const drag = Math.pow(0.76, dt); b.vx *= drag; b.vz *= drag;
+                        const spd = Math.hypot(b.vx, b.vz);
+                        if (spd < 0.3) { b.vx = 0; b.vz = 0; }
+
+                        let bounced = false;
+                        if (b.x > HALF_W - B_RADIUS) { b.x = HALF_W - B_RADIUS; b.vx = -Math.abs(b.vx); bounced = true; }
+                        if (b.x < -HALF_W + B_RADIUS) { b.x = -HALF_W + B_RADIUS; b.vx = Math.abs(b.vx); bounced = true; }
+                        if (b.z > HALF_H - B_RADIUS) { b.z = HALF_H - B_RADIUS; b.vz = -Math.abs(b.vz); bounced = true; }
+                        if (b.z < -HALF_H + B_RADIUS) { b.z = -HALF_H + B_RADIUS; b.vz = Math.abs(b.vz); bounced = true; }
+
+                        if (bounced && spd > 2.5) {
+                            b.bounces++;
+                            playSound('bounce');
+                            spawnParticles(b.x, b.z, 0xffffff, 4, 0.5);
+                            broadcastEvent({ t: 'ev', s: 'bounce', part: [b.x, b.z, 0xffffff, 4, 0.5] });
+                        }
+
+                        if (spd > 4.5) {
+                            b.trailTimer -= dt;
+                            if (b.trailTimer <= 0) {
+                                b.trailTimer = 0.045;
+                                const tMesh = new THREE.Mesh(
+                                    new THREE.SphereGeometry(0.18, 8, 8),
+                                    new THREE.MeshBasicMaterial({ color: b.bounces > 0 ? 0xff4757 : 0x70a1ff, transparent: true, opacity: 0.7 })
+                                );
+                                tMesh.position.set(b.x, 0.42, b.z); fxGroup.add(tMesh);
+                                effects.push({ type: 'fade', mesh: tMesh, age: 0, duration: 0.22 });
+                            }
+                        }
+
+                        if (spd > 3.2) {
+                            for (const p of players) {
+                                if (!p.alive || p.invulnTimer > 0) continue;
+                                if (p === b.lastKicker && b.graceTimer > 0) continue;
+                                if (Math.hypot(b.x - p.x, b.z - p.z) < 0.85) { detonateBomb(b); break; }
+                            }
+                            if (b.exploded) { bombs.splice(i, 1); continue; }
+                        }
+
+                        b.fuse -= dt;
+                        b.mesh.position.set(b.x, b.y, b.z);
+                        b.ring.visible = (b === nearestMeBomb);
+
+                        if (b.fuse <= 2.2) {
+                            const flash = Math.sin(b.fuse * 22) > 0;
+                            b.mat.color.setHex(flash ? 0xff3f34 : 0x1b1e23);
+                            const s = flash ? 1.16 : 0.96; b.mesh.scale.set(s, s, s);
+                        } else {
+                            b.mat.color.setHex(0x1b1e23); b.mesh.scale.set(1, 1, 1);
+                        }
+                        b.spark.scale.setScalar(0.8 + Math.sin(now * 0.03) * 0.35);
+
+                        if (b.fuse <= 0) { detonateBomb(b); bombs.splice(i, 1); }
+                    }
+
+                    // 廣播狀態給所有連線中的玩家 (每秒 25 次)
+                    netSyncTimer += dt;
+                    if (clientConns.size > 0 && netSyncTimer >= 0.04) {
+                        netSyncTimer = 0;
+                        broadcastEvent({
+                            t: 'st',
+                            tm: elapsed,
+                            p: players.map(p => [
+                                +p.x.toFixed(2), +p.z.toFixed(2), +p.mesh.rotation.y.toFixed(2),
+                                p.alive ? 1 : 0, p.invulnTimer > 0 ? 1 : 0, p.ko, p.name
+                            ]),
+                            b: bombs.map(b => [b.id, +b.x.toFixed(2), +b.y.toFixed(2), +b.z.toFixed(2), +b.fuse.toFixed(1)])
+                        });
+                    }
+                }
+            } else {
+                // ===== 遠端玩家 (Client) 平滑插值與送出按鍵 =====
+                const mm = String(Math.floor(clientElapsed / 60)).padStart(2, '0');
+                const ss = String(clientElapsed % 60).padStart(2, '0');
+                document.getElementById('status-line').textContent = `連線對戰中 · 先搶 ${WIN_KO} 次 KO 獲勝 · ${mm}:${ss}`;
+
+                const inp = getLocalInputDir();
+                netSyncTimer += dt;
+                if (hostConn && hostConn.open && (inp.dx !== lastSentInput.dx || inp.dz !== lastSentInput.dz || netSyncTimer >= 0.1)) {
+                    netSyncTimer = 0;
+                    lastSentInput = inp;
+                    hostConn.send({ t: 'in', dx: +inp.dx.toFixed(2), dz: +inp.dz.toFixed(2) });
+                }
+
+                for (const p of players) {
+                    p.x += (p.targetX - p.x) * 0.35;
+                    p.z += (p.targetZ - p.z) * 0.35;
+                    p.mesh.position.set(p.x, 0, p.z);
+                    p.mesh.rotation.y = p.targetRot;
+                    if (p.shield.visible) p.shield.scale.setScalar(1 + Math.sin(now * 0.02) * 0.06);
+                }
+
+                const me = players[mySlot];
+                let nearestMeBomb = null, nearestMeDist = 2.25;
+                if (me && me.alive) {
+                    for (const cb of clientBombs.values()) {
+                        if (cb.ty > 1.35) continue;
+                        const d = Math.hypot(cb.tx - me.x, cb.tz - me.z);
+                        if (d < nearestMeDist) { nearestMeDist = d; nearestMeBomb = cb; }
+                    }
+                }
+
+                for (const cb of clientBombs.values()) {
+                    cb.x += (cb.tx - cb.x) * 0.42;
+                    cb.y += (cb.ty - cb.y) * 0.42;
+                    cb.z += (cb.tz - cb.z) * 0.42;
+                    cb.group.position.set(cb.x, cb.y, cb.z);
+                    cb.ring.visible = (cb === nearestMeBomb);
+
+                    if (cb.fuse <= 2.2) {
+                        const flash = Math.sin(cb.fuse * 22) > 0;
+                        cb.mat.color.setHex(flash ? 0xff3f34 : 0x1b1e23);
+                        const s = flash ? 1.16 : 0.96; cb.group.scale.set(s, s, s);
+                    } else {
+                        cb.mat.color.setHex(0x1b1e23); cb.group.scale.set(1, 1, 1);
+                    }
+                    cb.spark.scale.setScalar(0.8 + Math.sin(now * 0.03) * 0.35);
+                }
+            }
+
+            // 特效更新 (房主與遠端玩家共用)
+            for (let i = effects.length - 1; i >= 0; i--) {
+                const fx = effects[i];
+                fx.age += dt;
+                const t = fx.age / fx.duration;
+                if (t >= 1) { fxGroup.remove(fx.mesh); effects.splice(i, 1); continue; }
+                if (fx.type === 'ring') {
+                    const s = 1 + t * fx.maxScale; fx.mesh.scale.set(s, s, 1); fx.mesh.material.opacity = 1 - t;
+                } else if (fx.type === 'particle') {
+                    fx.vy -= 14 * dt;
+                    fx.mesh.position.x += fx.vx * dt;
+                    fx.mesh.position.y = Math.max(0.1, fx.mesh.position.y + fx.vy * dt);
+                    fx.mesh.position.z += fx.vz * dt;
+                    fx.mat.opacity = 1 - t; fx.mesh.scale.setScalar(1 - t * 0.6);
+                } else if (fx.type === 'fade') {
+                    fx.mesh.material.opacity = (1 - t) * 0.65; fx.mesh.scale.setScalar(1 - t * 0.7);
+                }
+            }
+
+            if (screenShake > 0) {
+                camera.position.set(
+                    baseCamPos.x + (Math.random() - 0.5) * screenShake,
+                    baseCamPos.y + (Math.random() - 0.5) * screenShake,
+                    baseCamPos.z + (Math.random() - 0.5) * screenShake
+                );
+                screenShake = Math.max(0, screenShake - dt * 1.8);
+            } else {
+                camera.position.copy(baseCamPos);
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        startHostPeer();
+        resetGame();
+        requestAnimationFrame(animate);
+    </script>
+</body>
+</html>
