@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- bomberman_dodgeball v2.1 MQTT hardened 2026-11-15 -->
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
@@ -352,6 +353,16 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://unpkg.com/mqtt@5.15.2/dist/mqtt.min.js"></script>
+    <script>
+        // mqtt.js 備援：unpkg 載入失敗時改用 jsdelivr；兩邊都失敗由啟動守門顯示單機模式
+        (function () {
+            if (typeof window.mqtt !== 'undefined') return;
+            var s = document.createElement('script');
+            s.src = 'https://cdn.jsdelivr.net/npm/mqtt@5.15.2/dist/mqtt.min.js';
+            s.onerror = function () { window.__mqttFailed = true; };
+            document.head.appendChild(s);
+        })();
+    </script>
     <script>
         // ================= 1. 難度與音效合成器 =================
         const DIFFICULTIES = [
@@ -777,6 +788,13 @@
         }
 
         function startHostMqtt(brokerIdx = 0) {
+            if (typeof mqtt === 'undefined') {
+                roomPill.className = 'glass-pill room-pill connecting';
+                roomPill.textContent = '⚠️ 單機模式（連線元件載入失敗）';
+                copyRoomBtn.style.display = 'none';
+                showToast('連線元件載入失敗，請檢查網路後重新整理');
+                return;
+            }
             cleanupMqtt();
             isHost = true; mySlot = 0; remoteClients.clear();
             diffBtn.disabled = false; restartBtn.disabled = false;
@@ -784,8 +802,11 @@
 
             if (brokerIdx >= BROKERS.length) {
                 roomPill.className = 'glass-pill room-pill connecting';
-                roomPill.textContent = '⚠️ 單機模式';
+                roomPill.textContent = '⚠️ 單機模式（3 個連線點都失敗，點我重試）';
                 copyRoomBtn.style.display = 'none';
+                roomPill.style.pointerEvents = 'auto';
+                roomPill.style.cursor = 'pointer';
+                roomPill.onclick = () => { roomPill.onclick = null; roomPill.style.pointerEvents = ''; roomPill.style.cursor = ''; startHostMqtt(0); };
                 return;
             }
 
@@ -793,8 +814,9 @@
             const code = String(Math.floor(b.min + Math.random() * (b.max - b.min + 1)));
             myRoomCode = code;
 
+            const brokerHost = b.url.replace('wss://', '').split('/')[0];
             roomPill.className = 'glass-pill room-pill connecting';
-            roomPill.textContent = '⏳ 連線中';
+            roomPill.textContent = `⏳ 連線中·${brokerHost}`;
             copyRoomBtn.style.display = 'none';
 
             let settled = false;
@@ -803,7 +825,7 @@
                 protocolVersion: 4,
                 clean: true,
                 reconnectPeriod: 0,
-                connectTimeout: 4000
+                connectTimeout: 8000
             });
             mqttClient = client;
 
@@ -811,7 +833,7 @@
                 if (!settled && mqttClient === client) {
                     startHostMqtt(brokerIdx + 1);
                 }
-            }, 4200);
+            }, 8500);
 
             client.on('connect', () => {
                 settled = true;
@@ -910,6 +932,7 @@
             const codeNum = parseInt(code, 10);
             if (!/^\d{4}$/.test(code)) { showToast('請輸入 4 位數字房號！'); return; }
             if (code === myRoomCode && isHost) { showToast('這就是你自己的房間喔！'); return; }
+            if (typeof mqtt === 'undefined') { showToast('連線元件尚未載入完成，請稍後再試'); return; }
 
             joinBtn.disabled = true; joinBtn.textContent = '連線中...';
             roomPill.className = 'glass-pill room-pill connecting';
@@ -926,7 +949,7 @@
                 protocolVersion: 4,
                 clean: true,
                 reconnectPeriod: 0,
-                connectTimeout: 5000
+                connectTimeout: 8000
             });
             mqttClient = client;
 
@@ -936,7 +959,7 @@
                     showToast('❌ 找不到此房號或房主沒開著頁面');
                     leaveRoomToHost();
                 }
-            }, 7000);
+            }, 10000);
 
             client.on('connect', () => {
                 client.subscribe(topicH2C(code), { qos: 0 }, (err) => {
@@ -1599,7 +1622,19 @@
         window.addEventListener('resize', updateCameraFraming);
         window.addEventListener('orientationchange', () => setTimeout(updateCameraFraming, 120));
 
-        startHostMqtt(0);
+        // 啟動時等 mqtt 連線元件就緒（unpkg 被擋時等 jsdelivr 備援載入），最多等 6 秒
+        let mqttBootTries = 0;
+        (function bootMqtt() {
+            if (typeof mqtt !== 'undefined') { startHostMqtt(0); return; }
+            if (++mqttBootTries > 12) {
+                roomPill.className = 'glass-pill room-pill connecting';
+                roomPill.textContent = '⚠️ 單機模式（連線元件載入失敗）';
+                copyRoomBtn.style.display = 'none';
+                showToast('連線元件載入失敗，請檢查網路後重新整理');
+                return;
+            }
+            setTimeout(bootMqtt, 500);
+        })();
         resetGame();
         requestAnimationFrame(animate);
     </script>
