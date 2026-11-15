@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<!-- bomberman_dodgeball v4.1 timeouts 8s + mqtt fallback 2026-11-15 -->
+<!-- bomberman_dodgeball v5.1 timeouts 8s + mqtt fallback 2026-11-15 -->
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>3D 炸彈躲避球 (極順連線優化版)</title>
+    <title>3D 炸彈躲避球 (UDP直連極速版)</title>
     <style>
         * { box-sizing: border-box; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
         html, body {
@@ -183,7 +183,7 @@
 
     <div id="joystick-zone"><div id="joystick-knob"></div></div>
     <div id="kick-btn"><span>⚽</span>踢 / 衝</div>
-    <div id="hint">WASD/方向鍵 移動 · <b>空白鍵</b>：有球踢球 ／ 沒球衝刺閃避 · 移動流暢極速版</div>
+    <div id="hint">WASD/方向鍵 移動 · <b>空白鍵</b>：有球踢球 ／ 沒球衝刺閃避 · UDP直連＋雲端備援版</div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://unpkg.com/mqtt@5.15.2/dist/mqtt.min.js"></script>
@@ -198,9 +198,7 @@
         })();
     </script>
     <script>
-        ['gesturestart', 'gesturechange', 'gestureend'].forEach(ev => {
-            document.addEventListener(ev, e => e.preventDefault(), { passive: false });
-        });
+        ['gesturestart', 'gesturechange', 'gestureend'].forEach(ev => document.addEventListener(ev, e => e.preventDefault(), { passive: false }));
         let lastTouchEnd = 0;
         document.addEventListener('touchend', e => {
             const t = e.target;
@@ -261,7 +259,7 @@
             }
         }
 
-        // ===== 2. 3D 場景與 iPad 效能／縮放優化 =====
+        // ===== 2. 3D 場景 (移除吃效能動態陰影，改為極速貼地陰影，iPad 穩跑 60fps) =====
         const ARENA_W = 16, ARENA_H = 12, HALF_W = 8, HALF_H = 6, WIN_KO = 5;
         const PLAYER_SPEED = 6.3, P_RADIUS = 0.42, B_RADIUS = 0.42;
 
@@ -271,9 +269,7 @@
         const baseCamPos = new THREE.Vector3(0, 18, 13.5);
 
         const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5)); // iPad Retina 降負載保持滿幀 60fps
-        renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFShadowMap;
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
         document.body.appendChild(renderer.domElement);
 
         function updateCameraFraming() {
@@ -295,13 +291,9 @@
         }
         updateCameraFraming();
 
-        scene.add(new THREE.AmbientLight(0xffffff, 0.55));
-        const dirLight = new THREE.DirectionalLight(0xffffff, 0.85);
-        dirLight.position.set(7, 22, 10); dirLight.castShadow = true;
-        dirLight.shadow.mapSize.width = 1024; dirLight.shadow.mapSize.height = 1024;
-        dirLight.shadow.camera.near = 1; dirLight.shadow.camera.far = 45;
-        dirLight.shadow.camera.left = -12; dirLight.shadow.camera.right = 12;
-        dirLight.shadow.camera.top = 12; dirLight.shadow.camera.bottom = -12;
+        scene.add(new THREE.AmbientLight(0xffffff, 0.62));
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.82);
+        dirLight.position.set(7, 22, 10);
         scene.add(dirLight);
 
         function createCourtTexture() {
@@ -330,17 +322,17 @@
         }
 
         const floor = new THREE.Mesh(new THREE.PlaneGeometry(ARENA_W, ARENA_H), new THREE.MeshStandardMaterial({ map: createCourtTexture(), roughness: 0.85 }));
-        floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
+        floor.rotation.x = -Math.PI / 2; scene.add(floor);
 
         const wallGeo = new THREE.BoxGeometry(1, 1.15, 1), wallMat = new THREE.MeshStandardMaterial({ map: createWallTexture(), roughness: 0.55 });
         for (let x = -HALF_W - 0.5; x <= HALF_W + 0.5; x += 1) [-HALF_H - 0.5, HALF_H + 0.5].forEach(z => {
-            const w = new THREE.Mesh(wallGeo, wallMat); w.position.set(x, 0.575, z); w.castShadow = true; w.receiveShadow = true; scene.add(w);
+            const w = new THREE.Mesh(wallGeo, wallMat); w.position.set(x, 0.575, z); scene.add(w);
         });
         for (let z = -HALF_H + 0.5; z <= HALF_H - 0.5; z += 1) [-HALF_W - 0.5, HALF_W + 0.5].forEach(x => {
-            const w = new THREE.Mesh(wallGeo, wallMat); w.position.set(x, 0.575, z); w.castShadow = true; w.receiveShadow = true; scene.add(w);
+            const w = new THREE.Mesh(wallGeo, wallMat); w.position.set(x, 0.575, z); scene.add(w);
         });
 
-        // ===== 3. 共用幾何體與物件池 =====
+        // ===== 3. 共用幾何體與物件 =====
         const PLAYER_CONFIGS = [
             { slot: 0, defaultName: '藍 CPU', colorName: '藍', color: '#2e86de', spawn: [-5.5, -3.5] },
             { slot: 1, defaultName: '紅 CPU', colorName: '紅', color: '#ee5253', spawn: [5.5, 3.5] },
@@ -351,13 +343,14 @@
         let gameStartTime = 0, clientElapsed = 0, spawnTimer = 0, spawnQuadrant = 0, gameOver = false, screenShake = 0;
 
         const BROKERS = [
-            { url: 'wss://broker.mqttgo.io:8084/mqtt', min: 1000, max: 3999, label: '台灣' },
-            { url: 'wss://broker.emqx.io:8084/mqtt', min: 4000, max: 6999, label: '亞太' },
+            { url: 'wss://broker.emqx.io:8084/mqtt', min: 1000, max: 3999, label: '亞太節點' },
+            { url: 'wss://broker.mqttgo.io:8084/mqtt', min: 4000, max: 6999, label: '台灣機房' },
             { url: 'wss://mqtt.eclipseprojects.io:443/mqtt', min: 7000, max: 9999, label: '443通道' }
         ];
         const myClientId = 'bd_' + Math.random().toString(36).slice(2, 10);
         let currentBrokerIdx = 0, isHost = true, mySlot = 0, mqttClient = null, myRoomCode = '';
         let remoteClients = new Map(), joinTimeout = null, helloInterval = null, pingInterval = null, lastHostPacketAt = 0;
+        let clientRtcPc = null, clientRtcDc = null, clientRtcOpen = false, clientIceQueue = [];
 
         const playersGroup = new THREE.Group(), bombsGroup = new THREE.Group(), fxGroup = new THREE.Group();
         scene.add(playersGroup); scene.add(bombsGroup); scene.add(fxGroup);
@@ -365,6 +358,7 @@
         const cylGeo = new THREE.CylinderGeometry(0.36, 0.36, 0.65, 20), domeGeo = new THREE.SphereGeometry(0.36, 20, 14);
         const eyeGeo = new THREE.SphereGeometry(0.065, 10, 10), eyeMat = new THREE.MeshBasicMaterial({ color: 0x111111 });
         const shieldGeo = new THREE.SphereGeometry(0.68, 16, 12), shieldMat = new THREE.MeshBasicMaterial({ color: 0x70a1ff, transparent: true, opacity: 0.28 });
+        const blobShadowGeo = new THREE.CircleGeometry(0.42, 18), blobShadowMat = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.32 });
 
         const selfMarkerGroup = new THREE.Group();
         const selfRing = new THREE.Mesh(new THREE.RingGeometry(0.45, 0.56, 28), new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide }));
@@ -377,15 +371,15 @@
         const sparkMat = new THREE.MeshBasicMaterial({ color: 0xffd32a }), targetRingGeo = new THREE.RingGeometry(0.5, 0.68, 22);
         const targetRingMat = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent: true, opacity: 0.95 });
 
-        // 共用特效幾何體 (防止 iPad GPU 記憶體洩漏卡頓)
         const ringFxGeo = new THREE.RingGeometry(0.3, 0.5, 20);
         const partFxGeo = new THREE.BoxGeometry(0.24, 0.24, 0.24);
         const trailFxGeo = new THREE.SphereGeometry(0.18, 8, 8);
 
         function createPlayerMesh(cfg) {
             const g = new THREE.Group(), mat = new THREE.MeshStandardMaterial({ color: cfg.color, roughness: 0.35 });
-            const body = new THREE.Mesh(cylGeo, mat); body.position.y = 0.42; body.castShadow = true; g.add(body);
-            const head = new THREE.Mesh(domeGeo, mat); head.position.y = 0.76; head.castShadow = true; g.add(head);
+            const sh = new THREE.Mesh(blobShadowGeo, blobShadowMat); sh.rotation.x = -Math.PI / 2; sh.position.y = 0.015; g.add(sh);
+            const body = new THREE.Mesh(cylGeo, mat); body.position.y = 0.42; g.add(body);
+            const head = new THREE.Mesh(domeGeo, mat); head.position.y = 0.76; g.add(head);
             const eyeL = new THREE.Mesh(eyeGeo, eyeMat); eyeL.position.set(-0.13, 0.8, 0.32);
             const eyeR = new THREE.Mesh(eyeGeo, eyeMat); eyeR.position.set(0.13, 0.8, 0.32);
             g.add(eyeL); g.add(eyeR);
@@ -394,7 +388,8 @@
         }
         function createBombMesh() {
             const g = new THREE.Group(), mat = new THREE.MeshStandardMaterial({ color: 0x1b1e23, roughness: 0.25, metalness: 0.75 });
-            const sphere = new THREE.Mesh(bombSphereGeo, mat); sphere.castShadow = true; g.add(sphere);
+            const sh = new THREE.Mesh(blobShadowGeo, blobShadowMat); sh.rotation.x = -Math.PI / 2; sh.position.y = -0.40; g.add(sh);
+            const sphere = new THREE.Mesh(bombSphereGeo, mat); g.add(sphere);
             const fuse = new THREE.Mesh(fuseGeo, fuseMat); fuse.position.set(0, 0.44, 0); fuse.rotation.z = -0.25; g.add(fuse);
             const spark = new THREE.Mesh(sparkGeo, sparkMat); spark.position.set(0.05, 0.55, 0); g.add(spark);
             const ring = new THREE.Mesh(targetRingGeo, targetRingMat); ring.rotation.x = -Math.PI / 2; ring.position.y = -0.39; ring.visible = false; g.add(ring);
@@ -406,7 +401,16 @@
         const menuDrawer = document.getElementById('menu-drawer'), menuToggle = document.getElementById('menu-toggle');
         const closeMenuBtn = document.getElementById('close-menu-btn'), roomPill = document.getElementById('room-pill');
         const timerPill = document.getElementById('timer-pill'), fsBtn = document.getElementById('fs-btn'), toastEl = document.getElementById('toast');
-        let toastTimer = null;
+        const statusLineEl = document.getElementById('status-line');
+        let toastTimer = null, lastTimerStr = '', lastStatusStr = '';
+
+        function setTimerText(sec) {
+            const s = `${String(Math.floor(sec / 60)).padStart(2, '0')}:${String(sec % 60).padStart(2, '0')}`;
+            if (s !== lastTimerStr) { lastTimerStr = s; timerPill.textContent = s; }
+        }
+        function setStatusText(s) {
+            if (s !== lastStatusStr) { lastStatusStr = s; statusLineEl.textContent = s; }
+        }
 
         function setMenuOpen(open) { menuDrawer.classList.toggle('open', open); }
         function closeMenuIfOpen() { if (menuDrawer.classList.contains('open')) setMenuOpen(false); }
@@ -448,7 +452,7 @@
                 const hasClient = isHost && occupied.has(idx);
                 return {
                     ...cfg, name: idx === 0 ? '房主' : (hasClient ? `玩家${idx + 1}` : cfg.defaultName),
-                    isHuman: (idx === 0) || hasClient, hasRemotePos: false,
+                    isHuman: (idx === 0) || hasClient, vx: 0, vz: 0,
                     x: cfg.spawn[0], z: cfg.spawn[1], targetX: cfg.spawn[0], targetZ: cfg.spawn[1], targetRot: angle,
                     dirX: Math.sin(angle), dirZ: Math.cos(angle), alive: true, respawnTimer: 0, invulnTimer: 1.5,
                     kickCooldown: 0, dashTimer: 0, dashCooldown: 0, dashDirX: 0, dashDirZ: 0,
@@ -458,11 +462,7 @@
             attachSelfMarker(mySlot);
         }
         function clearEffects() {
-            while (effects.length) {
-                const fx = effects.pop();
-                fxGroup.remove(fx.mesh);
-                if (fx.mesh.material) fx.mesh.material.dispose();
-            }
+            while (effects.length) { const fx = effects.pop(); fxGroup.remove(fx.mesh); if (fx.mesh.material) fx.mesh.material.dispose(); }
         }
         function resetGame() {
             while (bombsGroup.children.length) bombsGroup.remove(bombsGroup.children[0]);
@@ -486,7 +486,7 @@
             bombs.push({ id: nextBombId++, x: bx, y: 5.2, vy: 0, z: bz, vx: 0, vz: 0, fuse: 7.0, bounces: 0, lastKicker: null, graceTimer: 0, trailTimer: 0, mesh: group, mat, spark, ring, exploded: false });
         }
 
-        // ===== 5. 低延遲 MQTT 連線邏輯 (含線路切換與即時位置同步) =====
+        // ===== 5. 混合連線引擎 (MQTT 秒連 + 自動升級 WebRTC UDP 直連) =====
         const copyRoomBtn = document.getElementById('copy-room-btn'), joinInput = document.getElementById('join-input');
         const joinBtn = document.getElementById('join-btn'), leaveBtn = document.getElementById('leave-btn');
         const diffBtn = document.getElementById('diff-btn'), restartBtn = document.getElementById('restart-btn');
@@ -494,19 +494,71 @@
 
         joinInput.addEventListener('blur', () => { setTimeout(() => { window.scrollTo(0, 0); updateCameraFraming(); }, 80); });
 
-        function topicH2C(code) { return `bdodge/v3/${code}/h2c`; }
-        function topicC2H(code) { return `bdodge/v3/${code}/c2h`; }
+        function topicH2C(code) { return `bdodge/v4/${code}/h2c`; }
+        function topicC2H(code) { return `bdodge/v4/${code}/c2h`; }
         function brokerIndexForCode(codeNum) {
             for (let i = 0; i < BROKERS.length; i++) if (codeNum >= BROKERS[i].min && codeNum <= BROKERS[i].max) return i;
             return 0;
         }
-        function cleanupMqtt() {
+        function closeClientRtc() {
+            clientRtcOpen = false; clientIceQueue = [];
+            if (clientRtcDc) { try { clientRtcDc.close(); } catch (e) {} clientRtcDc = null; }
+            if (clientRtcPc) { try { clientRtcPc.close(); } catch (e) {} clientRtcPc = null; }
+        }
+        function cleanupNet() {
             clearTimeout(joinTimeout); clearInterval(helloInterval); clearInterval(pingInterval);
+            for (const info of remoteClients.values()) {
+                if (info.dc) try { info.dc.close(); } catch (e) {}
+                if (info.pc) try { info.pc.close(); } catch (e) {}
+            }
+            remoteClients.clear();
+            closeClientRtc();
             if (mqttClient) { try { mqttClient.end(true); } catch (e) {} mqttClient = null; }
         }
+
         function broadcastEvent(obj) {
-            if (!isHost || !mqttClient || !mqttClient.connected || remoteClients.size === 0) return;
-            mqttClient.publish(topicH2C(myRoomCode), JSON.stringify(obj), { qos: 0 });
+            if (!isHost) return;
+            const raw = JSON.stringify(obj);
+            let needMqtt = false;
+            for (const info of remoteClients.values()) {
+                if (info.dcOpen && info.dc && info.dc.readyState === 'open') {
+                    try { info.dc.send(raw); } catch (e) { needMqtt = true; }
+                } else { needMqtt = true; }
+            }
+            if (needMqtt && mqttClient && mqttClient.connected && remoteClients.size > 0) {
+                mqttClient.publish(topicH2C(myRoomCode), raw, { qos: 0 });
+            }
+        }
+        function sendToSpecificClient(cid, info, obj) {
+            const raw = JSON.stringify(obj);
+            if (info && info.dcOpen && info.dc && info.dc.readyState === 'open') {
+                try { info.dc.send(raw); return; } catch (e) {}
+            }
+            if (mqttClient && mqttClient.connected) mqttClient.publish(topicH2C(myRoomCode), raw, { qos: 0 });
+        }
+
+        // Host 端啟動 WebRTC 直連邀請
+        function hostStartRtcForClient(cid, info) {
+            if (typeof RTCPeerConnection === 'undefined') return;
+            try {
+                const pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
+                info.pc = pc; info.iceQueue = []; info.dcOpen = false;
+                const dc = pc.createDataChannel('g', { ordered: false, maxRetransmits: 0 });
+                info.dc = dc;
+                dc.onopen = () => { info.dcOpen = true; };
+                dc.onclose = () => { info.dcOpen = false; };
+                dc.onmessage = (ev) => { try { handleHostReceive(JSON.parse(ev.data)); } catch (e) {} };
+                pc.onicecandidate = (ev) => {
+                    if (ev.candidate && mqttClient && mqttClient.connected) {
+                        mqttClient.publish(topicH2C(myRoomCode), JSON.stringify({ t: 'rtc_ice', cid, ice: ev.candidate }), { qos: 0 });
+                    }
+                };
+                pc.createOffer().then(offer => pc.setLocalDescription(offer)).then(() => {
+                    if (mqttClient && mqttClient.connected) {
+                        mqttClient.publish(topicH2C(myRoomCode), JSON.stringify({ t: 'rtc_off', cid, sdp: pc.localDescription }), { qos: 0 });
+                    }
+                }).catch(() => {});
+            } catch (e) {}
         }
 
         function startHostMqtt(brokerIdx = 0) {
@@ -517,8 +569,7 @@
                 showToast('連線元件載入失敗，請檢查網路後重新整理');
                 return;
             }
-            cleanupMqtt(); isHost = true; mySlot = 0; remoteClients.clear();
-            currentBrokerIdx = brokerIdx;
+            cleanupNet(); isHost = true; mySlot = 0; currentBrokerIdx = brokerIdx;
             diffBtn.disabled = false; restartBtn.disabled = false; switchBrokerBtn.disabled = false;
             joinInput.style.display = ''; joinBtn.style.display = ''; leaveBtn.style.display = 'none';
 
@@ -563,36 +614,50 @@
 
         function handleHostReceive(data) {
             const cid = data.cid; if (!cid) return;
-            if (data.t === 'ping') { mqttClient.publish(topicH2C(myRoomCode), JSON.stringify({ t: 'pong', cid, ts: data.ts }), { qos: 0 }); return; }
+            const info = remoteClients.get(cid);
+
+            if (data.t === 'ping') { sendToSpecificClient(cid, info, { t: 'pong', cid, ts: data.ts }); return; }
             if (data.t === 'hello') {
-                let info = remoteClients.get(cid);
-                if (!info) {
+                let targetInfo = info;
+                if (!targetInfo) {
                     const occ = getOccupiedSlotsMap(); let freeSlot = -1;
                     for (let s = 1; s < 4; s++) if (!occ.has(s)) { freeSlot = s; break; }
                     if (freeSlot === -1) { mqttClient.publish(topicH2C(myRoomCode), JSON.stringify({ t: 'full', cid }), { qos: 0 }); return; }
-                    info = { slot: freeSlot, lastSeen: performance.now() }; remoteClients.set(cid, info);
-                    const p = players[freeSlot]; p.isHuman = true; p.name = `玩家${freeSlot + 1}`;
+                    targetInfo = { slot: freeSlot, lastSeen: performance.now(), pc: null, dc: null, dcOpen: false, iceQueue: [] };
+                    remoteClients.set(cid, targetInfo);
+                    const p = players[freeSlot]; p.isHuman = true; p.name = `玩家${freeSlot + 1}`; p.vx = 0; p.vz = 0;
                     updateScoreboard(); showToast(`🎉 玩家${freeSlot + 1} (${p.colorName}) 加入房間！`);
                     broadcastEvent({ t: 'toast', msg: `🎉 玩家${freeSlot + 1} (${p.colorName}) 加入房間！` });
                     broadcastEvent({ t: 'names', n: players.map(pl => pl.name) });
+                    hostStartRtcForClient(cid, targetInfo);
                 }
-                info.lastSeen = performance.now();
-                mqttClient.publish(topicH2C(myRoomCode), JSON.stringify({ t: 'welcome', cid, slot: info.slot, diffIndex, names: players.map(pl => pl.name) }), { qos: 0 });
+                targetInfo.lastSeen = performance.now();
+                mqttClient.publish(topicH2C(myRoomCode), JSON.stringify({ t: 'welcome', cid, slot: targetInfo.slot, diffIndex, names: players.map(pl => pl.name) }), { qos: 0 });
                 return;
             }
-            const info = remoteClients.get(cid); if (!info) return;
+            if (!info) return;
             info.lastSeen = performance.now();
-            const p = players[info.slot]; if (!p) return;
 
+            if (data.t === 'rtc_ans' && info.pc) {
+                info.pc.setRemoteDescription(new RTCSessionDescription(data.sdp)).then(() => {
+                    while (info.iceQueue.length) info.pc.addIceCandidate(new RTCIceCandidate(info.iceQueue.shift())).catch(() => {});
+                }).catch(() => {});
+                return;
+            }
+            if (data.t === 'rtc_ice' && info.pc && data.ice) {
+                if (info.pc.remoteDescription) info.pc.addIceCandidate(new RTCIceCandidate(data.ice)).catch(() => {});
+                else info.iceQueue.push(data.ice);
+                return;
+            }
+
+            const p = players[info.slot]; if (!p) return;
             if (data.t === 'pos' && p.alive) {
-                // 接收遠端玩家精準座標 (僅在與本地 spawnSeq 同步時更新)
                 if (data.seq === undefined || data.seq === p.spawnSeq) {
                     clampPlayerPos(p, Number(data.x) || 0, Number(data.z) || 0);
+                    p.vx = Number(data.vx) || 0; p.vz = Number(data.vz) || 0;
                     const dx = Number(data.dx) || 0, dz = Number(data.dz) || 0;
                     if (dx !== 0 || dz !== 0) {
-                        const l = Math.hypot(dx, dz);
-                        p.dirX = dx / l; p.dirZ = dz / l;
-                        p.mesh.rotation.y = Math.atan2(p.dirX, p.dirZ);
+                        const l = Math.hypot(dx, dz); p.dirX = dx / l; p.dirZ = dz / l; p.mesh.rotation.y = Math.atan2(p.dirX, p.dirZ);
                     }
                     p.mesh.position.set(p.x, 0, p.z);
                 }
@@ -608,18 +673,18 @@
                         spawnRingFX(p.x, p.z, 0x70a1ff, 1.4, 0.25); playSound('dash');
                         broadcastEvent({ t: 'ev', skip: p.slot, s: 'dash', ring: [p.x, p.z, 0x70a1ff, 1.4, 0.25] });
                     }
-                } else {
-                    tryKick(p, true);
-                }
+                } else { tryKick(p, true); }
             } else if (data.t === 'bye') {
                 kickOutRemoteClient(cid, info);
             }
         }
 
         function kickOutRemoteClient(cid, info) {
+            if (info.dc) try { info.dc.close(); } catch (e) {}
+            if (info.pc) try { info.pc.close(); } catch (e) {}
             remoteClients.delete(cid);
             const p = players[info.slot];
-            if (p) { p.isHuman = false; p.name = PLAYER_CONFIGS[info.slot].defaultName; }
+            if (p) { p.isHuman = false; p.name = PLAYER_CONFIGS[info.slot].defaultName; p.vx = 0; p.vz = 0; }
             updateScoreboard(); showToast(`👋 玩家${info.slot + 1} 已離開（由 CPU 接手）`);
             broadcastEvent({ t: 'toast', msg: `👋 玩家${info.slot + 1} 已離開（由 CPU 接手）` });
             broadcastEvent({ t: 'names', n: players.map(pl => pl.name) });
@@ -631,10 +696,9 @@
             if (code === myRoomCode && isHost) { showToast('這就是你自己的房間喔！'); return; }
             if (typeof mqtt === 'undefined') { showToast('連線元件尚未載入完成，請稍後再試'); return; }
 
-            joinInput.blur();
-            joinBtn.disabled = true; joinBtn.textContent = '連線中...';
+            joinInput.blur(); joinBtn.disabled = true; joinBtn.textContent = '連線中...';
             roomPill.className = 'glass-pill room-pill connecting'; roomPill.textContent = `⏳ ${code}`;
-            cleanupMqtt(); remoteClients.clear(); isHost = false; myRoomCode = code;
+            cleanupNet(); isHost = false; myRoomCode = code;
 
             const b = BROKERS[brokerIndexForCode(codeNum)];
             const client = mqtt.connect(b.url, { clientId: myClientId + '_' + Date.now().toString(36), protocolVersion: 4, clean: true, reconnectPeriod: 0, connectTimeout: 8000 });
@@ -655,28 +719,73 @@
                 if (isHost || mqttClient !== client) return;
                 let data;
                 try { data = JSON.parse(typeof payload === 'string' ? payload : new TextDecoder().decode(payload)); } catch (e) { return; }
-
-                if (data.t === 'pong' && data.cid === myClientId) {
-                    const ms = Math.round(performance.now() - data.ts);
-                    roomPill.textContent = `🔵 房:${code} (${ms}ms)`;
-                    return;
-                }
-                if (data.t === 'welcome' && data.cid === myClientId && !welcomed) {
-                    welcomed = true; clearTimeout(joinTimeout); clearInterval(helloInterval); lastHostPacketAt = performance.now();
-                    joinBtn.disabled = false; joinBtn.textContent = '加入房間';
-                    joinInput.style.display = 'none'; joinBtn.style.display = 'none'; copyRoomBtn.style.display = 'none'; leaveBtn.style.display = '';
-                    diffBtn.disabled = true; restartBtn.disabled = true; switchBrokerBtn.disabled = true;
-                    roomPill.className = 'glass-pill room-pill client'; roomPill.textContent = `🔵 房:${code}`;
-                    setMenuOpen(false);
-                    const doPing = () => { if (!isHost && mqttClient && mqttClient.connected) mqttClient.publish(topicC2H(code), JSON.stringify({ t: 'ping', cid: myClientId, ts: performance.now() }), { qos: 0 }); };
-                    doPing(); pingInterval = setInterval(doPing, 2000);
-                } else if (data.t === 'full' && data.cid === myClientId) {
-                    clearTimeout(joinTimeout); clearInterval(helloInterval); showToast('⚠️ 房間已滿！'); leaveRoomToHost(); return;
-                }
-                lastHostPacketAt = performance.now();
-                handleServerPacket(data);
+                handleClientIncoming(data, code, () => {
+                    if (!welcomed) {
+                        welcomed = true; clearTimeout(joinTimeout); clearInterval(helloInterval);
+                        joinBtn.disabled = false; joinBtn.textContent = '加入房間';
+                        joinInput.style.display = 'none'; joinBtn.style.display = 'none'; copyRoomBtn.style.display = 'none'; leaveBtn.style.display = '';
+                        diffBtn.disabled = true; restartBtn.disabled = true; switchBrokerBtn.disabled = true;
+                        roomPill.className = 'glass-pill room-pill client'; roomPill.textContent = `🔵 房:${code}`;
+                        setMenuOpen(false);
+                        const doPing = () => {
+                            if (!isHost) sendClientPacket({ t: 'ping', ts: performance.now() });
+                        };
+                        doPing(); pingInterval = setInterval(doPing, 2000);
+                    }
+                });
             });
             client.on('error', () => { if (!welcomed) { showToast('❌ 連線失敗，請檢查網路'); leaveRoomToHost(); } });
+        }
+
+        function handleClientIncoming(data, code, onWelcomed) {
+            if (data.t === 'pong' && data.cid === myClientId) {
+                const ms = Math.round(performance.now() - data.ts);
+                roomPill.textContent = `🔵 ${code} ${clientRtcOpen ? '⚡' : '☁️'}${ms}ms`;
+                return;
+            }
+            if (data.t === 'welcome' && data.cid === myClientId) {
+                if (onWelcomed) onWelcomed();
+                lastHostPacketAt = performance.now();
+                handleServerPacket(data);
+                return;
+            }
+            if (data.t === 'full' && data.cid === myClientId) {
+                clearTimeout(joinTimeout); clearInterval(helloInterval); showToast('⚠️ 房間已滿！'); leaveRoomToHost(); return;
+            }
+            if (data.t === 'rtc_off' && data.cid === myClientId && typeof RTCPeerConnection !== 'undefined') {
+                closeClientRtc();
+                try {
+                    const pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
+                    clientRtcPc = pc;
+                    pc.ondatachannel = (ev) => {
+                        clientRtcDc = ev.channel;
+                        clientRtcDc.onopen = () => { clientRtcOpen = true; showToast('⚡ 已升級低延遲 UDP 直連！'); };
+                        clientRtcDc.onclose = () => { clientRtcOpen = false; };
+                        clientRtcDc.onmessage = (m) => { try { lastHostPacketAt = performance.now(); handleClientIncoming(JSON.parse(m.data), code); } catch (e) {} };
+                    };
+                    pc.onicecandidate = (ev) => {
+                        if (ev.candidate && mqttClient && mqttClient.connected) {
+                            mqttClient.publish(topicC2H(code), JSON.stringify({ t: 'rtc_ice', cid: myClientId, ice: ev.candidate }), { qos: 0 });
+                        }
+                    };
+                    pc.setRemoteDescription(new RTCSessionDescription(data.sdp)).then(() => {
+                        while (clientIceQueue.length) pc.addIceCandidate(new RTCIceCandidate(clientIceQueue.shift())).catch(() => {});
+                        return pc.createAnswer();
+                    }).then(ans => pc.setLocalDescription(ans)).then(() => {
+                        if (mqttClient && mqttClient.connected) {
+                            mqttClient.publish(topicC2H(code), JSON.stringify({ t: 'rtc_ans', cid: myClientId, sdp: pc.localDescription }), { qos: 0 });
+                        }
+                    }).catch(() => {});
+                } catch (e) {}
+                return;
+            }
+            if (data.t === 'rtc_ice' && data.cid === myClientId && clientRtcPc && data.ice) {
+                if (clientRtcPc.remoteDescription) clientRtcPc.addIceCandidate(new RTCIceCandidate(data.ice)).catch(() => {});
+                else clientIceQueue.push(data.ice);
+                return;
+            }
+            lastHostPacketAt = performance.now();
+            handleServerPacket(data);
         }
 
         function leaveRoomToHost() {
@@ -687,8 +796,13 @@
             startHostMqtt(0); resetGame();
         }
         function sendClientPacket(obj) {
-            if (isHost || !mqttClient || !mqttClient.connected) return;
-            obj.cid = myClientId; mqttClient.publish(topicC2H(myRoomCode), JSON.stringify(obj), { qos: 0 });
+            if (isHost) return;
+            obj.cid = myClientId;
+            const raw = JSON.stringify(obj);
+            if (clientRtcOpen && clientRtcDc && clientRtcDc.readyState === 'open') {
+                try { clientRtcDc.send(raw); return; } catch (e) {}
+            }
+            if (mqttClient && mqttClient.connected) mqttClient.publish(topicC2H(myRoomCode), raw, { qos: 0 });
         }
 
         function handleServerPacket(d) {
@@ -705,7 +819,7 @@
             if (d.t === 'reset') {
                 while (bombsGroup.children.length) bombsGroup.remove(bombsGroup.children[0]);
                 clearEffects(); clientBombs.clear(); gameOver = false; document.getElementById('gameover').classList.remove('show');
-                players.forEach((p, idx) => { p.x = p.spawn[0]; p.z = p.spawn[1]; p.spawnSeq = 0; p.lastSpawnSeq = 0; p.ko = 0; });
+                players.forEach(p => { p.x = p.spawn[0]; p.z = p.spawn[1]; p.vx = 0; p.vz = 0; p.spawnSeq = 0; p.lastSpawnSeq = 0; p.ko = 0; });
                 updateScoreboard(); return;
             }
             if (d.t === 'toast') { showToast(d.msg); return; }
@@ -726,14 +840,11 @@
                 clientElapsed = d.tm; let scoreChanged = false;
                 d.p.forEach((pd, i) => {
                     const p = players[i]; if (!p) return;
-                    p.targetX = pd[0]; p.targetZ = pd[1]; p.targetRot = pd[2];
-                    p.alive = !!pd[3]; p.invulnTimer = pd[4] ? 1 : 0;
-                    if (p.ko !== pd[5]) { p.ko = pd[5]; scoreChanged = true; }
-                    const seq = pd[6] || 0;
-                    if (seq !== p.lastSpawnSeq) {
-                        p.lastSpawnSeq = seq; p.spawnSeq = seq;
-                        p.x = p.targetX; p.z = p.targetZ; p.dashTimer = 0;
-                    }
+                    p.targetX = pd[0]; p.targetZ = pd[1]; p.vx = pd[2]; p.vz = pd[3]; p.targetRot = pd[4];
+                    p.alive = !!pd[5]; p.invulnTimer = pd[6] ? 1 : 0;
+                    if (p.ko !== pd[7]) { p.ko = pd[7]; scoreChanged = true; }
+                    const seq = pd[8] || 0;
+                    if (seq !== p.lastSpawnSeq) { p.lastSpawnSeq = seq; p.spawnSeq = seq; p.x = p.targetX; p.z = p.targetZ; p.dashTimer = 0; }
                     p.mesh.visible = p.alive; p.shield.visible = p.alive && p.invulnTimer > 0;
                 });
                 if (scoreChanged) updateScoreboard();
@@ -819,9 +930,9 @@
             bomb.exploded = true; bombsGroup.remove(bomb.mesh);
             playSound('explode'); screenShake = Math.max(screenShake, 0.32);
             spawnRingFX(bomb.x, bomb.z, 0xff9f43, 4.6, 0.32);
-            spawnParticles(bomb.x, bomb.z, 0xff6b6b, 12, 1.2);
-            spawnParticles(bomb.x, bomb.z, 0xffd32a, 8, 0.9);
-            broadcastEvent({ t: 'ev', s: 'explode', shake: 0.32, ring: [bomb.x, bomb.z, 0xff9f43, 4.6, 0.32], part: [bomb.x, bomb.z, 0xff6b6b, 12, 1.2] });
+            spawnParticles(bomb.x, bomb.z, 0xff6b6b, 10, 1.2);
+            spawnParticles(bomb.x, bomb.z, 0xffd32a, 6, 0.9);
+            broadcastEvent({ t: 'ev', s: 'explode', shake: 0.32, ring: [bomb.x, bomb.z, 0xff9f43, 4.6, 0.32], part: [bomb.x, bomb.z, 0xff6b6b, 10, 1.2] });
 
             const EXP_R = 2.05;
             for (const other of bombs) if (!other.exploded && Math.hypot(other.x - bomb.x, other.z - bomb.z) < EXP_R) {
@@ -830,9 +941,9 @@
             for (const p of players) {
                 if (!p.alive || p.invulnTimer > 0) continue;
                 if (Math.hypot(p.x - bomb.x, p.z - bomb.z) <= EXP_R) {
-                    p.alive = false; p.respawnTimer = 2.0; p.mesh.visible = false;
-                    spawnParticles(p.x, p.z, p.color, 12, 1.1);
-                    broadcastEvent({ t: 'ev', part: [p.x, p.z, p.color, 12, 1.1] });
+                    p.alive = false; p.respawnTimer = 2.0; p.vx = 0; p.vz = 0; p.mesh.visible = false;
+                    spawnParticles(p.x, p.z, p.color, 10, 1.1);
+                    broadcastEvent({ t: 'ev', part: [p.x, p.z, p.color, 10, 1.1] });
                     if (bomb.lastKicker && bomb.lastKicker !== p) {
                         bomb.lastKicker.ko++;
                         const kName = bomb.lastKicker.slot === 0 ? '房主(藍)' : bomb.lastKicker.name;
@@ -908,9 +1019,7 @@
             if (nearBomb) {
                 sendClientPacket({ t: 'act', act: 'kick', x: +p.x.toFixed(2), z: +p.z.toFixed(2), dx: +p.dirX.toFixed(2), dz: +p.dirZ.toFixed(2) });
             } else if (p.dashCooldown <= 0) {
-                // 本地 0 延遲立即衝刺
-                p.dashTimer = 0.18; p.dashCooldown = 1.0;
-                p.dashDirX = p.dirX; p.dashDirZ = p.dirZ;
+                p.dashTimer = 0.18; p.dashCooldown = 1.0; p.dashDirX = p.dirX; p.dashDirZ = p.dirZ;
                 spawnRingFX(p.x, p.z, 0x70a1ff, 1.4, 0.25); playSound('dash');
                 sendClientPacket({ t: 'act', act: 'dash', x: +p.x.toFixed(2), z: +p.z.toFixed(2), dx: +p.dirX.toFixed(2), dz: +p.dirZ.toFixed(2) });
             }
@@ -984,7 +1093,7 @@
             return len > 0.05 ? { dx: moveX / len, dz: moveZ / len } : { dx: 0, dz: 0 };
         }
 
-        // ===== 9. 主迴圈 (18Hz 穩定節流 + 本地 60fps 零延遲移動) =====
+        // ===== 9. 主迴圈 (UDP 直連 25Hz / MQTT 備援 14Hz 不限流) =====
         let lastTime = performance.now(), netSyncTimer = 0;
 
         function animate(now) {
@@ -997,9 +1106,9 @@
 
                 if (!gameOver) {
                     const elapsed = Math.floor((now - gameStartTime) / 1000);
-                    timerPill.textContent = `${String(Math.floor(elapsed / 60)).padStart(2, '0')}:${String(elapsed % 60).padStart(2, '0')}`;
+                    setTimerText(elapsed);
                     const humanCount = 1 + remoteClients.size;
-                    document.getElementById('status-line').textContent = `房主：${humanCount} 真人 + ${4 - humanCount} CPU · 先搶 ${WIN_KO} KO`;
+                    setStatusText(`房主：${humanCount} 真人 + ${4 - humanCount} CPU · 先搶 ${WIN_KO} KO`);
 
                     spawnTimer -= dt;
                     if (spawnTimer <= 0) { spawnBomb(); spawnTimer = 1.05; }
@@ -1011,7 +1120,7 @@
                         if (!p.alive) {
                             p.respawnTimer -= dt;
                             if (p.respawnTimer <= 0) {
-                                p.alive = true; p.x = p.spawn[0]; p.z = p.spawn[1];
+                                p.alive = true; p.x = p.spawn[0]; p.z = p.spawn[1]; p.vx = 0; p.vz = 0;
                                 p.invulnTimer = 2.0; p.dashTimer = 0; p.spawnSeq++; p.mesh.visible = true;
                             }
                             continue;
@@ -1021,18 +1130,21 @@
 
                         if (p.slot === 0) {
                             if (p.dashTimer > 0) {
-                                p.dashTimer -= dt; clampPlayerPos(p, p.x + p.dashDirX * 15.0 * dt, p.z + p.dashDirZ * 15.0 * dt);
+                                p.dashTimer -= dt; p.vx = p.dashDirX * 15.0; p.vz = p.dashDirZ * 15.0;
+                                clampPlayerPos(p, p.x + p.vx * dt, p.z + p.vz * dt);
                             } else {
                                 const inp = getLocalInputDir();
+                                p.vx = inp.dx * PLAYER_SPEED; p.vz = inp.dz * PLAYER_SPEED;
                                 if (inp.dx !== 0 || inp.dz !== 0) {
-                                    clampPlayerPos(p, p.x + inp.dx * PLAYER_SPEED * dt, p.z + inp.dz * PLAYER_SPEED * dt);
+                                    clampPlayerPos(p, p.x + p.vx * dt, p.z + p.vz * dt);
                                     p.dirX = inp.dx; p.dirZ = inp.dz; p.mesh.rotation.y = Math.atan2(inp.dx, inp.dz);
                                 }
                             }
                         } else if (!p.isHuman) {
                             const ai = updateCPU(p);
+                            p.vx = ai.dx * CPU_SPEED; p.vz = ai.dz * CPU_SPEED;
                             if (ai.dx !== 0 || ai.dz !== 0) {
-                                clampPlayerPos(p, p.x + ai.dx * CPU_SPEED * dt, p.z + ai.dz * CPU_SPEED * dt);
+                                clampPlayerPos(p, p.x + p.vx * dt, p.z + p.vz * dt);
                                 p.dirX = ai.dx; p.dirZ = ai.dz; p.mesh.rotation.y = Math.atan2(ai.dx, ai.dz);
                             }
                         }
@@ -1064,13 +1176,13 @@
                         if (b.z < -HALF_H + B_RADIUS) { b.z = -HALF_H + B_RADIUS; b.vz = Math.abs(b.vz); bounced = true; }
 
                         if (bounced && spd > 2.5) {
-                            b.bounces++; playSound('bounce'); spawnParticles(b.x, b.z, 0xffffff, 4, 0.5);
-                            broadcastEvent({ t: 'ev', s: 'bounce', part: [b.x, b.z, 0xffffff, 4, 0.5] });
+                            b.bounces++; playSound('bounce'); spawnParticles(b.x, b.z, 0xffffff, 3, 0.5);
+                            broadcastEvent({ t: 'ev', s: 'bounce', part: [b.x, b.z, 0xffffff, 3, 0.5] });
                         }
                         if (spd > 4.5) {
                             b.trailTimer -= dt;
                             if (b.trailTimer <= 0) {
-                                b.trailTimer = 0.05;
+                                b.trailTimer = 0.055;
                                 const tm = new THREE.Mesh(trailFxGeo, new THREE.MeshBasicMaterial({ color: b.bounces > 0 ? 0xff4757 : 0x70a1ff, transparent: true, opacity: 0.7 }));
                                 tm.position.set(b.x, 0.42, b.z); fxGroup.add(tm); effects.push({ type: 'fade', mesh: tm, age: 0, duration: 0.22 });
                             }
@@ -1092,54 +1204,65 @@
                         if (b.fuse <= 0) { detonateBomb(b); bombs.splice(i, 1); }
                     }
 
-                    // 18Hz 穩定節流廣播 (不會塞爆免費伺服器)
+                    // 有直連走 25Hz (40ms)，純 MQTT 中繼降為 14Hz (72ms) 不塞車
+                    let allRtc = remoteClients.size > 0;
+                    for (const info of remoteClients.values()) if (!info.dcOpen) { allRtc = false; break; }
+                    const syncInterval = allRtc ? 0.04 : 0.072;
+
                     netSyncTimer += dt;
-                    if (remoteClients.size > 0 && netSyncTimer >= 0.055) {
+                    if (remoteClients.size > 0 && netSyncTimer >= syncInterval) {
                         netSyncTimer = 0;
                         broadcastEvent({
                             t: 'st', tm: elapsed,
-                            p: players.map(p => [+p.x.toFixed(2), +p.z.toFixed(2), +p.mesh.rotation.y.toFixed(2), p.alive ? 1 : 0, p.invulnTimer > 0 ? 1 : 0, p.ko, p.spawnSeq]),
+                            p: players.map(p => [+p.x.toFixed(2), +p.z.toFixed(2), +p.vx.toFixed(1), +p.vz.toFixed(1), +p.mesh.rotation.y.toFixed(2), p.alive ? 1 : 0, p.invulnTimer > 0 ? 1 : 0, p.ko, p.spawnSeq]),
                             b: bombs.map(b => [b.id, +b.x.toFixed(2), +b.y.toFixed(2), +b.z.toFixed(2), +b.vx.toFixed(1), +b.vz.toFixed(1), +b.fuse.toFixed(1)])
                         });
                     }
                 }
             } else {
-                timerPill.textContent = `${String(Math.floor(clientElapsed / 60)).padStart(2, '0')}:${String(clientElapsed % 60).padStart(2, '0')}`;
-                document.getElementById('status-line').textContent = `連線對戰中 · 先搶 ${WIN_KO} 次 KO 獲勝`;
+                setTimerText(clientElapsed);
+                setStatusText(clientRtcOpen ? `UDP 直連對戰中 · 先搶 ${WIN_KO} KO` : `雲端中繼對戰中 · 先搶 ${WIN_KO} KO`);
 
                 if (lastHostPacketAt > 0 && now - lastHostPacketAt > 6500) {
                     showToast('⚠️ 房主連線中斷，已返回自己的房間'); leaveRoomToHost(); return;
                 }
 
-                const me = players[mySlot];
-                const inp = getLocalInputDir();
+                const me = players[mySlot], inp = getLocalInputDir();
                 if (me) {
                     if (me.dashCooldown > 0) me.dashCooldown -= dt;
                     if (me.alive && !gameOver) {
                         if (me.dashTimer > 0) {
-                            me.dashTimer -= dt;
-                            clampPlayerPos(me, me.x + me.dashDirX * 15.0 * dt, me.z + me.dashDirZ * 15.0 * dt);
-                        } else if (inp.dx !== 0 || inp.dz !== 0) {
-                            clampPlayerPos(me, me.x + inp.dx * PLAYER_SPEED * dt, me.z + inp.dz * PLAYER_SPEED * dt);
-                            me.dirX = inp.dx; me.dirZ = inp.dz; me.mesh.rotation.y = Math.atan2(inp.dx, inp.dz);
+                            me.dashTimer -= dt; me.vx = me.dashDirX * 15.0; me.vz = me.dashDirZ * 15.0;
+                            clampPlayerPos(me, me.x + me.vx * dt, me.z + me.vz * dt);
+                        } else {
+                            me.vx = inp.dx * PLAYER_SPEED; me.vz = inp.dz * PLAYER_SPEED;
+                            if (inp.dx !== 0 || inp.dz !== 0) {
+                                clampPlayerPos(me, me.x + me.vx * dt, me.z + me.vz * dt);
+                                me.dirX = inp.dx; me.dirZ = inp.dz; me.mesh.rotation.y = Math.atan2(inp.dx, inp.dz);
+                            }
                         }
-                    }
+                    } else { me.vx = 0; me.vz = 0; }
                     me.mesh.position.set(me.x, 0, me.z);
                     if (me.shield.visible) me.shield.scale.setScalar(1 + Math.sin(now * 0.02) * 0.06);
 
-                    // 節流上限 18Hz (每 55ms 最多送 1 次座標，移動時不塞爆網路)
+                    const sendInt = clientRtcOpen ? 0.035 : 0.072;
                     netSyncTimer += dt;
                     const moved = Math.hypot(me.x - lastSentPos.x, me.z - lastSentPos.z) > 0.02;
-                    if (netSyncTimer >= 0.055 && (moved || netSyncTimer >= 0.9)) {
+                    if (netSyncTimer >= sendInt && (moved || netSyncTimer >= 0.8)) {
                         netSyncTimer = 0; lastSentPos.x = me.x; lastSentPos.z = me.z;
-                        sendClientPacket({ t: 'pos', x: +me.x.toFixed(2), z: +me.z.toFixed(2), dx: +me.dirX.toFixed(2), dz: +me.dirZ.toFixed(2), seq: me.spawnSeq });
+                        sendClientPacket({ t: 'pos', x: +me.x.toFixed(2), z: +me.z.toFixed(2), vx: +me.vx.toFixed(1), vz: +me.vz.toFixed(1), dx: +me.dirX.toFixed(2), dz: +me.dirZ.toFixed(2), seq: me.spawnSeq });
                     }
                 }
 
+                // 其他玩家用速度預測平滑移動，不再一格一格跳
                 for (let i = 0; i < players.length; i++) {
                     if (i === mySlot) continue;
                     const p = players[i];
-                    p.x += (p.targetX - p.x) * 0.35; p.z += (p.targetZ - p.z) * 0.35;
+                    if (p.alive) {
+                        p.targetX = Math.max(-HALF_W + P_RADIUS, Math.min(HALF_W - P_RADIUS, p.targetX + p.vx * dt));
+                        p.targetZ = Math.max(-HALF_H + P_RADIUS, Math.min(HALF_H - P_RADIUS, p.targetZ + p.vz * dt));
+                    }
+                    p.x += (p.targetX - p.x) * 0.34; p.z += (p.targetZ - p.z) * 0.34;
                     p.mesh.position.set(p.x, 0, p.z); p.mesh.rotation.y = p.targetRot;
                     if (p.shield.visible) p.shield.scale.setScalar(1 + Math.sin(now * 0.02) * 0.06);
                 }
@@ -1151,14 +1274,16 @@
                     if (d < nearestMeDist) { nearestMeDist = d; nearestMeBomb = cb; }
                 }
 
+                const drag = Math.pow(0.76, dt);
                 for (const cb of clientBombs.values()) {
                     cb.tx += cb.vx * dt; cb.tz += cb.vz * dt;
+                    cb.vx *= drag; cb.vz *= drag;
                     if (cb.tx > HALF_W - B_RADIUS) { cb.tx = HALF_W - B_RADIUS; cb.vx = -Math.abs(cb.vx); }
                     if (cb.tx < -HALF_W + B_RADIUS) { cb.tx = -HALF_W + B_RADIUS; cb.vx = Math.abs(cb.vx); }
                     if (cb.tz > HALF_H - B_RADIUS) { cb.tz = HALF_H - B_RADIUS; cb.vz = -Math.abs(cb.vz); }
                     if (cb.tz < -HALF_H + B_RADIUS) { cb.tz = -HALF_H + B_RADIUS; cb.vz = Math.abs(cb.vz); }
 
-                    cb.x += (cb.tx - cb.x) * 0.45; cb.y += (cb.ty - cb.y) * 0.45; cb.z += (cb.tz - cb.z) * 0.45;
+                    cb.x += (cb.tx - cb.x) * 0.38; cb.y += (cb.ty - cb.y) * 0.42; cb.z += (cb.tz - cb.z) * 0.38;
                     cb.group.position.set(cb.x, cb.y, cb.z); cb.ring.visible = (cb === nearestMeBomb);
 
                     if (cb.fuse <= 2.2) {
@@ -1171,11 +1296,7 @@
 
             for (let i = effects.length - 1; i >= 0; i--) {
                 const fx = effects[i]; fx.age += dt; const t = fx.age / fx.duration;
-                if (t >= 1) {
-                    fxGroup.remove(fx.mesh);
-                    if (fx.mesh.material) fx.mesh.material.dispose();
-                    effects.splice(i, 1); continue;
-                }
+                if (t >= 1) { fxGroup.remove(fx.mesh); if (fx.mesh.material) fx.mesh.material.dispose(); effects.splice(i, 1); continue; }
                 if (fx.type === 'ring') { const s = 1 + t * fx.maxScale; fx.mesh.scale.set(s, s, 1); fx.mesh.material.opacity = 1 - t; }
                 else if (fx.type === 'particle') {
                     fx.vy -= 14 * dt; fx.mesh.position.x += fx.vx * dt;
