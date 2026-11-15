@@ -159,19 +159,24 @@
         display:flex; justify-content:space-between; align-items:flex-end;
         padding:0 14px calc(12px + var(--sat)) 14px;
       }
-      #dpad{
-        pointer-events:auto; display:grid; gap:6px;
-        grid-template-columns:repeat(3,54px); grid-template-rows:repeat(3,54px);
-      }
-      .dbtn{
-        border:1px solid var(--line); background:rgba(10,14,18,.6); border-radius:12px;
-        display:flex; align-items:center; justify-content:center; min-height:54px; padding:0;
+      #joystick{
+        pointer-events:auto; position:relative; flex:none;
+        width:128px; height:128px; border-radius:50%;
+        border:1.5px solid rgba(255,255,255,.28);
+        background:radial-gradient(circle at 50% 42%, rgba(255,255,255,.10), rgba(10,14,18,.55) 68%);
         backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);
+        touch-action:none;
       }
-      .dbtn svg{ width:22px; height:22px; fill:#e8eef2; }
-      .dbtn.on{ background:rgba(255,159,67,.55); }
-      .dbtn.up{ grid-area:1/2; } .dbtn.left{ grid-area:2/1; }
-      .dbtn.right{ grid-area:2/3; } .dbtn.down{ grid-area:3/2; }
+      #joystick.on{ border-color:rgba(255,159,67,.8); }
+      #joyKnob{
+        position:absolute; left:50%; top:50%; width:56px; height:56px; margin:-28px 0 0 -28px;
+        border-radius:50%; pointer-events:none;
+        background:radial-gradient(circle at 38% 32%, #d9e4ec, #8fa3b3 55%, #5d7181);
+        box-shadow:0 4px 12px rgba(0,0,0,.45), inset 0 -4px 8px rgba(0,0,0,.25);
+      }
+      #joystick.on #joyKnob{
+        background:radial-gradient(circle at 38% 32%, #ffe4c4, #ffab5e 55%, #dd7c2b);
+      }
       #bombBtn{
         pointer-events:auto; width:86px; height:86px; border-radius:50%;
         border:1px solid rgba(255,255,255,.3); background:rgba(10,14,18,.6);
@@ -240,8 +245,7 @@
         .card h2{ font-size:23px; }
         .rules{ font-size:12.5px; line-height:1.8; }
         .key{ min-width:21px; padding:0 4px; font-size:11px; }
-        #dpad{ grid-template-columns:repeat(3,50px); grid-template-rows:repeat(3,50px); gap:5px; }
-        .dbtn{ min-height:50px; }
+        #joystick{ width:122px; height:122px; }
         #bombBtn{ width:78px; height:78px; }
       }
     </style>
@@ -315,7 +319,7 @@
           <span><i style="background:#22d3ee"></i>移速＋（走得更快）</span>
         </div>
         <div class="rules">
-          <div><b>移動</b>　<span class="key">W</span><span class="key">A</span><span class="key">S</span><span class="key">D</span> 或 <span class="key">↑</span><span class="key">↓</span><span class="key">←</span><span class="key">→</span>（手機用左下方向鍵）</div>
+          <div><b>移動</b>　<span class="key">W</span><span class="key">A</span><span class="key">S</span><span class="key">D</span> 或 <span class="key">↑</span><span class="key">↓</span><span class="key">←</span><span class="key">→</span>（手機用左下虛擬搖桿：按住拖動往任意方向走、放開停住）</div>
           <div><b>放炸彈</b>　<span class="key">Space</span>（手機用右下炸彈鈕）</div>
           <div><b>道具</b>　部分橘磚底下藏著道具，炸開磚塊後走過去踩上去就吃到；每種最多疊 3 次。露出的道具再被火燒到會燒掉。</div>
           <div><b>規則</b>　炸彈 3 秒後爆炸，起始火力十字範圍 2 格、同時最多放 2 顆；灰牆擋火、橘磚可炸碎。腳下有白圈的就是你。</div>
@@ -338,11 +342,8 @@
 
     <!-- Touch controls -->
     <div id="touch">
-      <div id="dpad">
-        <button class="dbtn up" type="button" data-dir="0,-1" aria-label="上"><svg viewBox="0 0 24 24"><path d="M12 5l8 12H4z"/></svg></button>
-        <button class="dbtn left" type="button" data-dir="-1,0" aria-label="左"><svg viewBox="0 0 24 24"><path d="M5 12l12-8v16z"/></svg></button>
-        <button class="dbtn right" type="button" data-dir="1,0" aria-label="右"><svg viewBox="0 0 24 24"><path d="M19 12L7 4v16z"/></svg></button>
-        <button class="dbtn down" type="button" data-dir="0,1" aria-label="下"><svg viewBox="0 0 24 24"><path d="M12 19L4 7h16z"/></svg></button>
+      <div id="joystick" role="application" aria-label="虛擬搖桿：按住拖動往任意方向移動，放開停住">
+        <div id="joyKnob"></div>
       </div>
       <button id="bombBtn" type="button" aria-label="放炸彈">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="14.5" r="7.5" fill="#20262b" stroke="#cfd8de" stroke-width="1.3"/><rect x="13.2" y="4" width="4.2" height="3.4" rx="1" fill="#8d99a3"/><path d="M15.8 3.6c1.7-1.5 3.4-.3 4.2-1.9" stroke="#ff9f43" stroke-width="1.7" fill="none" stroke-linecap="round"/><circle cx="20.4" cy="1.1" r="1.4" fill="#ffd76e"/></svg>
@@ -1423,6 +1424,8 @@
 
       /* ================= 躲避球連續移動（真人／遠端／CPU 共用積分） ================= */
       function dodgeInputVector(){
+        // 虛擬搖桿優先：類比向量直接用，任意方向移動、放開即停（與躲避球搖桿邏輯一致）
+        if (joyVec.x !== 0 || joyVec.y !== 0) return { x: joyVec.x, y: joyVec.y };
         var dx = (keysDown.right ? 1 : 0) - (keysDown.left ? 1 : 0);
         var dz = (keysDown.down ? 1 : 0) - (keysDown.up ? 1 : 0);
         var l = Math.hypot(dx, dz);
@@ -1603,10 +1606,16 @@
       /* ================= 輸入 ================= */
       var held = { x: 0, y: 0 };
       var keysDown = {};
+      var joyVec = { x: 0, y: 0 };   // 虛擬搖桿類比向量（長度 0~1），放開歸零
       function refreshHeld(){
         held.x = (keysDown.right ? 1 : 0) - (keysDown.left ? 1 : 0);
         held.y = (keysDown.down ? 1 : 0) - (keysDown.up ? 1 : 0);
         if (held.x !== 0) held.y = 0;
+        // 搖桿優先：對戰／屍潮是格子移動，斜拖取主軸（絕對值較大的一軸）
+        if (joyVec.x !== 0 || joyVec.y !== 0){
+          if (Math.abs(joyVec.x) >= Math.abs(joyVec.y)){ held.x = joyVec.x > 0 ? 1 : -1; held.y = 0; }
+          else { held.x = 0; held.y = joyVec.y > 0 ? 1 : -1; }
+        }
       }
       var KEYMAP = {
         ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down',
@@ -1625,18 +1634,49 @@
       window.addEventListener('keyup', function(e){
         if (KEYMAP[e.code]){ keysDown[KEYMAP[e.code]] = false; refreshHeld(); }
       });
-      document.querySelectorAll('.dbtn').forEach(function(btn){
-        var parts = btn.getAttribute('data-dir').split(',');
-        var dx = +parts[0], dy = +parts[1];
-        var name = dy < 0 ? 'up' : dy > 0 ? 'down' : dx < 0 ? 'left' : 'right';
-        function on(e){ e.preventDefault(); audio(); btn.classList.add('on'); keysDown[name] = true; refreshHeld(); }
-        function off(e){ if (e) e.preventDefault(); btn.classList.remove('on'); keysDown[name] = false; refreshHeld(); }
-        btn.addEventListener('pointerdown', on);
-        btn.addEventListener('pointerup', off);
-        btn.addEventListener('pointerleave', off);
-        btn.addEventListener('pointercancel', off);
-        btn.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+      /* ---------- 虛擬搖桿（左下・圓形底座＋可拖動圓鈕） ----------
+         按住拖動往任意方向移動、放開就停住；邏輯與躲避球模式的搖桿一致：
+         搖桿輸出類比向量，躲避球直接用向量連續移動，對戰／屍潮在 refreshHeld 取主軸走格子。 */
+      var joyEl = document.getElementById('joystick');
+      var joyKnob = document.getElementById('joyKnob');
+      var joyPointer = null;
+      function joySet(dxPx, dyPx){
+        var maxR = Math.max(10, joyEl.clientWidth / 2 - joyKnob.offsetWidth / 2 - 4);
+        var d = Math.hypot(dxPx, dyPx);
+        var cl = d > maxR ? maxR / d : 1;
+        joyKnob.style.transform = 'translate(' + (dxPx * cl).toFixed(1) + 'px,' + (dyPx * cl).toFixed(1) + 'px)';
+        var mag = Math.min(1, d / maxR);
+        if (mag < 0.22 || d < 0.001){ joyVec.x = 0; joyVec.y = 0; }   // 中央死區，避免微飄
+        else { joyVec.x = (dxPx / d) * mag; joyVec.y = (dyPx / d) * mag; }
+        refreshHeld();
+      }
+      function joyReset(){
+        joyPointer = null;
+        joyVec.x = 0; joyVec.y = 0;
+        joyKnob.style.transform = 'translate(0px,0px)';
+        joyEl.classList.remove('on');
+        refreshHeld();
+      }
+      function joyPos(e){
+        var r = joyEl.getBoundingClientRect();
+        return { x: e.clientX - (r.left + r.width / 2), y: e.clientY - (r.top + r.height / 2) };
+      }
+      joyEl.addEventListener('pointerdown', function(e){
+        e.preventDefault(); audio();
+        if (joyPointer !== null) return;
+        joyPointer = e.pointerId;
+        try { joyEl.setPointerCapture(e.pointerId); } catch(err){}
+        joyEl.classList.add('on');
+        var p = joyPos(e); joySet(p.x, p.y);
       });
+      joyEl.addEventListener('pointermove', function(e){
+        if (e.pointerId !== joyPointer) return;
+        var p = joyPos(e); joySet(p.x, p.y);
+      });
+      ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(function(ev){
+        joyEl.addEventListener(ev, function(e){ if (joyPointer === null || e.pointerId === joyPointer) joyReset(); });
+      });
+      joyEl.addEventListener('contextmenu', function(e){ e.preventDefault(); });
       var bombBtn = document.getElementById('bombBtn');
       bombBtn.addEventListener('pointerdown', function(e){
         e.preventDefault(); audio(); bombBtn.classList.add('on');
@@ -1780,6 +1820,7 @@
         drawClock(); updateScore(); hideToast();
         pickupEl.classList.remove('show');
         Object.keys(keysDown).forEach(function(k){ keysDown[k] = false; }); refreshHeld();
+        joyReset();
         clientBombs.forEach(function(cb){ bombGroup.remove(cb.mesh); });
         clientBombs.clear();
         lastWinnerIdx = -1; lastEndReason = '';
