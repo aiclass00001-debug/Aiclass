@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- bomberman_dodgeball v3.1 timeouts 8s 2026-11-15 -->
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
@@ -670,10 +671,10 @@
             copyRoomBtn.style.display = 'none';
 
             let settled = false;
-            const client = mqtt.connect(b.url, { clientId: myClientId + '_' + Date.now().toString(36), protocolVersion: 4, clean: true, reconnectPeriod: 0, connectTimeout: 3000 });
+            const client = mqtt.connect(b.url, { clientId: myClientId + '_' + Date.now().toString(36), protocolVersion: 4, clean: true, reconnectPeriod: 0, connectTimeout: 8000 });
             mqttClient = client;
 
-            const failTimer = setTimeout(() => { if (!settled && mqttClient === client) startHostMqtt(brokerIdx + 1); }, 3200);
+            const failTimer = setTimeout(() => { if (!settled && mqttClient === client) startHostMqtt(brokerIdx + 1); }, 8500);
             client.on('connect', () => {
                 settled = true; clearTimeout(failTimer);
                 client.subscribe(topicC2H(code), { qos: 0 }, (err) => {
@@ -736,11 +737,11 @@
             cleanupMqtt(); remoteClients.clear(); isHost = false; myRoomCode = code;
 
             const b = BROKERS[brokerIndexForCode(codeNum)];
-            const client = mqtt.connect(b.url, { clientId: myClientId + '_' + Date.now().toString(36), protocolVersion: 4, clean: true, reconnectPeriod: 0, connectTimeout: 5000 });
+            const client = mqtt.connect(b.url, { clientId: myClientId + '_' + Date.now().toString(36), protocolVersion: 4, clean: true, reconnectPeriod: 0, connectTimeout: 8000 });
             mqttClient = client;
 
             let welcomed = false;
-            joinTimeout = setTimeout(() => { if (!welcomed) { showToast('❌ 找不到此房號或房主沒開著頁面'); leaveRoomToHost(); } }, 6500);
+            joinTimeout = setTimeout(() => { if (!welcomed) { showToast('❌ 找不到此房號或房主沒開著頁面'); leaveRoomToHost(); } }, 10000);
 
             client.on('connect', () => {
                 client.subscribe(topicH2C(code), { qos: 0 }, (err) => {
