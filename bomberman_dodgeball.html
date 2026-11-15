@@ -2,119 +2,142 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>3D 炸彈躲避球大亂鬥 (多人連線版)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>3D 炸彈躲避球 (iPad/電腦跨平台連線版)</title>
     <style>
         * {
             box-sizing: border-box;
             user-select: none;
             -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
-        body {
+        html, body {
             margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
             overflow: hidden;
             background-color: #111820;
             font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif;
             color: #fff;
             touch-action: none;
         }
-        #hud {
+
+        /* ===== 頂部極簡狀態列 ===== */
+        #topbar {
             position: absolute;
-            top: 12px;
-            left: 14px;
-            right: 14px;
+            top: max(8px, env(safe-area-inset-top));
+            left: max(10px, env(safe-area-inset-left));
+            right: max(10px, env(safe-area-inset-right));
             display: flex;
-            flex-wrap: wrap;
             justify-content: space-between;
-            align-items: flex-start;
-            gap: 10px;
-            pointer-events: none;
-            z-index: 10;
-        }
-        .panel {
-            background: rgba(15, 22, 30, 0.85);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.16);
-            border-radius: 14px;
-            padding: 10px 14px;
-            pointer-events: auto;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
-        }
-        .title-box h1 {
-            margin: 0 0 3px 0;
-            font-size: 17px;
-            display: flex;
             align-items: center;
             gap: 8px;
+            pointer-events: none;
+            z-index: 20;
         }
-        .title-box p {
-            margin: 0;
-            font-size: 12px;
-            color: #a4b0be;
-        }
-        .controls-row {
+        .top-left, .top-right {
             display: flex;
-            flex-wrap: wrap;
+            align-items: center;
             gap: 6px;
-            margin-top: 8px;
+            pointer-events: auto;
+        }
+        .glass-pill {
+            background: rgba(15, 22, 30, 0.72);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 999px;
+            padding: 5px 11px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: #fff;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .glass-pill:active { transform: scale(0.95); }
+        .room-pill { color: #2ecc71; border-color: rgba(46, 204, 113, 0.45); }
+        .room-pill.connecting { color: #f1c40f; border-color: rgba(241, 196, 15, 0.45); }
+        .room-pill.client { color: #70a1ff; border-color: rgba(112, 161, 255, 0.5); }
+
+        .scoreboard {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(15, 22, 30, 0.72);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 999px;
+            padding: 4px 10px;
+            pointer-events: auto;
+        }
+        .score-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 999px;
+        }
+        .score-item.me {
+            background: rgba(255, 255, 255, 0.16);
+            border: 1px solid rgba(255, 255, 255, 0.65);
+        }
+        .dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+        .timer-pill { font-variant-numeric: tabular-nums; color: #dfe4ea; cursor: default; }
+
+        /* ===== 可收合展開的詳細選單抽屜 ===== */
+        #menu-drawer {
+            position: absolute;
+            top: calc(max(8px, env(safe-area-inset-top)) + 40px);
+            left: max(10px, env(safe-area-inset-left));
+            background: rgba(15, 22, 30, 0.94);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 12px 14px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+            z-index: 25;
+            display: none;
+            max-width: min(350px, 92vw);
+        }
+        #menu-drawer.open { display: block; }
+        .drawer-title {
+            font-size: 14px;
+            font-weight: 800;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
         }
-        .net-row {
+        .drawer-sub { font-size: 11px; color: #a4b0be; margin-bottom: 10px; }
+        .btn-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+        .net-box {
             display: flex;
             flex-wrap: wrap;
             gap: 6px;
-            margin-top: 8px;
-            padding-top: 8px;
+            padding-top: 9px;
             border-top: 1px solid rgba(255, 255, 255, 0.12);
             align-items: center;
-            font-size: 12px;
         }
-        .room-badge {
-            background: rgba(46, 204, 113, 0.15);
-            border: 1px solid rgba(46, 204, 113, 0.45);
-            color: #2ecc71;
-            padding: 4px 10px;
-            border-radius: 8px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-        .room-badge.connecting {
-            background: rgba(241, 196, 15, 0.15);
-            border-color: rgba(241, 196, 15, 0.45);
-            color: #f1c40f;
-        }
-        .room-badge.client {
-            background: rgba(52, 152, 219, 0.18);
-            border-color: rgba(52, 152, 219, 0.5);
-            color: #70a1ff;
-        }
-        input {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            border-radius: 8px;
-            color: #fff;
-            padding: 5px 8px;
-            width: 82px;
-            font-size: 13px;
-            text-align: center;
-            outline: none;
-            user-select: text;
-            -webkit-user-select: text;
-        }
-        input:focus { border-color: #70a1ff; }
-        input::placeholder { color: #747d8c; font-size: 12px; }
-
         button {
             background: rgba(255, 255, 255, 0.1);
             color: #fff;
             border: 1px solid rgba(255, 255, 255, 0.22);
             border-radius: 9px;
-            padding: 5px 10px;
-            font-size: 12px;
+            padding: 6px 11px;
+            font-size: 13px;
             cursor: pointer;
-            transition: background 0.15s, transform 0.1s;
         }
-        button:hover { background: rgba(255, 255, 255, 0.2); }
         button:active { transform: scale(0.95); }
         button:disabled { opacity: 0.45; cursor: not-allowed; }
         button.diff-easy { border-color: #2ecc71; color: #2ecc71; }
@@ -123,47 +146,39 @@
         button.btn-join { background: #1e90ff; border-color: #1e90ff; font-weight: 700; }
         button.btn-leave { background: #ff4757; border-color: #ff4757; font-weight: 700; }
 
-        .scoreboard {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            align-items: center;
+        /* font-size 16px 防止 iPad/iPhone Safari 點擊輸入框時自動放大網頁 */
+        input {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            border-radius: 8px;
+            color: #fff;
+            padding: 5px 8px;
+            width: 96px;
+            font-size: 16px;
+            text-align: center;
+            outline: none;
+            user-select: text;
+            -webkit-user-select: text;
         }
-        .score-pill {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(15, 22, 30, 0.85);
-            border: 1.5px solid rgba(255, 255, 255, 0.15);
-            border-radius: 12px;
-            padding: 7px 11px;
-            font-size: 13px;
-            font-weight: 600;
-        }
-        .score-pill.me {
-            border-color: #ffffff;
-            box-shadow: 0 0 12px rgba(255, 255, 255, 0.28);
-        }
-        .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
-        .ko-num { font-size: 17px; font-weight: 800; margin-left: 2px; }
-        .ko-label { font-size: 10px; color: #a4b0be; }
+        input:focus { border-color: #70a1ff; }
+        input::placeholder { color: #747d8c; font-size: 13px; }
 
         #toast {
             position: absolute;
-            top: 122px;
+            top: calc(max(8px, env(safe-area-inset-top)) + 42px);
             left: 50%;
             transform: translateX(-50%) scale(0.9);
             background: linear-gradient(135deg, #ff6b6b, #ffa502);
             color: #fff;
             font-weight: 800;
-            font-size: 15px;
-            padding: 8px 20px;
+            font-size: 13px;
+            padding: 6px 16px;
             border-radius: 999px;
-            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.45);
+            box-shadow: 0 4px 16px rgba(255, 107, 107, 0.45);
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.2s, transform 0.2s;
-            z-index: 15;
+            z-index: 18;
             white-space: nowrap;
         }
         #toast.show { opacity: 1; transform: translateX(-50%) scale(1); }
@@ -176,116 +191,146 @@
             display: none;
             justify-content: center;
             align-items: center;
-            z-index: 30;
+            z-index: 40;
         }
         #gameover.show { display: flex; }
         .modal {
             background: #1b2430;
             border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 20px;
-            padding: 28px 36px;
+            padding: 22px 30px;
             text-align: center;
             box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
-            max-width: 90vw;
+            max-width: 88vw;
         }
-        .modal h2 { margin: 0 0 8px 0; font-size: 26px; }
-        .modal p { margin: 0 0 20px 0; color: #ced6e0; font-size: 15px; }
+        .modal h2 { margin: 0 0 6px 0; font-size: 22px; }
+        .modal p { margin: 0 0 16px 0; color: #ced6e0; font-size: 14px; }
         .btn-primary {
             background: linear-gradient(135deg, #1e90ff, #00cec9);
             border: none;
-            padding: 11px 26px;
-            font-size: 15px;
+            padding: 10px 24px;
+            font-size: 14px;
             font-weight: 700;
             border-radius: 12px;
         }
 
-        #dpad {
+        /* ===== 360° 圓形類比虛擬搖桿 (左下) ===== */
+        #joystick-zone {
             position: absolute;
-            bottom: 22px;
-            left: 22px;
-            width: 144px;
-            height: 144px;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(3, 1fr);
-            gap: 4px;
-            z-index: 20;
-            opacity: 0.78;
-        }
-        .d-btn {
-            background: rgba(15, 22, 30, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            border-radius: 12px;
+            bottom: max(16px, env(safe-area-inset-bottom));
+            left: max(16px, env(safe-area-inset-left));
+            width: 112px;
+            height: 112px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.28);
+            backdrop-filter: blur(4px);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
-            color: #fff;
-            cursor: pointer;
+            z-index: 20;
+            opacity: 0.48;
+            transition: opacity 0.15s;
+            touch-action: none;
         }
-        .d-btn:active, .d-btn.active { background: rgba(52, 152, 219, 0.75); }
+        #joystick-zone.active {
+            opacity: 0.9;
+            border-color: rgba(112, 161, 255, 0.8);
+            background: rgba(112, 161, 255, 0.14);
+        }
+        #joystick-knob {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.92), rgba(180, 210, 255, 0.72));
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+            pointer-events: none;
+            transform: translate(0px, 0px);
+        }
 
+        /* ===== 半透明圓形踢球鈕 (右下) ===== */
         #kick-btn {
             position: absolute;
-            bottom: 28px;
-            right: 26px;
-            width: 96px;
-            height: 96px;
+            bottom: max(20px, env(safe-area-inset-bottom));
+            right: max(18px, env(safe-area-inset-right));
+            width: 82px;
+            height: 82px;
             border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #ff7675, #d63031);
-            border: 3px solid rgba(255, 255, 255, 0.45);
-            box-shadow: 0 8px 24px rgba(214, 48, 49, 0.5);
+            background: radial-gradient(circle at 30% 30%, rgba(255, 118, 117, 0.88), rgba(214, 48, 49, 0.88));
+            border: 2.5px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 6px 20px rgba(214, 48, 49, 0.4);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             font-weight: 800;
-            font-size: 13px;
+            font-size: 12px;
             z-index: 20;
             cursor: pointer;
-            text-align: center;
+            opacity: 0.56;
+            transition: opacity 0.12s, transform 0.08s;
+            touch-action: none;
         }
-        #kick-btn:active { transform: scale(0.92); }
-        #kick-btn span { font-size: 24px; margin-bottom: 2px; }
+        #kick-btn.active, #kick-btn:active { opacity: 0.95; transform: scale(0.91); }
+        #kick-btn span { font-size: 22px; line-height: 1.1; }
 
         #hint {
             position: absolute;
-            bottom: 14px;
+            bottom: 12px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.62);
-            padding: 7px 16px;
+            background: rgba(0, 0, 0, 0.58);
+            padding: 5px 14px;
             border-radius: 999px;
             font-size: 12px;
             color: #dfe4ea;
             pointer-events: none;
             white-space: nowrap;
         }
-        @media (max-width: 760px) {
+
+        @media (max-height: 520px), (max-width: 720px) {
             #hint { display: none; }
-            #hud { top: 8px; left: 8px; right: 8px; }
+            .hide-sm { display: none; }
+            .glass-pill { padding: 4px 9px; font-size: 11px; }
+            .scoreboard { padding: 3px 7px; gap: 3px; }
+            .score-item { font-size: 11px; padding: 2px 5px; }
+            #joystick-zone { width: 98px; height: 98px; bottom: max(12px, env(safe-area-inset-bottom)); left: max(12px, env(safe-area-inset-left)); }
+            #joystick-knob { width: 40px; height: 40px; }
+            #kick-btn { width: 74px; height: 74px; bottom: max(14px, env(safe-area-inset-bottom)); right: max(14px, env(safe-area-inset-right)); font-size: 11px; }
+            #kick-btn span { font-size: 20px; }
         }
     </style>
 </head>
 <body>
-    <div id="hud">
-        <div class="panel title-box">
-            <h1>⚽ 3D 炸彈躲避球（連線版）</h1>
-            <p id="status-line">連線大廳準備中 · 先搶 5 次 KO 獲勝 · 00:00</p>
-            <div class="controls-row">
-                <button id="diff-btn" class="diff-easy">難度：輕鬆</button>
-                <button id="sound-btn">音效：開</button>
-                <button id="restart-btn">重新開始</button>
-            </div>
-            <div class="net-row">
-                <span id="room-status" class="room-badge connecting">⏳ 取得房號中...</span>
-                <button id="copy-room-btn" style="display:none;">📋 複製房號</button>
-                <input id="join-input" type="text" maxlength="6" placeholder="輸入房號" />
-                <button id="join-btn" class="btn-join">加入房間</button>
-                <button id="leave-btn" class="btn-leave" style="display:none;">離開房間</button>
-            </div>
+    <div id="topbar">
+        <div class="top-left">
+            <button id="menu-toggle" class="glass-pill">⚙️ 選單</button>
+            <div id="room-pill" class="glass-pill room-pill connecting">⏳ 連線中</div>
         </div>
         <div class="scoreboard" id="scoreboard"></div>
+        <div class="top-right">
+            <div id="timer-pill" class="glass-pill timer-pill">00:00</div>
+            <button id="fs-btn" class="glass-pill" title="全螢幕">⛶</button>
+        </div>
+    </div>
+
+    <div id="menu-drawer">
+        <div class="drawer-title">
+            <span>⚽ 3D 炸彈躲避球</span>
+            <button id="close-menu-btn" style="padding:3px 8px;">✕</button>
+        </div>
+        <div class="drawer-sub" id="status-line">先搶 5 次 KO 獲勝 · 移動時自動收合選單</div>
+        <div class="btn-row">
+            <button id="diff-btn" class="diff-easy">難度：輕鬆</button>
+            <button id="sound-btn">音效：開</button>
+            <button id="restart-btn">重新開始</button>
+        </div>
+        <div class="net-box">
+            <button id="copy-room-btn" style="display:none;">📋 複製房號</button>
+            <input id="join-input" type="text" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="4碼房號" />
+            <button id="join-btn" class="btn-join">加入房間</button>
+            <button id="leave-btn" class="btn-leave" style="display:none;">離開房間</button>
+        </div>
     </div>
 
     <div id="toast"></div>
@@ -298,16 +343,15 @@
         </div>
     </div>
 
-    <div id="dpad">
-        <div></div><div class="d-btn" data-dir="up">▲</div><div></div>
-        <div class="d-btn" data-dir="left">◀</div><div></div><div class="d-btn" data-dir="right">▶</div>
-        <div></div><div class="d-btn" data-dir="down">▼</div><div></div>
+    <div id="joystick-zone">
+        <div id="joystick-knob"></div>
     </div>
-    <div id="kick-btn"><span>⚽</span>踢 / 衝刺</div>
-    <div id="hint">WASD/方向鍵 移動 · <b>空白鍵</b>：有球踢球(可反踢來球!) ／ 沒球衝刺閃避 · 分享房號即可連線！</div>
+    <div id="kick-btn"><span>⚽</span>踢 / 衝</div>
+
+    <div id="hint">WASD/方向鍵 移動 · <b>空白鍵</b>：有球踢球(可反踢來球!) ／ 沒球衝刺閃避 · 點左上選單輸入房號連線</div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.5/dist/peerjs.min.js"></script>
+    <script src="https://unpkg.com/mqtt@5.15.2/dist/mqtt.min.js"></script>
     <script>
         // ================= 1. 難度與音效合成器 =================
         const DIFFICULTIES = [
@@ -384,23 +428,42 @@
             }
         }
 
-        // ================= 2. 3D 場景與貼圖 =================
+        // ================= 2. 3D 場景與自適應橫豎屏相機 =================
         const ARENA_W = 16, ARENA_H = 12, HALF_W = 8, HALF_H = 6, WIN_KO = 5;
 
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x141b24);
 
-        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 120);
         const baseCamPos = new THREE.Vector3(0, 15.5, 11.5);
-        camera.position.copy(baseCamPos);
-        camera.lookAt(0, 0, 0.3);
+
+        function updateCameraFraming() {
+            const w = window.innerWidth, h = window.innerHeight;
+            const aspect = w / Math.max(h, 1);
+            camera.aspect = aspect;
+            camera.updateProjectionMatrix();
+
+            const fovRad = THREE.MathUtils.degToRad(camera.fov);
+            const tanHalf = Math.tan(fovRad / 2);
+            const targetW = (h < 520 && aspect > 1.3) ? 20.5 : 18.5;
+            const targetH = (h < 520) ? 16.5 : 15.0;
+
+            const distH = (targetH / 2) / tanHalf;
+            const distW = (targetW / 2) / (tanHalf * aspect);
+            const dist = Math.max(distH, distW, 18.0);
+
+            baseCamPos.set(0, dist * 0.80, dist * 0.60);
+            camera.position.copy(baseCamPos);
+            camera.lookAt(0, 0, 0.25);
+            renderer.setSize(w, h);
+        }
 
         const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         document.body.appendChild(renderer.domElement);
+        updateCameraFraming();
 
         scene.add(new THREE.AmbientLight(0xffffff, 0.55));
         const dirLight = new THREE.DirectionalLight(0xffffff, 0.85);
@@ -458,9 +521,7 @@
             new THREE.PlaneGeometry(ARENA_W, ARENA_H),
             new THREE.MeshStandardMaterial({ map: createCourtTexture(), roughness: 0.85 })
         );
-        floor.rotation.x = -Math.PI / 2;
-        floor.receiveShadow = true;
-        scene.add(floor);
+        floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
 
         const wallGeo = new THREE.BoxGeometry(1, 1.15, 1);
         const wallMat = new THREE.MeshStandardMaterial({ map: createWallTexture(), roughness: 0.55 });
@@ -485,32 +546,22 @@
             { slot: 3, defaultName: '黃 CPU', colorName: '黃', color: '#ff9f43', spawn: [-5.5, 3.5] }
         ];
 
-        let players = [];
-        let bombs = [];
-        let nextBombId = 1;
-        let clientBombs = new Map();
-        let effects = [];
-        let gameStartTime = 0;
-        let clientElapsed = 0;
-        let spawnTimer = 0;
-        let spawnQuadrant = 0;
-        let gameOver = false;
-        let screenShake = 0;
+        let players = [], bombs = [], nextBombId = 1, clientBombs = new Map(), effects = [];
+        let gameStartTime = 0, clientElapsed = 0, spawnTimer = 0, spawnQuadrant = 0, gameOver = false, screenShake = 0;
 
-        // 連線狀態
-        let isHost = true;
-        let mySlot = 0;
-        let peer = null;
-        let myRoomCode = '';
-        let hostConn = null;        // Client 用來連房主
-        let clientConns = new Map(); // Host 儲存: slot -> DataConnection
+        // ===== MQTT over WSS 多人連線狀態 (走 Port 443，穿透教室 Wi-Fi 與 iPad Safari) =====
+        const BROKERS = [
+            { url: 'wss://mqtt.eclipseprojects.io:443/mqtt', min: 1000, max: 4999 }, // 首選：443 埠穿透力最強
+            { url: 'wss://broker.emqx.io:8084/mqtt', min: 5000, max: 7999 },         // 備援 1：EMQX 亞太快
+            { url: 'wss://broker.hivemq.com:8884/mqtt', min: 8000, max: 9999 }       // 備援 2：HiveMQ
+        ];
+        const myClientId = 'bd_' + Math.random().toString(36).slice(2, 10);
+        let isHost = true, mySlot = 0, mqttClient = null, myRoomCode = '';
+        let remoteClients = new Map(); // Host 用: cid -> { slot, lastSeen }
+        let joinTimeout = null, helloInterval = null, lastHostPacketAt = 0;
 
-        const playersGroup = new THREE.Group();
-        const bombsGroup = new THREE.Group();
-        const fxGroup = new THREE.Group();
-        scene.add(playersGroup);
-        scene.add(bombsGroup);
-        scene.add(fxGroup);
+        const playersGroup = new THREE.Group(), bombsGroup = new THREE.Group(), fxGroup = new THREE.Group();
+        scene.add(playersGroup); scene.add(bombsGroup); scene.add(fxGroup);
 
         const cylGeo = new THREE.CylinderGeometry(0.36, 0.36, 0.65, 24);
         const domeGeo = new THREE.SphereGeometry(0.36, 24, 16);
@@ -519,23 +570,17 @@
         const shieldGeo = new THREE.SphereGeometry(0.68, 20, 16);
         const shieldMat = new THREE.MeshBasicMaterial({ color: 0x70a1ff, transparent: true, opacity: 0.28 });
 
-        // 自己專屬的白圈與方向箭頭 (可動態切換掛在哪個角色身上)
         const selfMarkerGroup = new THREE.Group();
         const selfRing = new THREE.Mesh(
             new THREE.RingGeometry(0.45, 0.56, 32),
             new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide })
         );
-        selfRing.rotation.x = -Math.PI / 2;
-        selfRing.position.y = 0.03;
-        selfMarkerGroup.add(selfRing);
-
+        selfRing.rotation.x = -Math.PI / 2; selfRing.position.y = 0.03; selfMarkerGroup.add(selfRing);
         const selfArrow = new THREE.Mesh(
             new THREE.ConeGeometry(0.16, 0.32, 3),
             new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.85 })
         );
-        selfArrow.rotation.x = Math.PI / 2;
-        selfArrow.position.set(0, 0.06, 0.76);
-        selfMarkerGroup.add(selfArrow);
+        selfArrow.rotation.x = Math.PI / 2; selfArrow.position.set(0, 0.06, 0.76); selfMarkerGroup.add(selfArrow);
 
         const bombSphereGeo = new THREE.SphereGeometry(0.42, 24, 24);
         const fuseGeo = new THREE.CylinderGeometry(0.05, 0.05, 0.22, 8);
@@ -550,11 +595,9 @@
             const mat = new THREE.MeshStandardMaterial({ color: cfg.color, roughness: 0.35 });
             const body = new THREE.Mesh(cylGeo, mat); body.position.y = 0.42; body.castShadow = true; g.add(body);
             const head = new THREE.Mesh(domeGeo, mat); head.position.y = 0.76; head.castShadow = true; g.add(head);
-
             const eyeL = new THREE.Mesh(eyeGeo, eyeMat); eyeL.position.set(-0.13, 0.8, 0.32);
             const eyeR = new THREE.Mesh(eyeGeo, eyeMat); eyeR.position.set(0.13, 0.8, 0.32);
             g.add(eyeL); g.add(eyeR);
-
             const shield = new THREE.Mesh(shieldGeo, shieldMat);
             shield.position.y = 0.55; shield.visible = false; g.add(shield);
             return { group: g, shield };
@@ -572,39 +615,71 @@
         }
 
         function attachSelfMarker(slotIdx) {
-            if (players[slotIdx] && players[slotIdx].mesh) {
-                players[slotIdx].mesh.add(selfMarkerGroup);
-            }
+            if (players[slotIdx] && players[slotIdx].mesh) players[slotIdx].mesh.add(selfMarkerGroup);
         }
 
         // ================= 4. UI 與初始化 =================
+        const menuDrawer = document.getElementById('menu-drawer');
+        const menuToggle = document.getElementById('menu-toggle');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const roomPill = document.getElementById('room-pill');
+        const timerPill = document.getElementById('timer-pill');
+        const fsBtn = document.getElementById('fs-btn');
         const toastEl = document.getElementById('toast');
         let toastTimer = null;
+
+        function setMenuOpen(open) { menuDrawer.classList.toggle('open', open); }
+        function closeMenuIfOpen() { if (menuDrawer.classList.contains('open')) setMenuOpen(false); }
+
+        menuToggle.addEventListener('click', function () { this.blur(); setMenuOpen(!menuDrawer.classList.contains('open')); });
+        closeMenuBtn.addEventListener('click', function () { this.blur(); setMenuOpen(false); });
+        roomPill.addEventListener('click', function () { setMenuOpen(!menuDrawer.classList.contains('open')); });
+
+        if (!document.documentElement.requestFullscreen && !document.documentElement.webkitRequestFullscreen) {
+            fsBtn.style.display = 'none';
+        } else {
+            fsBtn.addEventListener('click', function () {
+                this.blur();
+                const doc = document, el = doc.documentElement;
+                if (!doc.fullscreenElement && !doc.webkitFullscreenElement) {
+                    (el.requestFullscreen || el.webkitRequestFullscreen).call(el).catch(() => {});
+                } else {
+                    (doc.exitFullscreen || doc.webkitExitFullscreen).call(doc).catch(() => {});
+                }
+            });
+        }
+
         function showToast(msg) {
             toastEl.textContent = msg;
             toastEl.classList.add('show');
             clearTimeout(toastTimer);
-            toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2100);
+            toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2200);
         }
 
         function updateScoreboard() {
             const sb = document.getElementById('scoreboard');
             sb.innerHTML = players.map((p, idx) => {
                 const isMe = (idx === mySlot);
-                const label = isMe ? `你 (${p.colorName})` : p.name;
+                const shortName = isMe ? '你' : `<span class="hide-sm">${p.name}</span>`;
                 return `
-                    <div class="score-pill ${isMe ? 'me' : ''}">
+                    <div class="score-item ${isMe ? 'me' : ''}">
                         <span class="dot" style="background:${p.color}"></span>
-                        <span>${label}</span>
-                        <span class="ko-num">${p.ko}</span>
-                        <span class="ko-label">KO</span>
+                        ${shortName}
+                        <span>${p.ko}</span>
                     </div>
                 `;
             }).join('');
         }
 
+        function getOccupiedSlotsMap() {
+            const map = new Map();
+            for (const info of remoteClients.values()) map.set(info.slot, true);
+            return map;
+        }
+
         function initPlayersStructure() {
             while (playersGroup.children.length) playersGroup.remove(playersGroup.children[0]);
+            const occupied = getOccupiedSlotsMap();
             players = PLAYER_CONFIGS.map((cfg, idx) => {
                 const { group, shield } = createPlayerMesh(cfg);
                 group.position.set(cfg.spawn[0], 0, cfg.spawn[1]);
@@ -612,32 +687,19 @@
                 group.rotation.y = angle;
                 playersGroup.add(group);
 
-                const hasClient = isHost && clientConns.has(idx);
-                const isHumanSlot = (idx === 0) || hasClient;
+                const hasClient = isHost && occupied.has(idx);
                 return {
                     ...cfg,
-                    name: idx === 0 ? '房主 (藍)' : (hasClient ? `玩家 ${idx + 1}` : cfg.defaultName),
-                    isHuman: isHumanSlot,
+                    name: idx === 0 ? '房主' : (hasClient ? `玩家${idx + 1}` : cfg.defaultName),
+                    isHuman: (idx === 0) || hasClient,
                     remoteInput: { dx: 0, dz: 0 },
                     pendingAction: false,
-                    x: cfg.spawn[0],
-                    z: cfg.spawn[1],
-                    targetX: cfg.spawn[0],
-                    targetZ: cfg.spawn[1],
-                    targetRot: angle,
-                    dirX: Math.sin(angle),
-                    dirZ: Math.cos(angle),
-                    alive: true,
-                    respawnTimer: 0,
-                    invulnTimer: 1.5,
-                    kickCooldown: 0,
-                    dashTimer: 0,
-                    dashCooldown: 0,
-                    dashDirX: 0,
-                    dashDirZ: 0,
-                    ko: 0,
-                    mesh: group,
-                    shield
+                    x: cfg.spawn[0], z: cfg.spawn[1],
+                    targetX: cfg.spawn[0], targetZ: cfg.spawn[1], targetRot: angle,
+                    dirX: Math.sin(angle), dirZ: Math.cos(angle),
+                    alive: true, respawnTimer: 0, invulnTimer: 1.5,
+                    kickCooldown: 0, dashTimer: 0, dashCooldown: 0, dashDirX: 0, dashDirZ: 0,
+                    ko: 0, mesh: group, shield
                 };
             });
             attachSelfMarker(mySlot);
@@ -647,23 +709,17 @@
             while (bombsGroup.children.length) bombsGroup.remove(bombsGroup.children[0]);
             while (fxGroup.children.length) fxGroup.remove(fxGroup.children[0]);
             clientBombs.clear();
-            bombs = [];
-            effects = [];
-            gameOver = false;
-            gameStartTime = performance.now();
-            spawnTimer = 0.5;
+            bombs = []; effects = []; gameOver = false;
+            gameStartTime = performance.now(); spawnTimer = 0.5;
             document.getElementById('gameover').classList.remove('show');
 
+            initPlayersStructure();
+            updateScoreboard();
             if (isHost) {
-                initPlayersStructure();
-                updateScoreboard();
                 spawnBomb(-3.2, -1.8);
                 spawnBomb(3.2, 1.8);
                 spawnBomb(0, 0);
                 broadcastEvent({ t: 'reset' });
-            } else {
-                initPlayersStructure();
-                updateScoreboard();
             }
         }
 
@@ -673,10 +729,8 @@
             if (customX !== undefined) {
                 bx = customX; bz = customZ;
             } else {
-                const q = spawnQuadrant % 4;
-                spawnQuadrant++;
-                const sx = (q === 0 || q === 2) ? -1 : 1;
-                const sz = (q < 2) ? -1 : 1;
+                const q = spawnQuadrant % 4; spawnQuadrant++;
+                const sx = (q === 0 || q === 2) ? -1 : 1, sz = (q < 2) ? -1 : 1;
                 bx = sx * (1.2 + Math.random() * 4.8);
                 bz = sz * (0.8 + Math.random() * 3.2);
             }
@@ -684,15 +738,13 @@
             group.position.set(bx, 5.2, bz);
             bombsGroup.add(group);
             bombs.push({
-                id: nextBombId++,
-                x: bx, y: 5.2, vy: 0, z: bz, vx: 0, vz: 0,
+                id: nextBombId++, x: bx, y: 5.2, vy: 0, z: bz, vx: 0, vz: 0,
                 fuse: 7.0, bounces: 0, lastKicker: null, graceTimer: 0, trailTimer: 0,
                 mesh: group, mat, spark, ring, exploded: false
             });
         }
 
-        // ================= 5. 多人連線 (PeerJS P2P) =================
-        const roomStatusEl = document.getElementById('room-status');
+        // ================= 5. 多人連線邏輯 (MQTT over WSS) =================
         const copyRoomBtn = document.getElementById('copy-room-btn');
         const joinInput = document.getElementById('join-input');
         const joinBtn = document.getElementById('join-btn');
@@ -700,203 +752,282 @@
         const diffBtn = document.getElementById('diff-btn');
         const restartBtn = document.getElementById('restart-btn');
 
-        function broadcastEvent(obj) {
-            if (!isHost) return;
-            for (const conn of clientConns.values()) {
-                if (conn.open) conn.send(obj);
+        function topicH2C(code) { return `bdodge/v1/${code}/h2c`; }
+        function topicC2H(code) { return `bdodge/v1/${code}/c2h`; }
+
+        function brokerIndexForCode(codeNum) {
+            for (let i = 0; i < BROKERS.length; i++) {
+                if (codeNum >= BROKERS[i].min && codeNum <= BROKERS[i].max) return i;
+            }
+            return 0;
+        }
+
+        function cleanupMqtt() {
+            clearTimeout(joinTimeout);
+            clearInterval(helloInterval);
+            if (mqttClient) {
+                try { mqttClient.end(true); } catch (e) {}
+                mqttClient = null;
             }
         }
 
-        function startHostPeer() {
-            if (peer) { try { peer.destroy(); } catch (e) {} }
-            isHost = true;
-            mySlot = 0;
-            clientConns.clear();
-            diffBtn.disabled = false;
-            restartBtn.disabled = false;
-            joinInput.style.display = '';
-            joinBtn.style.display = '';
-            leaveBtn.style.display = 'none';
+        function broadcastEvent(obj) {
+            if (!isHost || !mqttClient || !mqttClient.connected || remoteClients.size === 0) return;
+            mqttClient.publish(topicH2C(myRoomCode), JSON.stringify(obj), { qos: 0 });
+        }
 
-            roomStatusEl.className = 'room-badge connecting';
-            roomStatusEl.textContent = '⏳ 取得房號中...';
-            copyRoomBtn.style.display = 'none';
+        function startHostMqtt(brokerIdx = 0) {
+            cleanupMqtt();
+            isHost = true; mySlot = 0; remoteClients.clear();
+            diffBtn.disabled = false; restartBtn.disabled = false;
+            joinInput.style.display = ''; joinBtn.style.display = ''; leaveBtn.style.display = 'none';
 
-            const code = String(Math.floor(1000 + Math.random() * 9000));
+            if (brokerIdx >= BROKERS.length) {
+                roomPill.className = 'glass-pill room-pill connecting';
+                roomPill.textContent = '⚠️ 單機模式';
+                copyRoomBtn.style.display = 'none';
+                return;
+            }
+
+            const b = BROKERS[brokerIdx];
+            const code = String(Math.floor(b.min + Math.random() * (b.max - b.min + 1)));
             myRoomCode = code;
 
-            peer = new Peer('bdodge-' + code, {
-                config: { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun1.l.google.com:19302' }] }
+            roomPill.className = 'glass-pill room-pill connecting';
+            roomPill.textContent = '⏳ 連線中';
+            copyRoomBtn.style.display = 'none';
+
+            let settled = false;
+            const client = mqtt.connect(b.url, {
+                clientId: myClientId + '_' + Date.now().toString(36),
+                protocolVersion: 4,
+                clean: true,
+                reconnectPeriod: 0,
+                connectTimeout: 4000
+            });
+            mqttClient = client;
+
+            const failTimer = setTimeout(() => {
+                if (!settled && mqttClient === client) {
+                    startHostMqtt(brokerIdx + 1);
+                }
+            }, 4200);
+
+            client.on('connect', () => {
+                settled = true;
+                clearTimeout(failTimer);
+                client.subscribe(topicC2H(code), { qos: 0 }, (err) => {
+                    if (err) { startHostMqtt(brokerIdx + 1); return; }
+                    roomPill.className = 'glass-pill room-pill';
+                    roomPill.textContent = `🟢 ${code}`;
+                    copyRoomBtn.style.display = '';
+                });
             });
 
-            peer.on('open', () => {
-                roomStatusEl.className = 'room-badge';
-                roomStatusEl.textContent = `🟢 房號：${code}`;
-                copyRoomBtn.style.display = '';
+            client.on('message', (topic, payload) => {
+                if (!isHost || mqttClient !== client) return;
+                let data;
+                try {
+                    const str = typeof payload === 'string' ? payload : new TextDecoder().decode(payload);
+                    data = JSON.parse(str);
+                } catch (e) { return; }
+                handleHostReceive(data);
             });
 
-            peer.on('connection', (conn) => {
-                // 尋找空位 (1, 2, 3)
-                let freeSlot = -1;
-                for (let s = 1; s < 4; s++) {
-                    if (!clientConns.has(s)) { freeSlot = s; break; }
+            client.on('error', () => {
+                if (!settled && mqttClient === client) {
+                    settled = true;
+                    clearTimeout(failTimer);
+                    startHostMqtt(brokerIdx + 1);
                 }
-                if (freeSlot === -1) {
-                    conn.on('open', () => {
-                        conn.send({ t: 'full' });
-                        setTimeout(() => conn.close(), 300);
-                    });
-                    return;
-                }
+            });
+        }
 
-                conn.on('open', () => {
-                    clientConns.set(freeSlot, conn);
+        function handleHostReceive(data) {
+            const cid = data.cid;
+            if (!cid) return;
+
+            if (data.t === 'hello') {
+                let info = remoteClients.get(cid);
+                if (!info) {
+                    const occupied = getOccupiedSlotsMap();
+                    let freeSlot = -1;
+                    for (let s = 1; s < 4; s++) {
+                        if (!occupied.has(s)) { freeSlot = s; break; }
+                    }
+                    if (freeSlot === -1) {
+                        mqttClient.publish(topicH2C(myRoomCode), JSON.stringify({ t: 'full', cid }), { qos: 0 });
+                        return;
+                    }
+                    info = { slot: freeSlot, lastSeen: performance.now() };
+                    remoteClients.set(cid, info);
+
                     const p = players[freeSlot];
                     p.isHuman = true;
-                    p.name = `玩家 ${freeSlot + 1}`;
+                    p.name = `玩家${freeSlot + 1}`;
                     p.remoteInput = { dx: 0, dz: 0 };
                     p.pendingAction = false;
-                    conn.send({ t: 'welcome', slot: freeSlot, diffIndex });
                     updateScoreboard();
-                    showToast(`🎉 玩家 ${freeSlot + 1} (${p.colorName}) 加入房間！`);
-                    broadcastEvent({ t: 'toast', msg: `🎉 玩家 ${freeSlot + 1} (${p.colorName}) 加入房間！` });
-                });
-
-                conn.on('data', (data) => {
-                    const p = players[freeSlot];
-                    if (!p) return;
-                    if (data.t === 'in') {
-                        p.remoteInput.dx = Number(data.dx) || 0;
-                        p.remoteInput.dz = Number(data.dz) || 0;
-                    } else if (data.t === 'act') {
-                        p.pendingAction = true;
-                    }
-                });
-
-                conn.on('close', () => {
-                    if (clientConns.get(freeSlot) === conn) {
-                        clientConns.delete(freeSlot);
-                        const p = players[freeSlot];
-                        if (p) {
-                            p.isHuman = false;
-                            p.name = PLAYER_CONFIGS[freeSlot].defaultName;
-                            p.remoteInput = { dx: 0, dz: 0 };
-                        }
-                        updateScoreboard();
-                        showToast(`👋 玩家 ${freeSlot + 1} 已離開（由 CPU 接手）`);
-                    }
-                });
-            });
-
-            peer.on('error', (err) => {
-                if (err.type === 'unavailable-id') {
-                    startHostPeer();
-                } else {
-                    roomStatusEl.className = 'room-badge connecting';
-                    roomStatusEl.textContent = '⚠️ 離線模式';
+                    showToast(`🎉 玩家${freeSlot + 1} (${p.colorName}) 加入房間！`);
+                    broadcastEvent({ t: 'toast', msg: `🎉 玩家${freeSlot + 1} (${p.colorName}) 加入房間！` });
                 }
-            });
+                info.lastSeen = performance.now();
+                mqttClient.publish(topicH2C(myRoomCode), JSON.stringify({ t: 'welcome', cid, slot: info.slot, diffIndex }), { qos: 0 });
+                return;
+            }
+
+            const info = remoteClients.get(cid);
+            if (!info) return;
+            info.lastSeen = performance.now();
+            const p = players[info.slot];
+            if (!p) return;
+
+            if (data.t === 'in') {
+                p.remoteInput.dx = Number(data.dx) || 0;
+                p.remoteInput.dz = Number(data.dz) || 0;
+            } else if (data.t === 'act') {
+                p.pendingAction = true;
+            } else if (data.t === 'bye') {
+                kickOutRemoteClient(cid, info);
+            }
+        }
+
+        function kickOutRemoteClient(cid, info) {
+            remoteClients.delete(cid);
+            const p = players[info.slot];
+            if (p) {
+                p.isHuman = false;
+                p.name = PLAYER_CONFIGS[info.slot].defaultName;
+                p.remoteInput = { dx: 0, dz: 0 };
+            }
+            updateScoreboard();
+            showToast(`👋 玩家${info.slot + 1} 已離開（由 CPU 接手）`);
+            broadcastEvent({ t: 'toast', msg: `👋 玩家${info.slot + 1} 已離開（由 CPU 接手）` });
         }
 
         function joinRoom(rawCode) {
             const code = rawCode.trim();
-            if (!code) { showToast('請先輸入 4 碼房號！'); return; }
+            const codeNum = parseInt(code, 10);
+            if (!/^\d{4}$/.test(code)) { showToast('請輸入 4 位數字房號！'); return; }
             if (code === myRoomCode && isHost) { showToast('這就是你自己的房間喔！'); return; }
 
-            joinBtn.disabled = true;
-            joinBtn.textContent = '連線中...';
-            roomStatusEl.className = 'room-badge connecting';
-            roomStatusEl.textContent = `⏳ 正在連入 ${code}...`;
+            joinBtn.disabled = true; joinBtn.textContent = '連線中...';
+            roomPill.className = 'glass-pill room-pill connecting';
+            roomPill.textContent = `⏳ ${code}`;
 
-            if (peer) { try { peer.destroy(); } catch (e) {} }
-            clientConns.clear();
+            cleanupMqtt();
+            remoteClients.clear();
             isHost = false;
+            myRoomCode = code;
 
-            peer = new Peer(undefined, {
-                config: { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun1.l.google.com:19302' }] }
+            const b = BROKERS[brokerIndexForCode(codeNum)];
+            const client = mqtt.connect(b.url, {
+                clientId: myClientId + '_' + Date.now().toString(36),
+                protocolVersion: 4,
+                clean: true,
+                reconnectPeriod: 0,
+                connectTimeout: 5000
             });
+            mqttClient = client;
 
-            let timeoutHandle = setTimeout(() => {
-                if (!hostConn || !hostConn.open) {
-                    showToast('❌ 連線逾時，請確認房號是否正確');
+            let welcomed = false;
+            joinTimeout = setTimeout(() => {
+                if (!welcomed) {
+                    showToast('❌ 找不到此房號或房主沒開著頁面');
                     leaveRoomToHost();
                 }
-            }, 8500);
+            }, 7000);
 
-            peer.on('open', () => {
-                const conn = peer.connect('bdodge-' + code, { reliable: true });
-                hostConn = conn;
-
-                conn.on('open', () => {
-                    clearTimeout(timeoutHandle);
-                    joinBtn.disabled = false;
-                    joinBtn.textContent = '加入房間';
-                    joinInput.style.display = 'none';
-                    joinBtn.style.display = 'none';
-                    copyRoomBtn.style.display = 'none';
-                    leaveBtn.style.display = '';
-                    diffBtn.disabled = true;
-                    restartBtn.disabled = true;
-
-                    roomStatusEl.className = 'room-badge client';
-                    roomStatusEl.textContent = `🔵 已連線房間：${code}`;
-                });
-
-                conn.on('data', (data) => handleServerPacket(data));
-
-                conn.on('close', () => {
-                    clearTimeout(timeoutHandle);
-                    if (!isHost) {
-                        showToast('⚠️ 與房主斷開連線，已返回自己的房間');
-                        leaveRoomToHost();
-                    }
+            client.on('connect', () => {
+                client.subscribe(topicH2C(code), { qos: 0 }, (err) => {
+                    if (err) { showToast('❌ 訂閱失敗'); leaveRoomToHost(); return; }
+                    const sendHello = () => {
+                        if (mqttClient === client && client.connected && !welcomed) {
+                            client.publish(topicC2H(code), JSON.stringify({ t: 'hello', cid: myClientId }), { qos: 0 });
+                        }
+                    };
+                    sendHello();
+                    helloInterval = setInterval(sendHello, 900);
                 });
             });
 
-            peer.on('error', (err) => {
-                clearTimeout(timeoutHandle);
-                showToast(err.type === 'peer-not-found' ? '❌ 找不到該房號！' : `❌ 連線失敗 (${err.type})`);
-                leaveRoomToHost();
+            client.on('message', (topic, payload) => {
+                if (isHost || mqttClient !== client) return;
+                let data;
+                try {
+                    const str = typeof payload === 'string' ? payload : new TextDecoder().decode(payload);
+                    data = JSON.parse(str);
+                } catch (e) { return; }
+
+                if (data.t === 'welcome' && data.cid === myClientId && !welcomed) {
+                    welcomed = true;
+                    clearTimeout(joinTimeout);
+                    clearInterval(helloInterval);
+                    lastHostPacketAt = performance.now();
+
+                    joinBtn.disabled = false; joinBtn.textContent = '加入房間';
+                    joinInput.style.display = 'none'; joinBtn.style.display = 'none';
+                    copyRoomBtn.style.display = 'none'; leaveBtn.style.display = '';
+                    diffBtn.disabled = true; restartBtn.disabled = true;
+                    roomPill.className = 'glass-pill room-pill client';
+                    roomPill.textContent = `🔵 房:${code}`;
+                    setMenuOpen(false);
+                } else if (data.t === 'full' && data.cid === myClientId) {
+                    clearTimeout(joinTimeout);
+                    clearInterval(helloInterval);
+                    showToast('⚠️ 房間已滿 (最多 4 位真人)！');
+                    leaveRoomToHost();
+                    return;
+                }
+                lastHostPacketAt = performance.now();
+                handleServerPacket(data);
+            });
+
+            client.on('error', () => {
+                if (!welcomed) {
+                    showToast('❌ 連線失敗，請檢查網路');
+                    leaveRoomToHost();
+                }
             });
         }
 
         function leaveRoomToHost() {
-            if (hostConn) { try { hostConn.close(); } catch (e) {} hostConn = null; }
-            joinBtn.disabled = false;
-            joinBtn.textContent = '加入房間';
-            startHostPeer();
+            if (!isHost && mqttClient && mqttClient.connected && myRoomCode) {
+                try { mqttClient.publish(topicC2H(myRoomCode), JSON.stringify({ t: 'bye', cid: myClientId }), { qos: 0 }); } catch (e) {}
+            }
+            joinBtn.disabled = false; joinBtn.textContent = '加入房間';
+            startHostMqtt(0);
             resetGame();
         }
 
-        // Client 處理房主傳來的封包
+        function sendClientPacket(obj) {
+            if (isHost || !mqttClient || !mqttClient.connected) return;
+            obj.cid = myClientId;
+            mqttClient.publish(topicC2H(myRoomCode), JSON.stringify(obj), { qos: 0 });
+        }
+
         function handleServerPacket(d) {
-            if (d.t === 'full') {
-                showToast('⚠️ 房間已滿 (最多 4 名真人)！');
-                leaveRoomToHost();
+            if (d.t === 'welcome' && d.cid === myClientId) {
+                mySlot = d.slot; diffIndex = d.diffIndex || 0;
+                const df = DIFFICULTIES[diffIndex];
+                diffBtn.textContent = df.label; diffBtn.className = df.cls;
+                resetGame();
+                showToast(`✅ 加入成功！你是【${PLAYER_CONFIGS[mySlot].colorName}色】`);
                 return;
             }
-            if (d.t === 'welcome') {
-                mySlot = d.slot;
-                diffIndex = d.diffIndex || 0;
-                const df = DIFFICULTIES[diffIndex];
-                diffBtn.textContent = df.label;
-                diffBtn.className = df.cls;
-                resetGame();
-                showToast(`✅ 成功加入！你操作的是【${PLAYER_CONFIGS[mySlot].colorName}色】角色`);
+            if (d.t === 'host_bye') {
+                showToast('⚠️ 房主已離開房間');
+                leaveRoomToHost();
                 return;
             }
             if (d.t === 'reset') {
                 while (bombsGroup.children.length) bombsGroup.remove(bombsGroup.children[0]);
                 while (fxGroup.children.length) fxGroup.remove(fxGroup.children[0]);
-                clientBombs.clear();
-                gameOver = false;
+                clientBombs.clear(); gameOver = false;
                 document.getElementById('gameover').classList.remove('show');
                 return;
             }
-            if (d.t === 'toast') {
-                showToast(d.msg);
-                return;
-            }
+            if (d.t === 'toast') { showToast(d.msg); return; }
             if (d.t === 'ev') {
                 if (d.s) playSound(d.s);
                 if (d.ring) spawnRingFX(d.ring[0], d.ring[1], d.ring[2], d.ring[3], d.ring[4]);
@@ -906,73 +1037,54 @@
                 return;
             }
             if (d.t === 'diff') {
-                diffIndex = d.i;
-                const df = DIFFICULTIES[diffIndex];
-                diffBtn.textContent = df.label;
-                diffBtn.className = df.cls;
-                showToast(`房主切換為【${df.label}】`);
-                return;
+                diffIndex = d.i; const df = DIFFICULTIES[diffIndex];
+                diffBtn.textContent = df.label; diffBtn.className = df.cls;
+                showToast(`房主切換為【${df.label}】`); return;
             }
-            if (d.t === 'win') {
-                showWinnerModal(d.w);
-                return;
-            }
+            if (d.t === 'win') { showWinnerModal(d.w); return; }
             if (d.t === 'st') {
                 clientElapsed = d.tm;
                 let scoreChanged = false;
                 d.p.forEach((pd, i) => {
-                    const p = players[i];
-                    if (!p) return;
-                    p.targetX = pd[0];
-                    p.targetZ = pd[1];
-                    p.targetRot = pd[2];
-                    p.alive = !!pd[3];
-                    p.invulnTimer = pd[4] ? 1 : 0;
-                    if (p.ko !== pd[5] || p.name !== pd[6]) {
-                        p.ko = pd[5];
-                        p.name = pd[6];
-                        scoreChanged = true;
-                    }
+                    const p = players[i]; if (!p) return;
+                    p.targetX = pd[0]; p.targetZ = pd[1]; p.targetRot = pd[2];
+                    p.alive = !!pd[3]; p.invulnTimer = pd[4] ? 1 : 0;
+                    if (p.ko !== pd[5] || p.name !== pd[6]) { p.ko = pd[5]; p.name = pd[6]; scoreChanged = true; }
                     p.mesh.visible = p.alive;
                     p.shield.visible = p.alive && p.invulnTimer > 0;
                 });
                 if (scoreChanged) updateScoreboard();
 
-                // 同步炸彈
                 const seen = new Set();
                 d.b.forEach(bd => {
-                    const [id, x, y, z, fuse] = bd;
-                    seen.add(id);
+                    const [id, x, y, z, fuse] = bd; seen.add(id);
                     let cb = clientBombs.get(id);
                     if (!cb) {
-                        const m = createBombMesh();
-                        m.group.position.set(x, y, z);
-                        bombsGroup.add(m.group);
-                        cb = { id, x, y, z, tx: x, ty: y, tz: z, fuse, ...m };
-                        clientBombs.set(id, cb);
+                        const m = createBombMesh(); m.group.position.set(x, y, z); bombsGroup.add(m.group);
+                        cb = { id, x, y, z, tx: x, ty: y, tz: z, fuse, ...m }; clientBombs.set(id, cb);
                     } else {
                         cb.tx = x; cb.ty = y; cb.tz = z; cb.fuse = fuse;
                     }
                 });
                 for (const [id, cb] of clientBombs.entries()) {
-                    if (!seen.has(id)) {
-                        bombsGroup.remove(cb.group);
-                        clientBombs.delete(id);
-                    }
+                    if (!seen.has(id)) { bombsGroup.remove(cb.group); clientBombs.delete(id); }
                 }
             }
         }
+
+        window.addEventListener('beforeunload', () => {
+            if (!mqttClient || !mqttClient.connected || !myRoomCode) return;
+            if (isHost) broadcastEvent({ t: 'host_bye' });
+            else sendClientPacket({ t: 'bye' });
+        });
 
         // ================= 6. 動作、踢球與爆炸 =================
         function doPlayerAction(player) {
             if (!player || !player.alive || gameOver) return;
             if (tryKick(player, true)) return;
-
             if (player.dashCooldown <= 0) {
-                player.dashTimer = 0.18;
-                player.dashCooldown = 1.0;
-                player.dashDirX = player.dirX;
-                player.dashDirZ = player.dirZ;
+                player.dashTimer = 0.18; player.dashCooldown = 1.0;
+                player.dashDirX = player.dirX; player.dashDirZ = player.dirZ;
                 player.invulnTimer = Math.max(player.invulnTimer, 0.28);
                 spawnRingFX(player.x, player.z, 0x70a1ff, 1.4, 0.25);
                 playSound('dash');
@@ -984,7 +1096,6 @@
             if (!player.alive || player.kickCooldown > 0 || gameOver) return false;
             const maxRange = isHumanPlayer ? 2.25 : 1.45;
             let best = null, bestDist = maxRange;
-
             for (const b of bombs) {
                 if (b.exploded || b.y > 1.35) continue;
                 const d = Math.hypot(b.x - player.x, b.z - player.z);
@@ -997,11 +1108,8 @@
             const diff = DIFFICULTIES[diffIndex];
             const kickSpeed = isHumanPlayer ? (isCounter ? 17.5 : 15.8) : diff.cpuKickSpeed;
 
-            best.vx = player.dirX * kickSpeed;
-            best.vz = player.dirZ * kickSpeed;
-            best.lastKicker = player;
-            best.graceTimer = 0.35;
-            best.bounces = 0;
+            best.vx = player.dirX * kickSpeed; best.vz = player.dirZ * kickSpeed;
+            best.lastKicker = player; best.graceTimer = 0.35; best.bounces = 0;
             player.kickCooldown = isHumanPlayer ? 0.22 : diff.cpuCooldown;
 
             if (isCounter) {
@@ -1024,8 +1132,7 @@
                 new THREE.RingGeometry(0.3, 0.5, 24),
                 new THREE.MeshBasicMaterial({ color, side: THREE.DoubleSide, transparent: true, opacity: 0.9 })
             );
-            mesh.rotation.x = -Math.PI / 2;
-            mesh.position.set(x, 0.08, z);
+            mesh.rotation.x = -Math.PI / 2; mesh.position.set(x, 0.08, z);
             fxGroup.add(mesh);
             effects.push({ type: 'ring', mesh, age: 0, duration, maxScale });
         }
@@ -1035,10 +1142,8 @@
             for (let i = 0; i < count; i++) {
                 const mat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 1 });
                 const mesh = new THREE.Mesh(pGeo, mat);
-                mesh.position.set(x, 0.45, z);
-                fxGroup.add(mesh);
-                const ang = Math.random() * Math.PI * 2;
-                const spd = (2.5 + Math.random() * 5.5) * speedScale;
+                mesh.position.set(x, 0.45, z); fxGroup.add(mesh);
+                const ang = Math.random() * Math.PI * 2, spd = (2.5 + Math.random() * 5.5) * speedScale;
                 effects.push({
                     type: 'particle', mesh, mat,
                     vx: Math.cos(ang) * spd, vy: 3 + Math.random() * 4.5, vz: Math.sin(ang) * spd,
@@ -1070,9 +1175,7 @@
             for (const p of players) {
                 if (!p.alive || p.invulnTimer > 0) continue;
                 if (Math.hypot(p.x - bomb.x, p.z - bomb.z) <= EXP_RADIUS) {
-                    p.alive = false;
-                    p.respawnTimer = 2.0;
-                    p.mesh.visible = false;
+                    p.alive = false; p.respawnTimer = 2.0; p.mesh.visible = false;
                     spawnParticles(p.x, p.z, p.color, 16, 1.1);
                     broadcastEvent({ t: 'ev', part: [p.x, p.z, p.color, 16, 1.1] });
 
@@ -1080,7 +1183,7 @@
                         bomb.lastKicker.ko++;
                         const kName = bomb.lastKicker.slot === 0 ? '房主(藍)' : bomb.lastKicker.name;
                         const vName = p.slot === 0 ? '房主(藍)' : p.name;
-                        const msg = bomb.bounces > 0 ? `🎯 ${kName} 精彩反彈擊殺 ${vName}！` : `💥 ${kName} 炸飛了 ${vName}！`;
+                        const msg = bomb.bounces > 0 ? `🎯 ${kName} 反彈擊殺 ${vName}！` : `💥 ${kName} 炸飛了 ${vName}！`;
                         showToast(msg);
                         broadcastEvent({ t: 'toast', msg });
                         updateScoreboard();
@@ -1095,10 +1198,8 @@
         }
 
         function showWinnerModal(winnerSlot) {
-            gameOver = true;
-            playSound('win');
-            const w = players[winnerSlot];
-            const isMe = (winnerSlot === mySlot);
+            gameOver = true; playSound('win');
+            const w = players[winnerSlot], isMe = (winnerSlot === mySlot);
             document.getElementById('winner-title').textContent = isMe ? '🏆 你贏得了冠軍！' : `👑 ${w.name} (${w.colorName}) 獲勝！`;
             document.getElementById('winner-desc').textContent = isMe
                 ? '神級走位加上反彈神射，你是炸彈躲避球之王！'
@@ -1107,28 +1208,72 @@
             document.getElementById('gameover').classList.add('show');
         }
 
-        // ================= 7. 輸入控制 =================
+        // ================= 7. 360° 類比虛擬搖桿 ＋ 鍵盤控制 =================
         const keys = {};
-        const touchDir = { up: false, down: false, left: false, right: false };
+        const joyVec = { dx: 0, dz: 0 };
         let lastSentInput = { dx: 0, dz: 0 };
 
+        const joyZone = document.getElementById('joystick-zone');
+        const joyKnob = document.getElementById('joystick-knob');
+        let joyPointerId = null;
+
+        function updateJoystickFromClientXY(clientX, clientY) {
+            const rect = joyZone.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 2;
+            const maxR = rect.width * 0.36;
+            let vx = clientX - cx, vy = clientY - cy;
+            const dist = Math.hypot(vx, vy);
+            if (dist > maxR) { vx = (vx / dist) * maxR; vy = (vy / dist) * maxR; }
+            joyKnob.style.transform = `translate(${vx}px, ${vy}px)`;
+            if (dist > 6) { const len = Math.hypot(vx, vy); joyVec.dx = vx / len; joyVec.dz = vy / len; }
+            else { joyVec.dx = 0; joyVec.dz = 0; }
+        }
+
+        function resetJoystick() {
+            joyPointerId = null; joyVec.dx = 0; joyVec.dz = 0;
+            joyZone.classList.remove('active');
+            joyKnob.style.transform = 'translate(0px, 0px)';
+        }
+
+        joyZone.addEventListener('pointerdown', (e) => {
+            e.preventDefault(); initAudio(); closeMenuIfOpen();
+            if (joyPointerId !== null) return;
+            joyPointerId = e.pointerId;
+            joyZone.setPointerCapture(e.pointerId);
+            joyZone.classList.add('active');
+            updateJoystickFromClientXY(e.clientX, e.clientY);
+        });
+        joyZone.addEventListener('pointermove', (e) => {
+            if (e.pointerId !== joyPointerId) return;
+            e.preventDefault(); updateJoystickFromClientXY(e.clientX, e.clientY);
+        });
+        joyZone.addEventListener('pointerup', (e) => { if (e.pointerId === joyPointerId) resetJoystick(); });
+        joyZone.addEventListener('pointercancel', (e) => { if (e.pointerId === joyPointerId) resetJoystick(); });
+
+        const kickBtn = document.getElementById('kick-btn');
+        kickBtn.addEventListener('pointerdown', (e) => {
+            e.preventDefault(); initAudio(); closeMenuIfOpen();
+            kickBtn.classList.add('active'); triggerLocalAction();
+        });
+        kickBtn.addEventListener('pointerup', () => kickBtn.classList.remove('active'));
+        kickBtn.addEventListener('pointercancel', () => kickBtn.classList.remove('active'));
+
         function getLocalInputDir() {
-            let dx = 0, dz = 0;
-            if (keys['ArrowUp'] || keys['KeyW'] || touchDir.up) dz -= 1;
-            if (keys['ArrowDown'] || keys['KeyS'] || touchDir.down) dz += 1;
-            if (keys['ArrowLeft'] || keys['KeyA'] || touchDir.left) dx -= 1;
-            if (keys['ArrowRight'] || keys['KeyD'] || touchDir.right) dx += 1;
-            const l = Math.hypot(dx, dz);
-            if (l > 0) { dx /= l; dz /= l; }
+            let dx = joyVec.dx, dz = joyVec.dz;
+            if (dx === 0 && dz === 0) {
+                if (keys['ArrowUp'] || keys['KeyW']) dz -= 1;
+                if (keys['ArrowDown'] || keys['KeyS']) dz += 1;
+                if (keys['ArrowLeft'] || keys['KeyA']) dx -= 1;
+                if (keys['ArrowRight'] || keys['KeyD']) dx += 1;
+                const l = Math.hypot(dx, dz);
+                if (l > 0) { dx /= l; dz /= l; }
+            }
             return { dx, dz };
         }
 
         function triggerLocalAction() {
-            if (isHost) {
-                doPlayerAction(players[0]);
-            } else if (hostConn && hostConn.open) {
-                hostConn.send({ t: 'act' });
-            }
+            if (isHost) doPlayerAction(players[0]);
+            else sendClientPacket({ t: 'act' });
         }
 
         window.addEventListener('keydown', e => {
@@ -1137,71 +1282,47 @@
                 return;
             }
             if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) e.preventDefault();
-            initAudio();
-            keys[e.code] = true;
-            if (e.code === 'Space' && !e.repeat) triggerLocalAction();
+            initAudio(); keys[e.code] = true;
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyA', 'KeyS', 'KeyD'].includes(e.code)) closeMenuIfOpen();
+            if (e.code === 'Space' && !e.repeat) { closeMenuIfOpen(); triggerLocalAction(); }
         });
         window.addEventListener('keyup', e => { keys[e.code] = false; });
 
-        document.querySelectorAll('.d-btn').forEach(btn => {
-            const d = btn.dataset.dir;
-            const on = e => { e.preventDefault(); initAudio(); touchDir[d] = true; btn.classList.add('active'); };
-            const off = e => { e.preventDefault(); touchDir[d] = false; btn.classList.remove('active'); };
-            btn.addEventListener('touchstart', on, { passive: false });
-            btn.addEventListener('touchend', off);
-            btn.addEventListener('touchcancel', off);
-            btn.addEventListener('mousedown', on);
-            window.addEventListener('mouseup', off);
-        });
-
-        const kickBtn = document.getElementById('kick-btn');
-        const onKickBtn = e => { e.preventDefault(); initAudio(); triggerLocalAction(); };
-        kickBtn.addEventListener('touchstart', onKickBtn, { passive: false });
-        kickBtn.addEventListener('mousedown', onKickBtn);
-
         copyRoomBtn.addEventListener('click', function () {
             this.blur();
-            if (navigator.clipboard && myRoomCode) {
-                navigator.clipboard.writeText(myRoomCode);
-                showToast(`📋 已複製房號：${myRoomCode}，快傳給朋友吧！`);
-            }
+            if (navigator.clipboard && myRoomCode) navigator.clipboard.writeText(myRoomCode).catch(() => {});
+            showToast(`📋 房號：${myRoomCode}`);
         });
         joinBtn.addEventListener('click', function () { this.blur(); initAudio(); joinRoom(joinInput.value); });
         leaveBtn.addEventListener('click', function () { this.blur(); leaveRoomToHost(); });
 
         diffBtn.addEventListener('click', function () {
-            this.blur();
-            if (!isHost) return;
+            this.blur(); if (!isHost) return;
             diffIndex = (diffIndex + 1) % DIFFICULTIES.length;
             const d = DIFFICULTIES[diffIndex];
-            this.textContent = d.label;
-            this.className = d.cls;
+            this.textContent = d.label; this.className = d.cls;
             showToast(`已切換為【${d.label}】`);
             broadcastEvent({ t: 'diff', i: diffIndex });
         });
         document.getElementById('sound-btn').addEventListener('click', function () {
-            this.blur();
-            soundEnabled = !soundEnabled;
+            this.blur(); soundEnabled = !soundEnabled;
             this.textContent = soundEnabled ? '音效：開' : '音效：關';
         });
         restartBtn.addEventListener('click', function () {
             this.blur(); initAudio();
-            if (isHost) resetGame();
+            if (isHost) { resetGame(); setMenuOpen(false); }
         });
         document.getElementById('play-again-btn').addEventListener('click', function () {
-            this.blur();
-            if (isHost) resetGame();
+            this.blur(); if (isHost) resetGame();
         });
 
         // ================= 8. CPU AI =================
         function updateCPU(cpu) {
             const diff = DIFFICULTIES[diffIndex];
             let moveX = 0, moveZ = 0, dangerBomb = null, minThreat = 3.8;
-
             for (const b of bombs) {
                 if (b.exploded) continue;
-                const spd = Math.hypot(b.vx, b.vz);
-                const dist = Math.hypot(b.x - cpu.x, b.z - cpu.z);
+                const spd = Math.hypot(b.vx, b.vz), dist = Math.hypot(b.x - cpu.x, b.z - cpu.z);
                 if (spd > 3.5 && dist < minThreat && !(b.lastKicker === cpu && b.graceTimer > 0)) {
                     const dot = (cpu.x - b.x) * b.vx + (cpu.z - b.z) * b.vz;
                     if (dot > 0) { minThreat = dist; dangerBomb = b; }
@@ -1209,7 +1330,6 @@
                     moveX += (cpu.x - b.x); moveZ += (cpu.z - b.z);
                 }
             }
-
             if (dangerBomb) {
                 const perpX = -dangerBomb.vz, perpZ = dangerBomb.vx;
                 const side = ((cpu.x - dangerBomb.x) * perpX + (cpu.z - dangerBomb.z) * perpZ) >= 0 ? 1 : -1;
@@ -1223,7 +1343,6 @@
                     const d = Math.hypot(b.x - cpu.x, b.z - cpu.z);
                     if (d < bestDist) { bestDist = d; targetBomb = b; }
                 }
-
                 if (targetBomb) {
                     if (bestDist < 1.4 && cpu.kickCooldown <= 0) {
                         let targetEnemy = null, enemyDist = Infinity;
@@ -1236,15 +1355,10 @@
                         if (targetEnemy) {
                             const aimAngle = Math.atan2(targetEnemy.x - targetBomb.x, targetEnemy.z - targetBomb.z) + (Math.random() - 0.5) * diff.cpuAimJitter;
                             cpu.dirX = Math.sin(aimAngle); cpu.dirZ = Math.cos(aimAngle);
-                            cpu.mesh.rotation.y = aimAngle;
-                            tryKick(cpu, false);
+                            cpu.mesh.rotation.y = aimAngle; tryKick(cpu, false);
                         }
-                    } else {
-                        moveX += targetBomb.x - cpu.x; moveZ += targetBomb.z - cpu.z;
-                    }
-                } else {
-                    moveX += -cpu.x * 0.4; moveZ += -cpu.z * 0.4;
-                }
+                    } else { moveX += targetBomb.x - cpu.x; moveZ += targetBomb.z - cpu.z; }
+                } else { moveX += -cpu.x * 0.4; moveZ += -cpu.z * 0.4; }
             }
             const len = Math.hypot(moveX, moveZ);
             if (len > 0.05) return { dx: moveX / len, dz: moveZ / len };
@@ -1252,8 +1366,7 @@
         }
 
         // ================= 9. 主迴圈 =================
-        let lastTime = performance.now();
-        let netSyncTimer = 0;
+        let lastTime = performance.now(), netSyncTimer = 0;
 
         function animate(now) {
             requestAnimationFrame(animate);
@@ -1261,13 +1374,18 @@
             lastTime = now;
 
             if (isHost) {
-                // ===== 房主模擬物理與 AI =====
+                // 檢查是否有超時未回應的遠端玩家 (5.5秒無心跳自動釋放回 CPU)
+                for (const [cid, info] of remoteClients.entries()) {
+                    if (now - info.lastSeen > 5500) kickOutRemoteClient(cid, info);
+                }
+
                 if (!gameOver) {
                     const elapsed = Math.floor((now - gameStartTime) / 1000);
                     const mm = String(Math.floor(elapsed / 60)).padStart(2, '0');
                     const ss = String(elapsed % 60).padStart(2, '0');
-                    const humanCount = 1 + clientConns.size;
-                    document.getElementById('status-line').textContent = `房主模式：${humanCount} 真人 + ${4 - humanCount} CPU · 先搶 ${WIN_KO} KO · ${mm}:${ss}`;
+                    timerPill.textContent = `${mm}:${ss}`;
+                    const humanCount = 1 + remoteClients.size;
+                    document.getElementById('status-line').textContent = `房主模式：${humanCount} 真人 + ${4 - humanCount} CPU · 先搶 ${WIN_KO} KO`;
 
                     spawnTimer -= dt;
                     if (spawnTimer <= 0) { spawnBomb(); spawnTimer = 1.05; }
@@ -1288,18 +1406,11 @@
                         }
 
                         if (p.invulnTimer > 0) {
-                            p.invulnTimer -= dt;
-                            p.shield.visible = true;
+                            p.invulnTimer -= dt; p.shield.visible = true;
                             p.shield.scale.setScalar(1 + Math.sin(now * 0.02) * 0.06);
-                        } else {
-                            p.shield.visible = false;
-                        }
+                        } else { p.shield.visible = false; }
 
-                        // 處理遠端玩家的瞬發動作
-                        if (p.pendingAction) {
-                            p.pendingAction = false;
-                            doPlayerAction(p);
-                        }
+                        if (p.pendingAction) { p.pendingAction = false; doPlayerAction(p); }
 
                         if (p.dashTimer > 0) {
                             p.dashTimer -= dt;
@@ -1307,15 +1418,9 @@
                             p.z = Math.max(-HALF_H + P_RADIUS, Math.min(HALF_H - P_RADIUS, p.z + p.dashDirZ * 15.0 * dt));
                         } else {
                             let dx = 0, dz = 0;
-                            if (p.slot === 0) {
-                                const inp = getLocalInputDir();
-                                dx = inp.dx; dz = inp.dz;
-                            } else if (p.isHuman) {
-                                dx = p.remoteInput.dx; dz = p.remoteInput.dz;
-                            } else {
-                                const ai = updateCPU(p);
-                                dx = ai.dx; dz = ai.dz;
-                            }
+                            if (p.slot === 0) { const inp = getLocalInputDir(); dx = inp.dx; dz = inp.dz; }
+                            else if (p.isHuman) { dx = p.remoteInput.dx; dz = p.remoteInput.dz; }
+                            else { const ai = updateCPU(p); dx = ai.dx; dz = ai.dz; }
 
                             if (dx !== 0 || dz !== 0) {
                                 const spd = p.isHuman ? PLAYER_SPEED : CPU_SPEED;
@@ -1328,8 +1433,7 @@
                         p.mesh.position.set(p.x, 0, p.z);
                     }
 
-                    const B_RADIUS = 0.42;
-                    const me = players[0];
+                    const B_RADIUS = 0.42, me = players[0];
                     let nearestMeBomb = null, nearestMeDist = 2.25;
                     if (me && me.alive) {
                         for (const b of bombs) {
@@ -1361,8 +1465,7 @@
                         if (b.z < -HALF_H + B_RADIUS) { b.z = -HALF_H + B_RADIUS; b.vz = Math.abs(b.vz); bounced = true; }
 
                         if (bounced && spd > 2.5) {
-                            b.bounces++;
-                            playSound('bounce');
+                            b.bounces++; playSound('bounce');
                             spawnParticles(b.x, b.z, 0xffffff, 4, 0.5);
                             broadcastEvent({ t: 'ev', s: 'bounce', part: [b.x, b.z, 0xffffff, 4, 0.5] });
                         }
@@ -1389,29 +1492,24 @@
                             if (b.exploded) { bombs.splice(i, 1); continue; }
                         }
 
-                        b.fuse -= dt;
-                        b.mesh.position.set(b.x, b.y, b.z);
+                        b.fuse -= dt; b.mesh.position.set(b.x, b.y, b.z);
                         b.ring.visible = (b === nearestMeBomb);
 
                         if (b.fuse <= 2.2) {
                             const flash = Math.sin(b.fuse * 22) > 0;
                             b.mat.color.setHex(flash ? 0xff3f34 : 0x1b1e23);
                             const s = flash ? 1.16 : 0.96; b.mesh.scale.set(s, s, s);
-                        } else {
-                            b.mat.color.setHex(0x1b1e23); b.mesh.scale.set(1, 1, 1);
-                        }
+                        } else { b.mat.color.setHex(0x1b1e23); b.mesh.scale.set(1, 1, 1); }
                         b.spark.scale.setScalar(0.8 + Math.sin(now * 0.03) * 0.35);
 
                         if (b.fuse <= 0) { detonateBomb(b); bombs.splice(i, 1); }
                     }
 
-                    // 廣播狀態給所有連線中的玩家 (每秒 25 次)
                     netSyncTimer += dt;
-                    if (clientConns.size > 0 && netSyncTimer >= 0.04) {
+                    if (remoteClients.size > 0 && netSyncTimer >= 0.05) {
                         netSyncTimer = 0;
                         broadcastEvent({
-                            t: 'st',
-                            tm: elapsed,
+                            t: 'st', tm: elapsed,
                             p: players.map(p => [
                                 +p.x.toFixed(2), +p.z.toFixed(2), +p.mesh.rotation.y.toFixed(2),
                                 p.alive ? 1 : 0, p.invulnTimer > 0 ? 1 : 0, p.ko, p.name
@@ -1421,24 +1519,27 @@
                     }
                 }
             } else {
-                // ===== 遠端玩家 (Client) 平滑插值與送出按鍵 =====
                 const mm = String(Math.floor(clientElapsed / 60)).padStart(2, '0');
                 const ss = String(clientElapsed % 60).padStart(2, '0');
-                document.getElementById('status-line').textContent = `連線對戰中 · 先搶 ${WIN_KO} 次 KO 獲勝 · ${mm}:${ss}`;
+                timerPill.textContent = `${mm}:${ss}`;
+                document.getElementById('status-line').textContent = `連線對戰中 · 先搶 ${WIN_KO} 次 KO 獲勝`;
+
+                if (lastHostPacketAt > 0 && now - lastHostPacketAt > 6500) {
+                    showToast('⚠️ 房主連線中斷，已返回自己的房間');
+                    leaveRoomToHost();
+                    return;
+                }
 
                 const inp = getLocalInputDir();
                 netSyncTimer += dt;
-                if (hostConn && hostConn.open && (inp.dx !== lastSentInput.dx || inp.dz !== lastSentInput.dz || netSyncTimer >= 0.1)) {
-                    netSyncTimer = 0;
-                    lastSentInput = inp;
-                    hostConn.send({ t: 'in', dx: +inp.dx.toFixed(2), dz: +inp.dz.toFixed(2) });
+                if (inp.dx !== lastSentInput.dx || inp.dz !== lastSentInput.dz || netSyncTimer >= 0.8) {
+                    netSyncTimer = 0; lastSentInput = inp;
+                    sendClientPacket({ t: 'in', dx: +inp.dx.toFixed(2), dz: +inp.dz.toFixed(2) });
                 }
 
                 for (const p of players) {
-                    p.x += (p.targetX - p.x) * 0.35;
-                    p.z += (p.targetZ - p.z) * 0.35;
-                    p.mesh.position.set(p.x, 0, p.z);
-                    p.mesh.rotation.y = p.targetRot;
+                    p.x += (p.targetX - p.x) * 0.35; p.z += (p.targetZ - p.z) * 0.35;
+                    p.mesh.position.set(p.x, 0, p.z); p.mesh.rotation.y = p.targetRot;
                     if (p.shield.visible) p.shield.scale.setScalar(1 + Math.sin(now * 0.02) * 0.06);
                 }
 
@@ -1453,9 +1554,7 @@
                 }
 
                 for (const cb of clientBombs.values()) {
-                    cb.x += (cb.tx - cb.x) * 0.42;
-                    cb.y += (cb.ty - cb.y) * 0.42;
-                    cb.z += (cb.tz - cb.z) * 0.42;
+                    cb.x += (cb.tx - cb.x) * 0.42; cb.y += (cb.ty - cb.y) * 0.42; cb.z += (cb.tz - cb.z) * 0.42;
                     cb.group.position.set(cb.x, cb.y, cb.z);
                     cb.ring.visible = (cb === nearestMeBomb);
 
@@ -1463,17 +1562,13 @@
                         const flash = Math.sin(cb.fuse * 22) > 0;
                         cb.mat.color.setHex(flash ? 0xff3f34 : 0x1b1e23);
                         const s = flash ? 1.16 : 0.96; cb.group.scale.set(s, s, s);
-                    } else {
-                        cb.mat.color.setHex(0x1b1e23); cb.group.scale.set(1, 1, 1);
-                    }
+                    } else { cb.mat.color.setHex(0x1b1e23); cb.group.scale.set(1, 1, 1); }
                     cb.spark.scale.setScalar(0.8 + Math.sin(now * 0.03) * 0.35);
                 }
             }
 
-            // 特效更新 (房主與遠端玩家共用)
             for (let i = effects.length - 1; i >= 0; i--) {
-                const fx = effects[i];
-                fx.age += dt;
+                const fx = effects[i]; fx.age += dt;
                 const t = fx.age / fx.duration;
                 if (t >= 1) { fxGroup.remove(fx.mesh); effects.splice(i, 1); continue; }
                 if (fx.type === 'ring') {
@@ -1496,20 +1591,15 @@
                     baseCamPos.z + (Math.random() - 0.5) * screenShake
                 );
                 screenShake = Math.max(0, screenShake - dt * 1.8);
-            } else {
-                camera.position.copy(baseCamPos);
-            }
+            } else { camera.position.copy(baseCamPos); }
 
             renderer.render(scene, camera);
         }
 
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
+        window.addEventListener('resize', updateCameraFraming);
+        window.addEventListener('orientationchange', () => setTimeout(updateCameraFraming, 120));
 
-        startHostPeer();
+        startHostMqtt(0);
         resetGame();
         requestAnimationFrame(animate);
     </script>
