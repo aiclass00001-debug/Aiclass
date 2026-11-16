@@ -217,6 +217,21 @@
       @media (max-width:640px){ .hands{ margin-left:0; } }
       .hands b{ color:var(--cyan); }
 
+      /* reference links */
+      .refs{
+        margin:16px 0 0 calc(clamp(3.2rem,8vw,5.4rem) * var(--scale) + clamp(16px,3vw,30px) + .9em);
+        color:var(--ink3); font-size:calc(.88rem * var(--scale)); line-height:1.6;
+      }
+      @media (max-width:640px){ .refs{ margin-left:0; } }
+      .refs .refs-label{ font-weight:700; letter-spacing:.04em; }
+      .refs a{
+        color:var(--ink2); text-decoration:underline; text-underline-offset:3px;
+        text-decoration-color:var(--line); overflow-wrap:anywhere;
+      }
+      .refs a:hover{ color:var(--ac); text-decoration-color:var(--ac); }
+      .refs a:focus-visible{ outline:2px solid var(--amber); outline-offset:2px; border-radius:2px; }
+      .refs .sep{ margin:0 4px; opacity:.55; }
+
       /* poll chart (story 5) */
       .poll{
         margin:28px 0 0 calc(clamp(3.2rem,8vw,5.4rem) * var(--scale) + clamp(16px,3vw,30px) + .9em);
@@ -334,6 +349,7 @@
           <p>如果你是導演，錯字要重抽還是將錯就錯？用同音字改台詞，能救回多少？</p>
         </div>
         <div class="hands"><b>接著動手 →</b> 現場用 Gemini 生一段有台詞的影片，對照 Seedance 的原生出音，看誰先念錯字、錯在哪個字。</div>
+        <p class="refs"><span class="refs-label">參考連結：</span><a href="https://news.qq.com/rain/a/20261110A0DDP800" target="_blank" rel="noopener noreferrer">觀察者網專訪（騰訊新聞轉載）</a></p>
       </section>
 
       <!-- 2 -->
@@ -355,6 +371,7 @@
           <div class="ask-label">課堂問句</div>
           <p>你敢讓 AI 刷你的卡嗎？如果不敢——你怕的到底是哪一步？</p>
         </div>
+        <p class="refs"><span class="refs-label">參考連結：</span><a href="https://openai.com/index/introducing-chatgpt-wallet/" target="_blank" rel="noopener noreferrer">OpenAI 官方公告</a><span class="sep">・</span><a href="https://most.tw/posts/ainews/chatgpt-wallet-agentic-checkout-2026/" target="_blank" rel="noopener noreferrer">中文解說（most.tw）</a></p>
       </section>
 
       <!-- 3 -->
@@ -376,6 +393,7 @@
           <div class="ask-label">課堂問句</div>
           <p>一個 AI 工具長得跟真的一樣，你怎麼判斷真假？你會先查哪三個地方？</p>
         </div>
+        <p class="refs"><span class="refs-label">參考連結：</span><a href="https://cursor.com/blog/security-incident-update" target="_blank" rel="noopener noreferrer">Cursor 官方復盤</a><span class="sep">・</span><a href="https://zhaoda.net/2026/11/15/cursor-fireworks-breach-claude-code-backdoor/" target="_blank" rel="noopener noreferrer">中文解說（zhaoda.net）</a></p>
       </section>
 
       <!-- 4 -->
@@ -397,6 +415,7 @@
           <div class="ask-label">課堂問句</div>
           <p>你的作業、你的片，備份在哪？如果今晚雲端全掛，你明天交得出東西嗎？</p>
         </div>
+        <p class="refs"><span class="refs-label">參考連結：</span><a href="https://today.line.me/tw/v3/article/oqp5XQ5" target="_blank" rel="noopener noreferrer">NOWNEWS 報導（LINE TODAY）</a></p>
       </section>
 
       <!-- 5 -->
@@ -428,6 +447,7 @@
           <div class="ask-label">課堂問句</div>
           <p>同一份民調，為什麼標題和內文講的不一樣？如果你是編輯，這個標題你下還是不下？</p>
         </div>
+        <p class="refs"><span class="refs-label">參考連結：</span><a href="https://news.ltn.com.tw/news/politics/breakingnews/5641300" target="_blank" rel="noopener noreferrer">自由時報 — 標題寫「領先」</a><span class="sep">・</span><a href="https://udn.com/news/story/124652/9879869?from=udn-catelistnews_ch2" target="_blank" rel="noopener noreferrer">聯合新聞網 — 內文寫「相當拉鋸」</a></p>
       </section>
 
     </main>
